@@ -1,7 +1,8 @@
-const CACHE_NAME = 'sanschat-cache-v2';
+const CACHE_NAME = 'sanschat-cache-v4';
 const urlsToCache = [
     './',
     './index.html',
+    './utama.html',
     './manifest.json'
 ];
 
