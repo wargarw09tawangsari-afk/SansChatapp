@@ -1,7 +1,7 @@
 <!-- ============================================================================
 FILE: index.html
 DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol OK
-           + Pengaturan Paksa Instal PWA Android + Sinkronisasi URL Users S1;S2;S3;S4)
+           + Pengaturan Paksa Instal PWA Android + Sinkronisasi URL Users!S3)
 ============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
@@ -113,22 +113,8 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
 
 <script>
   let deferredInstallPrompt = null;
+  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 
-  // KONFIGURASI URL BERDASARKAN SHEET S1, S2, S3, S4 TERBARU
-  const CONFIG_URLS = {
-    S1_HELP: "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec",
-    S2_PORTAL: "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec",
-    S3_SANSCHAT: "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYpD_DXWm-TOqUw07KVg/exec",
-    S4_GITHUB: "https://wargarw09tawangsari-afk.github.io/SansChatapp/"
-  };
-
-  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || CONFIG_URLS.S3_SANSCHAT;
-  localStorage.setItem('sanschat_s3_url', cachedSansChatUrl);
-  localStorage.setItem('sanschat_s1_url', CONFIG_URLS.S1_HELP);
-  localStorage.setItem('sanschat_s2_url', CONFIG_URLS.S2_PORTAL);
-  localStorage.setItem('sanschat_s4_url', CONFIG_URLS.S4_GITHUB);
-
-  // Registrasi Service Worker agar siap diinstal & bekerja offline
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
   }
@@ -149,7 +135,6 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
     updatePwaBadgeStatus();
     prefetchSansChatUrlFromS3();
 
-    // Jika dibuka dalam mode aplikasi terinstal (standalone) dan sesi sudah aktif, langsung masuk ke utama.html
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
@@ -186,7 +171,7 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
           localStorage.setItem('sanschat_s3_url', urlS3);
         }
       }).getSansChatUrl();
-    } else {
+    } else if (cachedSansChatUrl && cachedSansChatUrl.startsWith('http')) {
       fetch(cachedSansChatUrl + '?action=getConfig')
         .then(r => r.json())
         .then(res => {
@@ -198,22 +183,14 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
     }
   }
 
-  function isHostedOnGitHub() {
-    return window.location.hostname.includes('github.io');
-  }
-
   function navigateToPage(pageName) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run.withSuccessHandler((urlS3) => {
-        const baseUrl = (urlS3 && urlS3.startsWith('http')) ? urlS3 : window.location.href.split('?')[0];
+        const baseUrl = (urlS3 && urlS3.startsWith('http')) ? urlS3 : cachedSansChatUrl;
         window.location.href = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
       }).getSansChatUrl();
-    } else if (isHostedOnGitHub()) {
-      // Tetap berada di lingkup GitHub Pages untuk file login.html dan utama.html
-      window.location.href = './' + pageName + '.html';
     } else {
-      const targetBase = cachedSansChatUrl || CONFIG_URLS.S3_SANSCHAT;
-      window.location.href = targetBase + (targetBase.includes('?') ? '&' : '?') + 'page=' + pageName;
+      window.location.href = cachedSansChatUrl + (cachedSansChatUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
     }
   }
 
