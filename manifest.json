@@ -1,16 +1,25 @@
 {
-  "name": "SansChat & Help System Portal",
-  "short_name": "SansChat",
-  "start_url": "/SansChatapp/",
-  "scope": "/SansChatapp/",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#06b6d4",
+  "short_name": "Sc-SansChat",
+  "name": "Sc-SansChat - Warga RW 09 Sansivera & Help System Portal",
+  "description": "Aplikasi komunikasi warga dan portal layanan terpadu RW 09 Cluster Sansivera berbasis PWA",
   "icons": [
     {
-      "src": "icon-512.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "type": "image/png",
       "sizes": "512x512",
-      "type": "image/png"
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050b10",
+  "theme_color": "#00f2fe"
 }
