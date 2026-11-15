@@ -1,25 +1,16 @@
 {
-  "short_name": "Sc-SansChat",
-  "name": "Sc-SansChat - Warga RW 09 Sansivera",
-  "description": "Aplikasi komunikasi warga pengganti WhatsApp berbasis PWA & Spreadsheet",
+  "name": "SansChat & Help System Portal",
+  "short_name": "SansChat",
+  "start_url": "/SansChatapp/",
+  "scope": "/SansChatapp/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#06b6d4",
   "icons": [
     {
-      "src": "[https://cdn-icons-png.flaticon.com/512/3135/3135715.png](https://cdn-icons-png.flaticon.com/512/3135/3135715.png)",
-      "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "[https://cdn-icons-png.flaticon.com/512/3135/3135715.png](https://cdn-icons-png.flaticon.com/512/3135/3135715.png)",
-      "type": "image/png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
-  ],
-  "start_url": "./index.html",
-  "background_color": "#050b10",
-  "theme_color": "#00a884",
-  "display": "standalone",
-  "orientation": "portrait",
-  "scope": "./"
+  ]
 }
