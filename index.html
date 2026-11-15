@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SansChat & Help System Portal</title>
+    <title>SansChat - Selamat Datang & Login</title>
     <link rel="manifest" href="./manifest.json">
     <style>
         :root {
@@ -27,29 +27,35 @@
         .container {
             background: var(--card-bg);
             border: 1px solid rgba(6, 182, 212, 0.2);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             border-radius: 16px;
             padding: 30px;
             width: 100%;
-            max-width: 600px;
+            max-width: 450px;
+            text-align: center;
         }
         h1 {
             color: var(--accent);
-            text-align: center;
-            margin-bottom: 24px;
-            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
             text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
         }
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            text-align: left;
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
-        input[type="text"], textarea, input[type="file"] {
+        input[type="text"] {
             width: 100%;
             padding: 12px;
             background: #0f172a;
@@ -60,7 +66,7 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        input[type="text"]:focus, textarea:focus {
+        input[type="text"]:focus {
             border-color: var(--accent);
             box-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
         }
@@ -73,127 +79,71 @@
             font-weight: bold;
             cursor: pointer;
             width: 100%;
+            margin-top: 10px;
             transition: opacity 0.2s;
         }
         button:hover {
             opacity: 0.9;
         }
-        #fileContentPreview {
-            margin-top: 10px;
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px dashed #334155;
+        .step {
             display: none;
         }
-        .status {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 0.9rem;
+        .step.active {
+            display: block;
+        }
+        .error-msg {
+            color: #f87171;
+            font-size: 0.85rem;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>SansChat Integration Portal</h1>
-        
-        <div class="form-group">
-            <label for="userName">Nama Pengguna:</label>
-            <input type="text" id="userName" placeholder="Masukkan nama Anda...">
+        <!-- STEP 1: SELAMAT DATANG -->
+        <div id="stepWelcome" class="step active">
+            <h1>Selamat Datang di SansChat</h1>
+            <p>Portal Komunitas RW 09 Cluster Sansivera & Sistem Layanan Terpadu.</p>
+            <button onclick="goToLogin()">Mulai Masuk</button>
         </div>
 
-        <div class="form-group">
-            <label for="chatMessage">Pesan / Kendala:</label>
-            <textarea id="chatMessage" rows="4" placeholder="Tulis pesan atau unggah file .txt di bawah..."></textarea>
+        <!-- STEP 2: LOGIN -->
+        <div id="stepLogin" class="step">
+            <h1>Login Pengguna</h1>
+            <p>Masukkan nama atau ID warga Anda untuk melanjutkan.</p>
+            <div class="form-group">
+                <label for="loginName">Nama / ID Warga:</label>
+                <input type="text" id="loginName" placeholder="Contoh: Budi / Warga 037">
+            </div>
+            <button onclick="handleLogin()">Masuk ke Aplikasi</button>
+            <div id="loginError" class="error-msg"></div>
         </div>
-
-        <!-- FITUR UPLOAD FILE TXT & PREVIEW -->
-        <div class="form-group">
-            <label for="txtFileUploader">Unggah Berkas Teks (.txt):</label>
-            <input type="file" id="txtFileUploader" accept=".txt">
-            <div id="fileContentPreview"></div>
-        </div>
-
-        <button id="sendBtn" onclick="sendDataToAppsScript()">Kirim ke Sistem</button>
-        <div id="statusMessage" class="status"></div>
     </div>
 
     <script>
-        // Konfigurasi Endpoint & Spreadsheet ID sesuai permintaan terbaru
-        const CONFIG = {
-            HELP_SYSTEM_URL: "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec",
-            PORTAL_WEB_URL: "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec",
-            WEBAPP_SANSCHAT_URL: "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec",
-            SPREADSHEET_ID: "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI"
-        };
+        function goToLogin() {
+            document.getElementById('stepWelcome').classList.remove('active');
+            document.getElementById('stepLogin').classList.add('active');
+        }
 
-        // Handler Event Pembacaan File TXT yang Diunggah
-        document.getElementById('txtFileUploader').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function handleLogin() {
+            const name = document.getElementById('loginName').value.trim();
+            const errorDiv = document.getElementById('loginError');
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const textContent = e.target.result;
-                
-                // Tampilkan kotak preview isi file
-                const previewDiv = document.getElementById('fileContentPreview');
-                previewDiv.style.display = 'block';
-                previewDiv.textContent = textContent;
-
-                // Masukkan isi teks file secara otomatis ke dalam textarea pesan
-                document.getElementById('chatMessage').value = textContent;
-            };
-            reader.readAsText(file);
-        });
-
-        // Fungsi Pengiriman Data ke Google Apps Script WebApp
-        async function sendDataToAppsScript() {
-            const name = document.getElementById('userName').value.trim();
-            const message = document.getElementById('chatMessage').value.trim();
-            const statusDiv = document.getElementById('statusMessage');
-
-            if (!name || !message) {
-                statusDiv.style.color = '#f87171';
-                statusDiv.textContent = 'Nama dan pesan tidak boleh kosong!';
+            if (!name) {
+                errorDiv.textContent = 'Nama atau ID tidak boleh kosong!';
                 return;
             }
 
-            statusDiv.style.color = '#06b6d4';
-            statusDiv.textContent = 'Mengirim data ke server...';
+            // Simpan sesi user di localStorage agar terbaca di utama.html
+            localStorage.setItem('sanschat_user', name);
 
-            const payload = {
-                sheetId: CONFIG.SPREADSHEET_ID,
-                name: name,
-                message: message,
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                await fetch(CONFIG.WEBAPP_SANSCHAT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                statusDiv.style.color = '#4ade80';
-                statusDiv.textContent = 'Data berhasil dikirim ke sistem!';
-            } catch (error) {
-                console.error('Error:', error);
-                statusDiv.style.color = '#f87171';
-                statusDiv.textContent = 'Gagal terhubung ke server Apps Script.';
-            }
+            // Redirect ke halaman utama.html
+            window.location.href = './utama.html';
         }
 
-        // Pendaftaran Service Worker untuk PWA
+        // Pendaftaran Service Worker PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
