@@ -127,8 +127,6 @@
 
   window.onload = function() {
     updatePwaBadgeStatus();
-    prefetchSansChatUrlFromS3();
-
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
@@ -155,19 +153,6 @@
       deferredInstallPrompt = null;
       document.getElementById('btnInstallPwaDirect').classList.add('hidden');
     });
-  }
-
-  function prefetchSansChatUrlFromS3() {
-    if (cachedSansChatUrl && cachedSansChatUrl.startsWith('http')) {
-      fetch(cachedSansChatUrl + '?action=getConfig')
-        .then(r => r.json())
-        .then(res => {
-          if (res && res.success && res.config && res.config.sansChatUrl) {
-            cachedSansChatUrl = res.config.sansChatUrl;
-            localStorage.setItem('sanschat_s3_url', cachedSansChatUrl);
-          }
-        }).catch(() => {});
-    }
   }
 
   function proceedToLogin() {
