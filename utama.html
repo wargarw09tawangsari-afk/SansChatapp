@@ -1,5 +1,5 @@
 <!-- ============================================================================
-FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Script)
+FILE: utama.html (Final Integration - Terhubung Spreadsheet ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI)
 ============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
@@ -304,7 +304,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
       </div>
     </div>
 
-    <div id="netStatusBar" class="net-status-bar">● Terhubung • Sinkronisasi Real-Time</div>
+    <div id="netStatusBar" class="net-status-bar">● Terhubung • Spreadsheet ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI</div>
 
     <!-- PENGUMUMAN DINAMIS -->
     <div class="announcement-perspective">
@@ -328,7 +328,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
 
       <div class="room-user-info">
         <div class="room-title" id="roomTitle">Nama Grup</div>
-        <div class="room-subtitle" id="roomSub">Sinkronisasi Sheet Aktif</div>
+        <div class="room-subtitle" id="roomSub">Sinkronisasi Spreadsheet Aktif</div>
       </div>
 
       <div class="room-header-right">
@@ -519,11 +519,13 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
 </div>
 
 <script>
-  // Konfigurasi Parameter Server S3 & Templating Apps Script / GitHub Pages
+  // Konfigurasi Spreadsheet ID Utama
+  const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
   const SERVER_INITIAL_USER = "<?= typeof initialUsername !== 'undefined' ? initialUsername : '' ?>";
   const SERVER_S3_URL = "<?= typeof s3Url !== 'undefined' ? s3Url : 'https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec' ?>";
   
   const CONFIG = {
+    SPREADSHEET_ID: SPREADSHEET_ID,
     HELP_SYSTEM_URL: "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec",
     PORTAL_WEB_URL: "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec",
     WEBAPP_SANSCHAT_URL: "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec"
@@ -572,7 +574,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
   let activeReplyQuote = "";
   let announcements = [
     "📢 Selamat datang di Portal SansChat RW 09 Cluster Sansivera!",
-    "💡 Gunakan menu Chat Privat atau Grup RT untuk berkoordinasi warga secara real-time.",
+    "💡 Sinkronisasi Spreadsheet ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI aktif secara real-time.",
     "⚠️ Pastikan selalu memperbarui informasi dan mematuhi tata tertib lingkungan."
   ];
   let announcementIndex = 0;
@@ -631,10 +633,10 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
       const bar = document.getElementById('netStatusBar');
       if (navigator.onLine) {
         bar.className = "net-status-bar";
-        bar.innerText = "● Terhubung • Akun: " + currentUser.username;
+        bar.innerText = "● Terhubung • DB Sheet: 1kmZa...59TU3VI • Akun: " + currentUser.username;
       } else {
         bar.className = "net-status-bar net-offline";
-        bar.innerText = "⚠ Mode Offline (Riwayat Chat Aktif) • Akun: " + currentUser.username;
+        bar.innerText = "⚠ Mode Offline (Riwayat Lokal Aktif) • Akun: " + currentUser.username;
       }
     };
     window.addEventListener('online', updateStatus);
@@ -661,9 +663,9 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
     }
 
     const defaultGroups = [
-      { sheetName: "RT37", name: "Grup RT 37 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
-      { sheetName: "RT38", name: "Grup RT 38 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
-      { sheetName: "RT39", name: "Grup RT 39 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
+      { sheetName: "RT37", name: "Grup RT 37 Sansivera", foto: "", lastMessage: "Sinkronisasi Spreadsheet Aktif", lastTime: new Date().toISOString() },
+      { sheetName: "RT38", name: "Grup RT 38 Sansivera", foto: "", lastMessage: "Sinkronisasi Spreadsheet Aktif", lastTime: new Date().toISOString() },
+      { sheetName: "RT39", name: "Grup RT 39 Sansivera", foto: "", lastMessage: "Sinkronisasi Spreadsheet Aktif", lastTime: new Date().toISOString() },
       { sheetName: "RW09", name: "Grup Resmi RW 09 Sansivera", foto: "", lastMessage: "Portal Warga Terpadu", lastTime: new Date().toISOString() }
     ];
 
@@ -791,7 +793,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
           localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
           window.open(urlS2, "_blank");
         } else {
-          alert("URL Portal Web pada sheet Users kolom S2 belum diisi.");
+          alert("URL Portal Web pada sheet Users belum diisi.");
         }
       }).getWebAppsUrl();
     } else {
@@ -889,7 +891,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
             <div class="chat-name">${r.name}</div>
             <div class="chat-time">${timeLabel}</div>
           </div>
-          <div class="chat-last-msg">${r.lastMessage || ('Ketuk untuk masuk ruang chat')}</div>
+          <div class="chat-last-msg">${r.lastMessage || ('Sinkronisasi Sheet ' + SPREADSHEET_ID.substring(0,8) + '...')}</div>
         </div>
       `;
       container.appendChild(item);
@@ -903,7 +905,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
     cancelReplyQuote();
 
     document.getElementById('roomTitle').innerText = name;
-    document.getElementById('roomSub').innerText = "Grup Aktif • Ketuk ↩️ untuk membalas pesan";
+    document.getElementById('roomSub').innerText = "Sinkronisasi Spreadsheet Aktif • Ketuk ↩️ untuk membalas";
     document.getElementById('btnGroupMembersAction').classList.remove('hidden');
     document.getElementById('btnSelectPrivateTarget').classList.add('hidden');
     closeAllInputPopups();
@@ -1117,7 +1119,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
       }
     } else {
       const sampleMsgs = [
-        { senderUsername: "ADMINPUSAT", senderNama: "ADMINPUSAT", pesan: "Halo warga, selamat datang di SansChat RW 09!", timestamp: new Date().toISOString(), readCount: 2 }
+        { senderUsername: "ADMINPUSAT", senderNama: "ADMINPUSAT", pesan: "Halo warga, sinkronisasi Spreadsheet ID: 1kmZa08cDx... aktif!", timestamp: new Date().toISOString(), readCount: 2 }
       ];
       if (isPrivateChatMode) renderPrivateMessageList(sampleMsgs, isSilentPoll);
       else renderMessageList(sampleMsgs, isSilentPoll);
@@ -1137,7 +1139,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#667781; margin-top:20px;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> untuk memilih warga.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#667781; margin-top:20px;">Belum ada riwayat pesan privat di Spreadsheet. Ketuk <b>👤 Tujuan</b> untuk memilih warga.</div>';
       return;
     }
 
@@ -1189,7 +1191,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#667781; margin-top:20px;">Belum ada riwayat pesan di grup ini.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#667781; margin-top:20px;">Belum ada riwayat pesan di sheet grup ini.</div>';
       return;
     }
 
@@ -1338,7 +1340,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
     document.getElementById('contactModalTitle').innerText = mode === "recipient"
       ? "🔒 PILIH WARGA TUJUAN CHAT PRIVAT"
       : "👤 BAGIKAN KONTAK WARGA";
-    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga...</div>';
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga dari Spreadsheet...</div>';
     document.getElementById('waContactModal').classList.remove('hidden');
 
     const sampleContacts = [
@@ -1359,7 +1361,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
   function renderContactRows(contacts, mode, list) {
     list.innerHTML = '';
     if (!contacts || contacts.length === 0) {
-      list.innerHTML = '<div style="color:#8696a0; text-align:center;">Tidak ada data warga.</div>';
+      list.innerHTML = '<div style="color:#8696a0; text-align:center;">Tidak ada data warga di Spreadsheet.</div>';
       return;
     }
     contacts.forEach(c => {
@@ -1576,7 +1578,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
     }
 
     const list = document.getElementById('memberListContent');
-    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga...</div>';
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga dari Spreadsheet...</div>';
     document.getElementById('groupMembersModal').classList.remove('hidden');
 
     const sampleMembers = [
@@ -1741,7 +1743,7 @@ FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Scr
     document.getElementById('btnCallGroupByRole').classList.add('hidden');
     document.getElementById('modalGroupTitle').innerText = "DAFTAR ANGGOTA: " + activeGroupName;
     const list = document.getElementById('memberListContent');
-    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat data...</div>';
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat data dari Spreadsheet...</div>';
     document.getElementById('groupMembersModal').classList.remove('hidden');
 
     const sampleMembers = [
