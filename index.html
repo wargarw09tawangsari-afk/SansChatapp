@@ -3,9 +3,7 @@ FILE: index.html
 DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol OK
            + Pengaturan Paksa Instal PWA Android + Sinkronisasi URL Users S1;S2;S3;S4)
 ============================================================================ -->
-
 <!DOCTYPE html>
-
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -96,7 +94,6 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
   <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
   <!-- PANDUAN & STATUS INSTALASI PWA ANDROID -->
-
   <div class="pwa-instruction-box">
     <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
     <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
@@ -110,28 +107,31 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
     </button>
   </div>
 
-<button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
+  <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
   <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
 </div>
 
 <script>
   let deferredInstallPrompt = null;
-  
-  // URL Cadangan (Fallback) S1, S2, S3, S4 sesuai Sheet Users Anda
-  const FALLBACK_S1_URL = "https://script.google.com/macros/s/AKfycbxCgCMURVNNwUjws78xD4k7_RyNdG5Thp76AWGw0zXNM3M4XViBop97hA7EI70THH/exec";
-  const FALLBACK_S2_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YthDZPCPGeNlrtlu5juNIK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec";
-  const FALLBACK_S3_URL = "https://script.google.com/macros/s/AKfycbvHBqO44nhszVhbKlep2qi6Wwafu5KgfU648L6RNQSBwYpD_DXWm-TOqUw07KVq/exec";
-  const FALLBACK_S4_GITHUB = "https://wargarw09tawangsari-afk.github.io/SansChatapp/";
 
+  // KONFIGURASI URL BERDASARKAN SHEET S1, S2, S3, S4 TERBARU
+  const CONFIG_URLS = {
+    S1_HELP: "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec",
+    S2_PORTAL: "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec",
+    S3_SANSCHAT: "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYpD_DXWm-TOqUw07KVg/exec",
+    S4_GITHUB: "https://wargarw09tawangsari-afk.github.io/SansChatapp/"
+  };
 
-  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || FALLBACK_S3_URL;
-
+  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || CONFIG_URLS.S3_SANSCHAT;
+  localStorage.setItem('sanschat_s3_url', cachedSansChatUrl);
+  localStorage.setItem('sanschat_s1_url', CONFIG_URLS.S1_HELP);
+  localStorage.setItem('sanschat_s2_url', CONFIG_URLS.S2_PORTAL);
+  localStorage.setItem('sanschat_s4_url', CONFIG_URLS.S4_GITHUB);
 
   // Registrasi Service Worker agar siap diinstal & bekerja offline
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
   }
-
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -139,27 +139,23 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
     document.getElementById('btnInstallPwaDirect').classList.remove('hidden');
   });
 
-
   window.addEventListener('appinstalled', () => {
     deferredInstallPrompt = null;
     document.getElementById('btnInstallPwaDirect').classList.add('hidden');
     updatePwaBadgeStatus();
   });
 
-
   window.onload = function() {
     updatePwaBadgeStatus();
     prefetchSansChatUrlFromS3();
 
-
-    // Jika dibuka dalam mode aplikasi terinstal (standalone) dan sesi sudah aktif, langsung masuk ke utama
+    // Jika dibuka dalam mode aplikasi terinstal (standalone) dan sesi sudah aktif, langsung masuk ke utama.html
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
-      navigateToPage('login');
+      navigateToPage('utama');
     }
   };
-
 
   function updatePwaBadgeStatus() {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -173,7 +169,6 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
     }
   }
 
-
   function triggerNativePwaInstall() {
     if (!deferredInstallPrompt) return;
     deferredInstallPrompt.prompt();
@@ -182,7 +177,6 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
       document.getElementById('btnInstallPwaDirect').classList.add('hidden');
     });
   }
-
 
   function prefetchSansChatUrlFromS3() {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -193,22 +187,20 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
         }
       }).getSansChatUrl();
     } else {
-      // Mengatasi pembacaan saat berjalan di GitHub Pages dengan aman tanpa error
-      fetch(FALLBACK_S3_URL + '?action=getConfig')
+      fetch(cachedSansChatUrl + '?action=getConfig')
         .then(r => r.json())
         .then(res => {
           if (res && res.success && res.config && res.config.sansChatUrl) {
             cachedSansChatUrl = res.config.sansChatUrl;
             localStorage.setItem('sanschat_s3_url', cachedSansChatUrl);
           }
-        }).catch(() => {
-          if (!cachedSansChatUrl) {
-            cachedSansChatUrl = FALLBACK_S3_URL;
-          }
-        });
+        }).catch(() => {});
     }
   }
 
+  function isHostedOnGitHub() {
+    return window.location.hostname.includes('github.io');
+  }
 
   function navigateToPage(pageName) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -216,12 +208,14 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
         const baseUrl = (urlS3 && urlS3.startsWith('http')) ? urlS3 : window.location.href.split('?')[0];
         window.location.href = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
       }).getSansChatUrl();
+    } else if (isHostedOnGitHub()) {
+      // Tetap berada di lingkup GitHub Pages untuk file login.html dan utama.html
+      window.location.href = './' + pageName + '.html';
     } else {
-      let targetBase = (cachedSansChatUrl && cachedSansChatUrl.startsWith('http')) ? cachedSansChatUrl : FALLBACK_S3_URL;
+      const targetBase = cachedSansChatUrl || CONFIG_URLS.S3_SANSCHAT;
       window.location.href = targetBase + (targetBase.includes('?') ? '&' : '?') + 'page=' + pageName;
     }
   }
-
 
   function proceedToLogin() {
     const btn = document.getElementById('btnOkWelcome');
@@ -230,6 +224,5 @@ DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol O
     navigateToPage('login');
   }
 </script>
-
 </body>
 </html>
