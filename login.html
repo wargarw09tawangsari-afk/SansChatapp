@@ -173,25 +173,25 @@
     btn.innerText = "MEMVERIFIKASI...";
     btn.disabled = true;
 
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler((res) => {
-          if (res && res.success && res.user) {
-            btn.innerText = "MEMBUKA HALAMAN UTAMA...";
-            saveUserMemoryAndRedirect(res.user, res.redirectBaseUrl);
-          } else {
-            btn.innerText = "VERIFIKASI & MASUK";
-            btn.disabled = false;
-            alert((res && res.message) ? res.message : "Login gagal!");
-          }
-        })
-        .withFailureHandler((err) => {
+    // Karena dijalankan di GitHub Pages, koneksi auth dialihkan via JSONP/fetch ke Apps Script Web App Backend Anda
+    // Atau jika menggunakan lingkungan hybrid, pastikan backend Apps Script mendukung CORS / JSONP request.
+    fetch(SERVER_S3_URL + "?action=login&user=" + encodeURIComponent(u) + "&pass=" + encodeURIComponent(p))
+      .then(response => response.json())
+      .then(res => {
+        if (res && res.success && res.user) {
+          btn.innerText = "MEMBUKA HALAMAN UTAMA...";
+          saveUserMemoryAndRedirect(res.user, res.redirectBaseUrl);
+        } else {
           btn.innerText = "VERIFIKASI & MASUK";
           btn.disabled = false;
-          alert("Koneksi bermasalah: " + err.message);
-        })
-        .loginUser(u, p);
-    }
+          alert((res && res.message) ? res.message : "Login gagal!");
+        }
+      })
+      .catch((err) => {
+        btn.innerText = "VERIFIKASI & MASUK";
+        btn.disabled = false;
+        alert("Koneksi bermasalah: " + err.message);
+      });
   }
 </script>
 </body>
