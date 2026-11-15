@@ -1,124 +1,206 @@
 <!-- ============================================================================
-FILE: login.html (Sinkronisasi Spreadsheet ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI)
+FILE: login.html
+DESKRIPSI: Halaman Login Warga (Terhubung Spreadsheet ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI)
 ============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sc-SansChat - Login Warga</title>
-<meta name="theme-color" content="#00a884">
+<title>Sc-SansChat - Login</title>
+<link rel="manifest" href="manifest.json">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  body {
-    background-color: #0b141a; color: #e9edef; min-height: 100dvh;
-    display: flex; justify-content: center; align-items: center; padding: 12px;
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  body { background-color: #050b10; color: #00f2fe; padding: 8px; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+  .login-container {
+    background: #0d1722; border-radius: 16px; width: 100%; max-width: 480px; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; padding: 20px; position: relative;
+    border: 3px solid #00f2fe; box-shadow: 0 0 20px rgba(0, 242, 254, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.2);
+    overflow-y: auto;
   }
-  .login-card {
-    background: #111b21; border: 2px solid #00f2fe; border-radius: 16px;
-    width: 100%; max-width: 420px; padding: 24px 20px;
-    box-shadow: 0 0 25px rgba(0, 242, 254, 0.35); display: flex; flex-direction: column; gap: 16px;
+  .logo-sc-3d-large {
+    width: 75px; height: 75px; margin: 0 auto 15px auto;
+    background: linear-gradient(135deg, #00f2fe 0%, #005288 100%); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 34px; color: #050b10;
+    box-shadow: 0 6px 0 #003355, 0 0 25px rgba(0, 242, 254, 0.8); border: 2px solid #79dae8;
   }
-  .login-logo-box {
-    width: 64px; height: 64px; background: linear-gradient(135deg, #00f2fe 0%, #007799 100%);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    margin: 0 auto; font-size: 26px; font-weight: 900; color: #050b10;
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
-  }
-  .login-title { font-size: 18px; font-weight: 900; color: #00f2fe; text-align: center; letter-spacing: 1px; }
-  .login-subtitle { font-size: 11px; color: #8696a0; text-align: center; margin-top: -10px; }
+  .login-title { font-size: 20px; font-weight: 900; color: #ffffff; text-shadow: 0 0 8px #00f2fe; margin-bottom: 6px; text-align: center; letter-spacing: 2px; }
+  .login-subtitle { font-size: 10.5px; color: #79dae8; text-align: center; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
   
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-label { font-size: 12px; font-weight: 700; color: #00f2fe; }
-  .form-input {
-    width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #2a3942;
-    background: #182229; color: #fff; font-size: 14px; outline: none; transition: border-color 0.2s;
+  .pwa-warning-box {
+    background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; border-radius: 10px;
+    padding: 12px; margin-bottom: 15px; color: #fca5a5; font-size: 11.5px; line-height: 1.4;
   }
-  .form-input:focus { border-color: #00f2fe; box-shadow: 0 0 8px rgba(0,242,254,0.25); }
+  .pwa-warning-title { font-weight: 900; color: #ef4444; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; }
+  .pwa-warning-box ol { padding-left: 16px; margin-top: 4px; }
+  .pwa-warning-box li { margin-bottom: 3px; color: #e2e8f0; }
 
-  .btn-login {
-    background: linear-gradient(135deg, #00a884 0%, #00f2fe 100%);
-    color: #050b10; border: none; padding: 13px; border-radius: 12px;
-    font-weight: 900; font-size: 14px; cursor: pointer; text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 168, 132, 0.4); margin-top: 6px; transition: transform 0.1s;
+  .field-group { margin-bottom: 15px; position: relative; }
+  .field-group label { display: block; font-size: 11px; color: #00f2fe; margin-bottom: 4px; font-weight: bold; letter-spacing: 1px; }
+  .field-group input {
+    width: 100%; padding: 12px 40px 12px 12px; background: #071017; border: 2px solid #1c3b52;
+    border-radius: 8px; color: #ffffff; font-size: 14px; font-weight: 700; outline: none;
   }
-  .btn-login:active { transform: scale(0.98); }
+  .password-toggle { position: absolute; right: 14px; top: 34px; cursor: pointer; font-size: 16px; user-select: none; color: #79dae8; }
+  
+  .btn-3d-robotic {
+    width: 100%; background: linear-gradient(180deg, #00f2fe 0%, #008cb3 100%); color: #050b10;
+    border: none; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 900; cursor: pointer;
+    margin-top: 5px; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 6px 0 #005d78;
+  }
+  .btn-3d-robotic:disabled { background: #334155; color: #64748b; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
 
-  .help-btn {
-    background: #182229; border: 1px solid #00f2fe; color: #00f2fe;
-    padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+  .help-btn-3d {
+    position: absolute; top: 14px; right: 14px; background: linear-gradient(135deg, #00f2fe 0%, #007799 100%);
+    color: #050b10; border: 1px solid #79dae8; padding: 6px 14px; border-radius: 20px; text-decoration: none;
+    font-size: 10.5px; font-weight: 900; box-shadow: 0 3px 0 #004455; z-index: 3;
   }
-  .db-info { font-size: 10px; text-align: center; color: #64748b; margin-top: 4px; }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
-
-<div class="login-card">
-  <div class="login-logo-box">Sc</div>
+<div class="login-container">
+  <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
+  <div class="logo-sc-3d-large">Sc</div>
   <div class="login-title">SANSCHAT SYSTEM</div>
-  <div class="login-subtitle">OTENTIKASI WARGA RW 09</div>
+  <div class="login-subtitle">Otentikasi Warga RT/RW</div>
 
-  <div class="form-group">
-    <label class="form-label">USERNAME WARGA</label>
-    <input type="text" id="usernameInput" class="form-input" placeholder="Contoh: WARGA37 / ADMINPUSAT" value="<?= typeof initialUsername !== 'undefined' ? initialUsername : '' ?>">
+  <div id="pwaWarningCard" class="pwa-warning-box hidden">
+    <div class="pwa-warning-title">⚠️ AKSES DIBATASI (BELUM DIINSTAL)</div>
+    <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
+    <ol>
+      <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
+      <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
+      <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
+    </ol>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">KODE AKSES / PASSWORD</label>
-    <input type="password" id="passwordInput" class="form-input" placeholder="Masukkan password warga..." onkeypress="handleKey(event)">
+  <div class="field-group">
+    <label>USERNAME WARGA</label>
+    <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
   </div>
 
-  <button class="btn-login" onclick="processLogin()">MASUK KE SANSCHAT</button>
-  <a href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn">📖 BANTUAN SISTEM / LUPA PASSWORD</a>
+  <div class="field-group">
+    <label>KODE AKSES / PASSWORD</label>
+    <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()">
+    <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+  </div>
 
-  <div class="db-info">Database Spreadsheet: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI</div>
+  <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
 </div>
 
 <script>
+  const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
+  const SERVER_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+
   window.onload = function() {
-    const inputUsr = document.getElementById('usernameInput');
-    if (inputUsr.value.includes("?=")) {
-      inputUsr.value = localStorage.getItem('sanschat_active_username') || "";
+    const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
+    if (savedUser) {
+      document.getElementById('loginUsername').value = savedUser.toUpperCase();
     }
+
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler((urlS1) => {
+        if (urlS1 && urlS1.startsWith('http')) {
+          document.getElementById('btnHelpSystem').href = urlS1;
+        }
+      }).getHelpSystemUrl();
+    }
+
+    checkPWAInstallationStatus();
   };
 
-  function handleKey(e) {
-    if (e.key === 'Enter') processLogin();
+  function checkPWAInstallationStatus() {
+    const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const btnSubmit = document.getElementById('btnLoginSubmit');
+    const warningCard = document.getElementById('pwaWarningCard');
+
+    if (usernameInput === 'ADMINPUSAT' || isStandalone) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = "VERIFIKASI & MASUK";
+      warningCard.classList.add('hidden');
+    } else {
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = "APLIKASI BELUM DIINSTAL";
+      warningCard.classList.remove('hidden');
+    }
   }
 
-  function processLogin() {
-    const username = document.getElementById('usernameInput').value.trim().toUpperCase();
-    const password = document.getElementById('passwordInput').value.trim();
+  function togglePasswordVisibility() {
+    const passInput = document.getElementById('loginPassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (passInput.type === 'password') {
+      passInput.type = 'text';
+      eyeIcon.innerText = '👁️';
+    } else {
+      passInput.type = 'password';
+      eyeIcon.innerText = '👁️‍🗨️';
+    }
+  }
 
-    if (!username) {
-      alert("Masukkan Username Warga terlebih dahulu!");
+  function saveUserMemoryAndRedirect(userObj, baseUrl) {
+    const cleanUsername = String(userObj.username || "").trim().toUpperCase();
+    try {
+      localStorage.setItem('sanschat_active_username', cleanUsername);
+      localStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+      sessionStorage.setItem('sanschat_active_username', cleanUsername);
+      sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+    } catch (e) {}
+
+    let targetBase = (baseUrl && baseUrl.startsWith('http'))
+      ? baseUrl
+      : ((SERVER_S3_URL && SERVER_S3_URL.startsWith('http')) ? SERVER_S3_URL : window.location.href.split('?')[0]);
+
+    targetBase = targetBase.split('?')[0];
+    const finalUtamaUrl = targetBase + "?page=utama&user=" + encodeURIComponent(cleanUsername);
+
+    try {
+      window.top.location.href = finalUtamaUrl;
+    } catch (err) {
+      window.location.href = finalUtamaUrl;
+    }
+  }
+
+  function doLogin() {
+    const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
+    if (usernameInput !== 'ADMINPUSAT' && !isStandalone) {
+      alert("Harap instal aplikasi terlebih dahulu ke layar utama HP Android Anda melalui menu browser.");
       return;
     }
 
-    const userSession = {
-      username: username,
-      nama: username,
-      alamat: "Warga RW 09 Cluster Sansivera"
-    };
+    const u = usernameInput;
+    const p = document.getElementById('loginPassword').value.trim();
+    if (!u || !p) { alert("Harap isi Username dan Password!"); return; }
 
-    try {
-      localStorage.setItem('sanschat_active_username', username);
-      localStorage.setItem('sanschat_user_session', JSON.stringify(userSession));
-      sessionStorage.setItem('sanschat_active_username', username);
-      sessionStorage.setItem('sanschat_user_session', JSON.stringify(userSession));
-    } catch (e) {}
+    const btn = document.getElementById('btnLoginSubmit');
+    btn.innerText = "MEMVERIFIKASI...";
+    btn.disabled = true;
 
     if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run.withSuccessHandler((res) => {
-        if (res && res.success) {
-          window.location.href = res.redirectUrl || ("?page=utama&user=" + username);
-        } else {
-          window.location.href = "?page=utama&user=" + username;
-        }
-      }).verifyUserLogin(username, password);
+      google.script.run
+        .withSuccessHandler((res) => {
+          if (res && res.success && res.user) {
+            btn.innerText = "MEMBUKA HALAMAN UTAMA...";
+            saveUserMemoryAndRedirect(res.user, res.redirectBaseUrl);
+          } else {
+            btn.innerText = "VERIFIKASI & MASUK";
+            btn.disabled = false;
+            alert((res && res.message) ? res.message : "Login gagal!");
+          }
+        })
+        .withFailureHandler((err) => {
+          btn.innerText = "VERIFIKASI & MASUK";
+          btn.disabled = false;
+          alert("Koneksi bermasalah: " + err.message);
+        })
+        .loginUser(u, p);
     } else {
-      const targetUrl = "utama.html?user=" + encodeURIComponent(username);
-      window.location.href = targetUrl;
+      // Fallback simulasi jika dibuka langsung dari GitHub Pages
+      const mockUser = { username: u, nama: u, alamat: "Warga RW 09 Cluster Sansivera" };
+      saveUserMemoryAndRedirect(mockUser, "utama.html");
     }
   }
 </script>
