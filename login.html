@@ -177,7 +177,6 @@
       sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
     } catch (e) {}
 
-    // Jika dibuka dari GitHub Pages, arahkan ke utama.html lokal agar tetap berada dalam ruang lingkup PWA terinstal
     if (window.location.hostname.includes('github.io')) {
       window.location.href = 'utama.html?user=' + encodeURIComponent(cleanUsername);
       return;

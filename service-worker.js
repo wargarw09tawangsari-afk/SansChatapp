@@ -12,7 +12,6 @@ const ASSETS_TO_CACHE = [
   './manifest.json'
 ];
 
-// Install Event
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -21,7 +20,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -36,7 +34,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event (Network First, fallback to cache)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   
