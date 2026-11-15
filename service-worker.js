@@ -1,80 +1,45 @@
-// ============================================================================
-FILE: service-worker.js (Gabungan untuk PWA SansChat - GitHub Pages)
-============================================================================
-const CACHE_NAME = 'sanschat-v6';
+const CACHE_NAME = 'sanschat-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './utama.html',
   './login.html',
+  './utama.html',
   './manifest.json',
   'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
 ];
 
-// 1. EVENT INSTALL: Menyimpan aset penting ke dalam cache browser
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Membuka cache dan menyimpan aset statis...');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .catch((err) => console.error('Gagal melakukan caching aset:', err))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
 });
 
-// 2. EVENT ACTIVATE: Membersihkan cache versi lama agar memori tetap optimal
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('Menghapus cache versi lama:', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
   );
+  self.clients.claim();
 });
 
-// 3. EVENT FETCH: Mengelola permintaan jaringan & fallback offline
 self.addEventListener('fetch', (event) => {
-  // Abaikan request non-GET atau request eksternal ke Google Apps Script agar data dinamis tetap real-time
-  if (event.request.method !== 'GET' || event.request.url.includes('script.google.com')) {
-    return;
-  }
-
+  if (event.request.method !== 'GET' || event.request.url.includes('script.google.com')) return;
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Jika jaringan aktif, simpan salinan terbaru ke cache
-        if (networkResponse && networkResponse.status === 200) {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+    caches.match(event.request).then((cachedResponse) => {
+      const networkFetch = fetch(event.request).then((res) => {
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
-        return networkResponse;
-      })
-      .catch(() => {
-        // Jika sedang offline, ambil dari cache browser
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          // Fallback darurat jika halaman utama diminta dalam kondisi offline total
-          if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
-          }
-        });
-      })
+        return res;
+      }).catch(() => cachedResponse);
+      return cachedResponse || networkFetch;
+    })
   );
 });
 
-// 4. EVENT NOTIFICATION CLICK: Menangani interaksi notifikasi PWA
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
