@@ -171,7 +171,7 @@
         .then(res => {
           if (res && res.success && res.config && res.config.sansChatUrl) {
             cachedSansChatUrl = res.config.sansChatUrl;
-            localStorage.setItem('sanschat_s3_url', cachedSansChatUrl);
+            localStorage.setItem('sanschat_s3_url', cachedSansCodeUrl);
           }
         }).catch(() => {});
     }
@@ -192,11 +192,7 @@
         window.location.href = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
       }).getSansChatUrl();
     } else {
-      if (cachedSansChatUrl && cachedSansChatUrl.startsWith('http')) {
-        window.location.href = cachedSansChatUrl + (cachedSansChatUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
-      } else {
-        window.location.href = pageName + '.html';
-      }
+      window.location.href = pageName + '.html';
     }
   }
 

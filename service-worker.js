@@ -1,9 +1,3 @@
-/**
- * ============================================================================
- * SERVICE WORKER: Sc-SansChat PWA
- * ============================================================================
- */
-
 const CACHE_NAME = 'sc-sanschat-v1';
 const ASSETS_TO_CACHE = [
   './index.html',
@@ -36,14 +30,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        return response;
-      })
-      .catch(() => {
-        return caches.match(event.request);
-      })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });

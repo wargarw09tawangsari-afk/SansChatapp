@@ -89,8 +89,15 @@
 <script>
   const DEFAULT_S1_URL = "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec";
   const DEFAULT_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
-  const RAW_SERVER_S3 = "<?= s3Url ?>";
-  const ACTIVE_S3_URL = (RAW_SERVER_S3 && RAW_SERVER_S3.startsWith('http')) ? RAW_SERVER_S3 : (localStorage.getItem('sanschat_s3_url') || DEFAULT_S3_URL);
+  
+  // Safe evaluation of server-side s3Url template tag if present
+  let rawServerS3 = "";
+  try {
+    rawServerS3 = "<?= s3Url ?>";
+  } catch (e) {
+    rawServerS3 = "";
+  }
+  const ACTIVE_S3_URL = (rawServerS3 && rawServerS3.startsWith('http') && !rawServerS3.includes('?')) ? rawServerS3 : (localStorage.getItem('sanschat_s3_url') || DEFAULT_S3_URL);
 
   function callBackendApi(action, payloadObj) {
     return new Promise((resolve, reject) => {
