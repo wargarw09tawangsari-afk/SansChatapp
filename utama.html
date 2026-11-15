@@ -1,5 +1,5 @@
 <!-- ============================================================================
-FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
+FILE: utama.html (Gabungan Sempurna - Disinkronkan untuk GitHub Pages & Apps Script)
 ============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
@@ -519,8 +519,10 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
 </div>
 
 <script>
-  // Konfigurasi Endpoint Backend Google Apps Script S3 & WebApp
-  const SERVER_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+  // Konfigurasi Parameter Server S3 & Templating Apps Script / GitHub Pages
+  const SERVER_INITIAL_USER = "<?= typeof initialUsername !== 'undefined' ? initialUsername : '' ?>";
+  const SERVER_S3_URL = "<?= typeof s3Url !== 'undefined' ? s3Url : 'https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec' ?>";
+  
   const CONFIG = {
     HELP_SYSTEM_URL: "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec",
     PORTAL_WEB_URL: "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec",
@@ -530,6 +532,7 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
   function resolveSavedUserSession() {
     const urlParams = new URLSearchParams(window.location.search);
     const urlUser = (urlParams.get('user') || "").trim().toUpperCase();
+    const serverUser = (SERVER_INITIAL_USER || "").trim().toUpperCase();
 
     let storedObj = null;
     try {
@@ -543,7 +546,7 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
       ""
     ).trim().toUpperCase();
 
-    const resolvedUsername = urlUser || storedUsername;
+    const resolvedUsername = serverUser || urlUser || storedUsername;
     if (!resolvedUsername) return null;
 
     if (storedObj && storedObj.username && storedObj.username.toUpperCase() === resolvedUsername) {
@@ -640,7 +643,14 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
   }
 
   function redirectToIndexWelcome() {
-    window.location.href = "./index.html";
+    const base = (SERVER_S3_URL && SERVER_S3_URL.startsWith('http'))
+      ? SERVER_S3_URL.split('?')[0]
+      : window.location.href.split('?')[0];
+    try {
+      window.top.location.href = base + "?page=login";
+    } catch (e) {
+      window.location.href = base + "?page=login";
+    }
   }
 
   function renderCachedDashboard() {
@@ -671,14 +681,6 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
       google.script.run.withSuccessHandler((bundle) => {
         applyDashboardBundle(bundle);
       }).getInitialDashboardBundle(currentUser.username);
-    } else {
-      const defaultGroups = [
-        { sheetName: "RT37", name: "Grup RT 37 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
-        { sheetName: "RT38", name: "Grup RT 38 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
-        { sheetName: "RT39", name: "Grup RT 39 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
-        { sheetName: "RW09", name: "Grup Resmi RW 09 Sansivera", foto: "", lastMessage: "Portal Warga Terpadu", lastTime: new Date().toISOString() }
-      ];
-      renderChatRoomList(defaultGroups);
     }
   }
 
@@ -689,6 +691,8 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
       try {
         localStorage.setItem('sanschat_active_username', currentUser.username);
         localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
+        sessionStorage.setItem('sanschat_active_username', currentUser.username);
+        sessionStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
       } catch (e) {}
 
       document.getElementById('headerUserName').innerText = currentUser.nama || currentUser.username;
@@ -774,7 +778,7 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
       sessionStorage.removeItem('sanschat_active_username');
     } catch (e) {}
     currentUser = null;
-    window.location.href = "./index.html";
+    redirectToIndexWelcome();
   }
 
   function openWebApsUrl() {
@@ -818,7 +822,7 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
           localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
           document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${resized}" />`;
           if (typeof google !== 'undefined' && google.script && google.script.run) {
-            google.script.run.updateProfilePicture(currentUser.username, resized);
+            google.script.run.withSuccessHandler((res) => {}).updateProfilePicture(currentUser.username, resized);
           }
         } else {
           document.getElementById('roomGroupAvatar').innerHTML = `<img src="${resized}" />`;
@@ -1126,6 +1130,9 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
     const newCount = msgs ? msgs.length : 0;
 
     if (isSilentPoll && newCount === prevCount) return;
+    if (isSilentPoll && newCount > prevCount && prevCount > 0) {
+      playNotificationBeep();
+    }
     lastKnownMessageCount["ChatPrivat"] = newCount;
 
     area.innerHTML = '';
@@ -1175,6 +1182,9 @@ FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
     const newCount = msgs ? msgs.length : 0;
 
     if (isSilentPoll && newCount === prevCount) return;
+    if (isSilentPoll && newCount > prevCount && prevCount > 0) {
+      playNotificationBeep();
+    }
     lastKnownMessageCount[activeChatSheet] = newCount;
 
     area.innerHTML = '';
