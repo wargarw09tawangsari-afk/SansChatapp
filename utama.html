@@ -14,7 +14,7 @@
   body {
     background-color: #050b10; color: #e9edef; height: 100dvh;
     display: flex; justify-content: center; align-items: center; overflow: hidden;
-    padding: 8px; /* Jarak 8px dari pinggir layar HP Android / Browser */
+    padding: 8px; /* Jarak 8px dari pinggir layar HP Android */
   }
   .mobile-frame {
     background: #0b141a; width: 100%; max-width: 480px; height: 100%;
@@ -79,13 +79,13 @@
 <body>
 
 <div class="mobile-frame">
-  <div id="netStatusBar" class="net-status-bar">● Terhubung (Spreadsheet Synced) • Username: <span id="lblActiveUser">...</span></div>
+  <div id="netStatusBar" class="net-status-bar">● Terhubung • Username: <span id="lblActiveUser">...</span></div>
 
   <!-- Main Dashboard View -->
   <div id="mainView" style="display:flex; flex-direction:column; height:calc(100dvh - 25px); overflow:hidden;">
     <div class="app-header">
       <div class="header-left">
-        <div id="mainHeaderAvatar" class="avatar" onclick="triggerProfileUpload('user')">👤</div>
+        <div id="mainHeaderAvatar" class="avatar" onclick="triggerProfileUpload('user')" title="Ketuk untuk ganti foto profil">👤</div>
         <div>
           <div id="headerUserName" class="header-title">Memuat Warga...</div>
           <div id="headerUserAddress" class="header-sub">Sansivera, Tawangsari</div>
@@ -102,7 +102,7 @@
 
     <div id="announcementCard" class="announcement-banner">
       <div id="announcementIcon" class="announcement-icon">📢</div>
-      <div id="announcementBox" class="announcement-content">SansChat Aktif dengan Username unik per HP. Sinkronisasi Google Spreadsheet aktif.</div>
+      <div id="announcementBox" class="announcement-content">SansChat Aktif. Fitur Ganti Profil, Telepon, Dokumen, dan Polling Siap Digunakan.</div>
     </div>
 
     <div id="chatListContainer" class="chat-list">
@@ -115,7 +115,7 @@
     <div class="room-header">
       <div style="display:flex; align-items:center; gap:6px;">
         <button onclick="handleBackToMain()" style="background:none; border:none; color:#fff; font-size:16px; cursor:pointer;">←</button>
-        <div id="roomGroupAvatar" class="avatar" style="width:32px; height:32px;" onclick="triggerProfileUpload('group')">👥</div>
+        <div id="roomGroupAvatar" class="avatar" style="width:32px; height:32px;" onclick="triggerProfileUpload('group')" title="Ketuk untuk ganti foto grup">👥</div>
         <div>
           <div id="roomTitle" style="font-size:13.5px; font-weight:bold;">Nama Ruangan</div>
           <div id="roomSub" style="font-size:10px; color:#8696a0;">Sinkron Sheet Aktif</div>
@@ -256,11 +256,20 @@
   let isPrivateChatMode = false;
   let activeReplyQuote = "";
   let activeRoomPollingTimer = null;
+  let uploadTargetType = "user";
 
   window.onload = function() {
     document.getElementById('headerUserName').innerText = currentUser.nama;
     document.getElementById('headerUserAddress').innerText = currentUser.alamat;
     document.getElementById('lblActiveUser').innerText = currentUser.username;
+    
+    // Load saved profile picture if available
+    const savedPic = localStorage.getItem('sanschat_profile_pic_' + currentUser.username);
+    if (savedPic) {
+      currentUser.foto = savedPic;
+      document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${savedPic}" />`;
+    }
+
     buildEmojiPicker();
     monitorNetworkStatus();
     loadSpreadsheetGroupsAndAnnouncements();
@@ -310,9 +319,8 @@
   }
 
   function initBackgroundPushSimulation() {
-    // Background polling simulation to trigger ringtone and push notifications like WhatsApp even when app is minimized
     setInterval(() => {
-      if (Math.random() < 0.05) { // Simulated incoming message / call event
+      if (Math.random() < 0.05) {
         playRingtoneBeep();
         if ('Notification' in window && Notification.permission === 'granted') {
           new Notification("Pesan Masuk SansChat", { body: "Ada pesan baru dari warga RW 09", icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" });
@@ -323,6 +331,29 @@
     if ('Notification' in window && Notification.permission !== 'granted') {
       Notification.requestPermission();
     }
+  }
+
+  function triggerProfileUpload(target) {
+    uploadTargetType = target;
+    document.getElementById('profilePicInput').click();
+  }
+
+  function uploadProfilePicture(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const resized = evt.target.result;
+      if (uploadTargetType === 'user') {
+        currentUser.foto = resized;
+        localStorage.setItem('sanschat_profile_pic_' + currentUser.username, resized);
+        document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${resized}" />`;
+      } else {
+        document.getElementById('roomGroupAvatar').innerHTML = `<img src="${resized}" />`;
+      }
+      alert("Foto profil berhasil diperbarui!");
+    };
+    reader.readAsDataURL(file);
   }
 
   function callBackendApi(action, payloadObj) {
