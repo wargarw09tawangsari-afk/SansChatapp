@@ -1,156 +1,181 @@
+<!-- ============================================================================
+FILE: index.html (Gabungan untuk GitHub Pages / PWA SansChat)
+============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SansChat - Selamat Datang & Login</title>
-    <link rel="manifest" href="./manifest.json">
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #06b6d4;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: var(--card-bg);
-            border: 1px solid rgba(6, 182, 212, 0.2);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            border-radius: 16px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-        }
-        h1 {
-            color: var(--accent);
-            margin-bottom: 10px;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
-        }
-        p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-        }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            color: var(--text);
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
-        }
-        button {
-            background: var(--accent);
-            color: #0f172a;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: opacity 0.2s;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        .step {
-            display: none;
-        }
-        .step.active {
-            display: block;
-        }
-        .error-msg {
-            color: #f87171;
-            font-size: 0.85rem;
-            margin-top: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sc-SansChat - Selamat Datang</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00a884">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  body {
+    background-color: #050b10; color: #e9edef; padding: 8px; height: 100dvh;
+    display: flex; justify-content: center; align-items: center; overflow: hidden;
+  }
+  .welcome-container {
+    background: #0d1722; width: 100%; max-width: 480px; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 24px 20px; text-align: center; border-radius: 16px; overflow-y: auto;
+    border: 3px solid #00f2fe;
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.2);
+  }
+  .welcome-title {
+    font-size: 24px; font-weight: 900; color: #ffffff;
+    text-shadow: 0 0 12px #00f2fe; margin-bottom: 18px; letter-spacing: 2.5px;
+  }
+  .logo-sc-3d-large {
+    width: 88px; height: 88px; margin: 0 auto 12px auto;
+    background: linear-gradient(135deg, #00f2fe 0%, #005288 100%); border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 40px; color: #050b10;
+    box-shadow: 0 7px 0 #003355, 0 0 24px rgba(0, 242, 254, 0.85);
+    border: 2px solid #79dae8;
+  }
+  .brand-sub {
+    font-size: 18px; font-weight: 900; color: #00f2fe;
+    margin-bottom: 10px; letter-spacing: 1.5px; text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+  }
+  .welcome-email {
+    font-size: 12.5px; color: #cbd5e1; margin-bottom: 20px;
+    background: #071017; padding: 8px 16px; border-radius: 20px;
+    border: 1px solid #1c3b52; font-weight: 600;
+  }
+  .pwa-instruction-box {
+    background: rgba(0, 242, 254, 0.08); border: 1.5px dashed #00f2fe; border-radius: 12px;
+    padding: 13px 14px; margin-bottom: 20px; text-align: left; width: 100%; max-width: 340px;
+  }
+  .pwa-instruction-title {
+    font-size: 12px; font-weight: 900; color: #00f2fe; margin-bottom: 6px;
+    text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+  }
+  .pwa-instruction-steps { font-size: 11.5px; color: #cbd5e1; line-height: 1.45; padding-left: 18px; }
+  .pwa-instruction-steps li { margin-bottom: 4px; }
+  .pwa-status-badge {
+    display: inline-block; font-size: 11px; font-weight: 800; padding: 4px 10px;
+    border-radius: 12px; margin-bottom: 10px; width: 100%; text-align: center;
+  }
+  .badge-installed { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+  .badge-browser { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid #ef4444; }
+  .btn-install-native {
+    width: 100%; margin-top: 8px; padding: 9px; border-radius: 8px; border: none;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff; font-weight: 900; font-size: 12px; cursor: pointer;
+    box-shadow: 0 3px 0 #064e3b; text-transform: uppercase;
+  }
+  .btn-ok-robotic {
+    width: 100%; max-width: 280px;
+    background: linear-gradient(180deg, #00f2fe 0%, #008cb3 100%); color: #050b10;
+    border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 900;
+    cursor: pointer; letter-spacing: 3px; text-transform: uppercase;
+    box-shadow: 0 6px 0 #005d78, 0 0 15px rgba(0, 242, 254, 0.4);
+    transition: transform 0.1s;
+  }
+  .btn-ok-robotic:active { transform: translateY(4px); box-shadow: 0 2px 0 #005d78; }
+  .footer-tag {
+    margin-top: 22px; font-size: 11px; color: #64748b; letter-spacing: 2px; font-weight: 700;
+  }
+  .hidden { display: none !important; }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- STEP 1: SELAMAT DATANG -->
-        <div id="stepWelcome" class="step active">
-            <h1>Selamat Datang di SansChat</h1>
-            <p>Portal Komunitas RW 09 Cluster Sansivera & Sistem Layanan Terpadu.</p>
-            <button onclick="goToLogin()">Mulai Masuk</button>
-        </div>
+<div class="welcome-container">
+  <div class="welcome-title">SELAMAT DATANG</div>
+  <div class="logo-sc-3d-large">Sc</div>
+  <div class="brand-sub">Sc-SansChat</div>
+  <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
-        <!-- STEP 2: LOGIN -->
-        <div id="stepLogin" class="step">
-            <h1>Login Pengguna</h1>
-            <p>Masukkan nama atau ID warga Anda untuk melanjutkan.</p>
-            <div class="form-group">
-                <label for="loginName">Nama / ID Warga:</label>
-                <input type="text" id="loginName" placeholder="Contoh: Budi / Warga 037">
-            </div>
-            <button onclick="handleLogin()">Masuk ke Aplikasi</button>
-            <div id="loginError" class="error-msg"></div>
-        </div>
-    </div>
+  <!-- PANDUAN & STATUS INSTALASI PWA ANDROID -->
+  <div class="pwa-instruction-box">
+    <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
+    <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
+    <ol class="pwa-instruction-steps">
+      <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
+      <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
+      <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
+    </ol>
+    <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
+      📲 INSTAL APLIKASI SEKARANG
+    </button>
+  </div>
 
-    <script>
-        function goToLogin() {
-            document.getElementById('stepWelcome').classList.remove('active');
-            document.getElementById('stepLogin').classList.add('active');
-        }
+  <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
+  <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
+</div>
 
-        function handleLogin() {
-            const name = document.getElementById('loginName').value.trim();
-            const errorDiv = document.getElementById('loginError');
+<script>
+  let deferredInstallPrompt = null;
 
-            if (!name) {
-                errorDiv.textContent = 'Nama atau ID tidak boleh kosong!';
-                return;
-            }
+  // Registrasi Service Worker untuk dukungan PWA offline di GitHub Pages
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker terdaftar:', reg.scope))
+        .catch(err => console.error('Service Worker gagal:', err));
+    });
+  }
 
-            // Simpan sesi user di localStorage agar terbaca di utama.html
-            localStorage.setItem('sanschat_user', name);
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    document.getElementById('btnInstallPwaDirect').classList.remove('hidden');
+  });
 
-            // Redirect ke halaman utama.html
-            window.location.href = './utama.html';
-        }
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+    updatePwaBadgeStatus();
+  });
 
-        // Pendaftaran Service Worker PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker terdaftar:', reg.scope))
-                    .catch(err => console.error('Service Worker gagal:', err));
-            });
-        }
-    </script>
+  window.onload = function() {
+    updatePwaBadgeStatus();
+
+    // Cek apakah sudah dalam mode aplikasi terinstal (standalone) dan sesi aktif
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
+    if (isStandalone && savedSession && savedSession.username) {
+      window.location.href = './utama.html';
+    }
+  };
+
+  function updatePwaBadgeStatus() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const badge = document.getElementById('pwaStatusBadge');
+    if (isStandalone) {
+      badge.className = "pwa-status-badge badge-installed";
+      badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda";
+    } else {
+      badge.className = "pwa-status-badge badge-browser";
+      badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama";
+    }
+  }
+
+  function triggerNativePwaInstall() {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Pengguna menerima instalasi PWA');
+      }
+      deferredInstallPrompt = null;
+      document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+    });
+  }
+
+  function proceedToLogin() {
+    const btn = document.getElementById('btnOkWelcome');
+    btn.innerText = "MEMBUKA LOGIN...";
+    btn.disabled = true;
+    
+    // Mengarahkan ke halaman login statis di GitHub Pages
+    window.location.href = './login.html';
+  }
+</script>
 </body>
 </html>
