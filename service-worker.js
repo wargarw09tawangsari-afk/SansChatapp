@@ -2,6 +2,8 @@ const CACHE_NAME = 'sanschat-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './login.html',
+  './utama.html',
   './manifest.json',
   'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
 ];

@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sc-SansChat - Login</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00a884">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
   body { background-color: #050b10; color: #00f2fe; padding: 8px; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
@@ -55,7 +57,7 @@
 </head>
 <body>
 <div class="login-container">
-  <a id="btnHelpSystem" href="#" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
+  <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
   <div class="logo-sc-3d-large">Sc</div>
   <div class="login-title">SANSCHAT SYSTEM</div>
   <div class="login-subtitle">Otentikasi Warga RT/RW</div>
@@ -85,20 +87,30 @@
 </div>
 
 <script>
+  const DEFAULT_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+  const ACTIVE_S3_URL = localStorage.getItem('sanschat_s3_url') || DEFAULT_S3_URL;
+
+  function callBackendApi(action, payloadObj) {
+    return new Promise((resolve, reject) => {
+      fetch(ACTIVE_S3_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({ action: action }, payloadObj || {}))
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.status === 'ok') resolve(res.data);
+        else reject(new Error((res && res.message) || 'Gagal terhubung ke server'));
+      })
+      .catch(reject);
+    });
+  }
+
   window.onload = function() {
     const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
     if (savedUser) {
       document.getElementById('loginUsername').value = savedUser.toUpperCase();
     }
-
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run.withSuccessHandler((urlS1) => {
-        if (urlS1 && urlS1.startsWith('http')) {
-          document.getElementById('btnHelpSystem').href = urlS1;
-        }
-      }).getHelpSystemUrl();
-    }
-
     checkPWAInstallationStatus();
   };
 
@@ -148,31 +160,25 @@
     btn.innerText = "MEMVERIFIKASI...";
     btn.disabled = true;
 
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler((res) => {
-          if (res && res.success && res.user) {
-            btn.innerText = "MEMBUKA HALAMAN UTAMA...";
-            const cleanUsername = res.user.username;
-            localStorage.setItem('sanschat_active_username', cleanUsername);
-            localStorage.setItem('sanschat_user_session', JSON.stringify(res.user));
-            
-            let targetBase = res.redirectBaseUrl || window.location.href.split('?')[0];
-            targetBase = targetBase.split('?')[0];
-            window.top.location.href = targetBase + "?page=utama&user=" + encodeURIComponent(cleanUsername);
-          } else {
-            btn.innerText = "VERIFIKASI & MASUK";
-            btn.disabled = false;
-            alert((res && res.message) ? res.message : "Login gagal!");
-          }
-        })
-        .withFailureHandler((err) => {
+    callBackendApi('loginUser', { username: u, password: p })
+      .then((res) => {
+        if (res && res.success && res.user) {
+          btn.innerText = "MEMBUKA HALAMAN UTAMA...";
+          const cleanUsername = res.user.username;
+          localStorage.setItem('sanschat_active_username', cleanUsername);
+          localStorage.setItem('sanschat_user_session', JSON.stringify(res.user));
+          window.location.href = 'utama.html?user=' + encodeURIComponent(cleanUsername);
+        } else {
           btn.innerText = "VERIFIKASI & MASUK";
           btn.disabled = false;
-          alert("Koneksi bermasalah: " + err.message);
-        })
-        .loginUser(u, p);
-    }
+          alert((res && res.message) ? res.message : "Login gagal!");
+        }
+      })
+      .catch((err) => {
+        btn.innerText = "VERIFIKASI & MASUK";
+        btn.disabled = false;
+        alert("Koneksi bermasalah: " + err.message);
+      });
   }
 </script>
 </body>
