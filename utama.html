@@ -1,5 +1,5 @@
 <!-- ============================================================================
-FILE: utama.html (Disinkronkan untuk GitHub Pages & Apps Script Backend)
+FILE: utama.html (Disinkronkan Lengkap untuk GitHub Pages & Apps Script Backend)
 ============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
@@ -550,7 +550,7 @@ FILE: utama.html (Disinkronkan untuk GitHub Pages & Apps Script Backend)
       return storedObj;
     }
 
-    const freshSession = { username: resolvedUsername, nama: resolvedUsername, alamat: "Warga RW 09 Sansivera" };
+    const freshSession = { username: resolvedUsername, nama: resolvedUsername, alamat: "Warga RW 09 Cluster Sansivera" };
     try {
       localStorage.setItem('sanschat_active_username', resolvedUsername);
       localStorage.setItem('sanschat_user_session', JSON.stringify(freshSession));
@@ -645,17 +645,16 @@ FILE: utama.html (Disinkronkan untuk GitHub Pages & Apps Script Backend)
 
   function renderCachedDashboard() {
     document.getElementById('headerUserName').innerText = currentUser.nama || currentUser.username;
-    document.getElementById('headerUserAddress').innerText = currentUser.alamat || "Warga RW 09";
+    document.getElementById('headerUserAddress').innerText = currentUser.alamat || "Warga RW 09 Cluster Sansivera";
     if (currentUser.foto) {
       document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${currentUser.foto}" />`;
     }
 
-    // Default grup statis untuk GitHub Pages jika belum tersinkronisasi server
     const defaultGroups = [
-      { sheetName: "RT37", name: "Grup RT 37 Sansivera", foto: "", lastMessage: "Selamat datang di SansChat RT 37", lastTime: new Date().toISOString() },
-      { sheetName: "RT38", name: "Grup RT 38 Sansivera", foto: "", lastMessage: "Selamat datang di SansChat RT 38", lastTime: new Date().toISOString() },
-      { sheetName: "RT39", name: "Grup RT 39 Sansivera", foto: "", lastMessage: "Selamat datang di SansChat RT 39", lastTime: new Date().toISOString() },
-      { sheetName: "RW09", name: "Grup Resmi RW 09 Sansivera", foto: "", lastMessage: "Pengumuman dan koordinasi warga RW", lastTime: new Date().toISOString() }
+      { sheetName: "RT37", name: "Grup RT 37 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
+      { sheetName: "RT38", name: "Grup RT 38 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
+      { sheetName: "RT39", name: "Grup RT 39 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
+      { sheetName: "RW09", name: "Grup Resmi RW 09 Sansivera", foto: "", lastMessage: "Portal Warga Terpadu", lastTime: new Date().toISOString() }
     ];
 
     const cachedGroups = JSON.parse(localStorage.getItem('sanschat_groups_' + currentUser.username) || 'null') || defaultGroups;
@@ -673,7 +672,6 @@ FILE: utama.html (Disinkronkan untuk GitHub Pages & Apps Script Backend)
         applyDashboardBundle(bundle);
       }).getInitialDashboardBundle(currentUser.username);
     } else {
-      // Fallback aman untuk GitHub Pages murni
       const defaultGroups = [
         { sheetName: "RT37", name: "Grup RT 37 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
         { sheetName: "RT38", name: "Grup RT 38 Sansivera", foto: "", lastMessage: "Sinkronisasi Web App Aktif", lastTime: new Date().toISOString() },
@@ -1114,7 +1112,6 @@ FILE: utama.html (Disinkronkan untuk GitHub Pages & Apps Script Backend)
         }).getMessages(activeChatSheet, currentUser.username);
       }
     } else {
-      // Data dummy fallback untuk GitHub Pages statis
       const sampleMsgs = [
         { senderUsername: "ADMINPUSAT", senderNama: "ADMINPUSAT", pesan: "Halo warga, selamat datang di SansChat RW 09!", timestamp: new Date().toISOString(), readCount: 2 }
       ];
@@ -1231,7 +1228,6 @@ FILE: utama.html (Disinkronkan untuk GitHub Pages & Apps Script Backend)
           .sendMessage(activeChatSheet, currentUser.username, currentUser.nama, pesanText, tipe, mediaUrl, replyPayload);
       }
     } else {
-      // Simulasi lokal responsif jika di GitHub Pages murni
       const existing = JSON.parse(localStorage.getItem('sanschat_msgs_' + activeChatSheet) || '[]');
       existing.push({
         senderUsername: currentUser.username,
