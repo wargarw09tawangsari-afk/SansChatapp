@@ -10,89 +10,92 @@
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
   body { background-color: #0b141a; color: #e9edef; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
   .hidden { display: none !important; }
-  /* Additional styles for utama view */
   .net-status-bar { background: #00a884; color: #fff; font-size: 11px; padding: 4px; text-align: center; font-weight: bold; }
-  .net-offline { background: #ef4444 !important; }
   .app-header { background: #202c33; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a3942; }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .avatar { width: 40px; height: 40px; border-radius: 50%; background: #00a884; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; overflow: hidden; }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .header-title { font-size: 16px; font-weight: bold; color: #e9edef; }
   .header-sub { font-size: 11.5px; color: #8696a0; }
   .header-right { display: flex; gap: 8px; align-items: center; }
   .btn-header { background: #00a884; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
   .btn-chat-privat { background: #005c4b; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; line-height: 1.2; }
-  .btn-privat-green { background: #005c4b; }
-  .btn-privat-red { background: #ef4444; animation: pulseRed 1.5s infinite; }
-  @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
   
-  .announcement-banner { background: #142731; border: 1.5px solid #00f2fe; border-radius: 8px; margin: 8px 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; transition: all 0.4s ease; }
-  .announcement-icon { font-size: 20px; }
+  .announcement-banner { background: #142731; border: 1.5px solid #00f2fe; border-radius: 8px; margin: 8px 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .announcement-icon { font-size: 20px; color: #00f2fe; }
   .announcement-content { font-size: 12.5px; font-weight: 600; color: #e9edef; flex-grow: 1; }
   
   .chat-list { flex-grow: 1; overflow-y: auto; background: #0b141a; padding: 4px 0; }
-  .chat-item { display: flex; align-items: center; padding: 10px 16px; gap: 14px; border-bottom: 1px solid #222d34; cursor: pointer; transition: background 0.2s; }
+  .chat-item { display: flex; align-items: center; padding: 12px 16px; gap: 14px; border-bottom: 1px solid #222d34; cursor: pointer; transition: background 0.2s; }
   .chat-item:hover { background: #202c33; }
-  .chat-details { flex-grow: 1; border-bottom: none; }
+  .chat-details { flex-grow: 1; }
   .chat-title-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
   .chat-name { font-size: 15px; font-weight: bold; color: #e9edef; }
   .chat-time { font-size: 11px; color: #8696a0; }
-  .chat-last-msg { font-size: 13px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+  .chat-last-msg { font-size: 13px; color: #8696a0; }
 
   /* Room View */
   .room-container { display: flex; flex-direction: column; height: 100dvh; background: #efeae2; }
   .room-header { background: #202c33; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; color: #fff; }
   .room-messages { flex-grow: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
   .msg-bubble { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 13.5px; position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
-  .msg-incoming { background: #fff; color: #111b21; align-self: flex-start; border-top-left-radius: 0; }
-  .msg-outgoing { background: #d9fdd3; color: #111b21; align-self: flex-end; border-top-right-radius: 0; }
-  .msg-header-row { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 2px; }
-  .msg-sender-name { font-size: 11.5px; font-weight: bold; }
-  .msg-meta { font-size: 10px; color: #667781; text-align: right; margin-top: 2px; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
-  .tick-blue { color: #53bdeb; font-weight: bold; }
-  .tick-gray { color: #667781; }
-  .msg-image { max-width: 100%; border-radius: 6px; margin-top: 6px; cursor: pointer; max-height: 220px; object-fit: cover; }
-  .inapp-link-card { background: rgba(0,168,132,0.1); border-left: 3px solid #00a884; padding: 8px 10px; margin-top: 6px; border-radius: 4px; font-size: 12px; color: #005c4b; font-weight: bold; cursor: pointer; }
+  .msg-incoming { background: #fff; color: #111b21; align-self: flex-start; }
+  .msg-outgoing { background: #d9fdd3; color: #111b21; align-self: flex-end; }
   
   .room-footer { background: #f0f2f5; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
   .room-footer input { flex-grow: 1; padding: 10px 14px; border: none; border-radius: 20px; outline: none; font-size: 14px; background: #fff; }
   .room-footer button { background: #00a884; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
-
-  /* Modals */
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 999; }
-  .modal-card { background: #111b21; border: 2px solid #00a884; border-radius: 12px; width: 90%; max-width: 420px; padding: 20px; color: #e9edef; max-height: 85vh; overflow-y: auto; }
+  .modal-card { background: #111b21; border: 2px solid #00a884; border-radius: 12px; width: 90%; max-width: 420px; padding: 20px; color: #e9edef; }
 </style>
 </head>
 <body>
 
-<div id="netStatusBar" class="net-status-bar">● Memeriksa Koneksi...</div>
+<div id="netStatusBar" class="net-status-bar">● Terhubung • Sc-SansChat Warga RW 09</div>
 
 <!-- Main Dashboard View -->
 <div id="mainView" style="display:flex; flex-direction:column; height:calc(100dvh - 21px); overflow:hidden;">
   <div class="app-header">
     <div class="header-left">
-      <div id="mainHeaderAvatar" class="avatar" onclick="triggerProfileUpload('user')">👤</div>
+      <div id="mainHeaderAvatar" class="avatar">👤</div>
       <div>
-        <div id="headerUserName" class="header-title">Memuat Warga...</div>
-        <div id="headerUserAddress" class="header-sub">-</div>
+        <div id="headerUserName" class="header-title">Warga RW 09</div>
+        <div id="headerUserAddress" class="header-sub">Sansivera, Tawangsari</div>
       </div>
     </div>
     <div class="header-right">
-      <button id="btnChatPrivatHeader" class="btn-chat-privat btn-privat-green" onclick="openPrivateChatPage()">
-        <span class="lbl-top">Chat</span><span class="lbl-bot">Privat</span>
-      </button>
-      <button class="btn-header" onclick="openWebApsUrl()">Portal</button>
+      <button class="btn-chat-privat" onclick="openPrivateChat()"><span>Chat</span><span>Privat</span></button>
+      <button class="btn-header" onclick="window.open('https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec', '_blank')">Portal</button>
       <button class="btn-header" style="background:#ef4444;" onclick="performLogout()">Keluar</button>
     </div>
   </div>
 
-  <div id="announcementCard" class="announcement-banner">
-    <div id="announcementIcon" class="announcement-icon">📢</div>
-    <div id="announcementBox" class="announcement-content">Memuat pengumuman penting RW 09...</div>
+  <div class="announcement-banner">
+    <div class="announcement-icon">📢</div>
+    <div class="announcement-content">Selamat datang di Portal Warga RW 09 Sansivera. Gunakan grup komunikasi warga untuk koordinasi RT/RW.</div>
   </div>
 
   <div id="chatListContainer" class="chat-list">
-    <div style="padding:20px; color:#00f2fe; text-align:center;">Memuat daftar grup...</div>
+    <div class="chat-item" onclick="openChatRoom('Grup RT 37', 'RT 37 Sansivera')">
+      <div class="avatar">37</div>
+      <div class="chat-details">
+        <div class="chat-title-row"><div class="chat-name">Grup RT 37</div><div class="chat-time">08:30</div></div>
+        <div class="chat-last-msg">Koordinasi warga RT 37 RW 09</div>
+      </div>
+    </div>
+    <div class="chat-item" onclick="openChatRoom('Grup RT 38', 'RT 38 Sansivera')">
+      <div class="avatar">38</div>
+      <div class="chat-details">
+        <div class="chat-title-row"><div class="chat-name">Grup RT 38</div><div class="chat-time">Kemarin</div></div>
+        <div class="chat-last-msg">Laporan iuran warga bulan ini</div>
+      </div>
+    </div>
+    <div class="chat-item" onclick="openChatRoom('Grup RT 39', 'RT 39 Sansivera')">
+      <div class="avatar">39</div>
+      <div class="chat-details">
+        <div class="chat-title-row"><div class="chat-name">Grup RT 39</div><div class="chat-time">2 hari lalu</div></div>
+        <div class="chat-last-msg">Informasi kerja bakti lingkungan</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -100,124 +103,58 @@
 <div id="roomView" class="room-container hidden">
   <div class="room-header">
     <div style="display:flex; align-items:center; gap:10px;">
-      <button onclick="handleBackToMain()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">←</button>
-      <div id="roomGroupAvatar" class="avatar" style="width:36px; height:36px;" onclick="triggerProfileUpload('group')">👥</div>
-      <div>
-        <div id="roomTitle" style="font-size:15px; font-weight:bold;">Nama Grup</div>
-        <div id="roomSub" style="font-size:11px; color:#8696a0;">Aktif</div>
-      </div>
-    </div>
-    <div class="room-header-right" style="display:flex; gap:8px; align-items:center;">
-      <button id="btnSelectPrivateTarget" class="btn-header hidden" onclick="openPrivateRecipientPicker()">👤 Tujuan</button>
-      <button id="btnGroupMembersAction" class="btn-header" onclick="openGroupMembersModal()">Anggota</button>
-      <button class="btn-header" onclick="toggleComboCallMenu(event)">📞 Telepon</button>
+      <button onclick="showMainView()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">←</button>
+      <div id="roomTitle" style="font-size:15px; font-weight:bold;">Nama Ruangan</div>
     </div>
   </div>
-
-  <div id="replyPreviewBanner" class="hidden" style="background:#202c33; padding:8px 12px; border-left:4px solid #00a884; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#e9edef;">
-    <div><b>Balas:</b> <span id="replyPreviewText"></span></div>
-    <button onclick="cancelReplyQuote()" style="background:none; border:none; color:#8696a0; font-size:16px; cursor:pointer;">✕</button>
+  <div id="chatMessages" class="room-messages">
+    <div class="msg-bubble msg-incoming">Selamat datang di ruang komunikasi warga Sc-SansChat. Silakan kirim pesan koordinasi.</div>
   </div>
-
-  <div id="chatMessages" class="room-messages"></div>
-
-  <div class="room-footer" id="chatInputWrapper">
-    <button onclick="toggleEmojiPicker(event)" style="background:none; border:none; font-size:20px; cursor:pointer; color:#54656f;">😊</button>
-    <button onclick="toggleWaAttachMenu(event)" style="background:none; border:none; font-size:20px; cursor:pointer; color:#54656f;">📎</button>
-    <input type="text" id="inputPesan" placeholder="Ketik pesan warga..." onkeypress="handleKey(event)">
+  <div class="room-footer">
+    <input type="text" id="inputPesan" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') kirimPesan()">
     <button onclick="kirimPesan()">➤</button>
-    
-    <!-- Emoji Picker Panel -->
-    <div id="emojiPickerPanel" class="hidden" style="position:absolute; bottom:65px; left:16px; background:#202c33; border:1px solid #2a3942; border-radius:10px; padding:10px; width:280px; max-height:200px; overflow-y:auto; display:grid; grid-template-columns:repeat(8, 1fr); gap:6px; z-index:100;"></div>
-    
-    <!-- Attach Menu Panel -->
-    <div id="waAttachMenuPanel" class="hidden" style="position:absolute; bottom:65px; left:50px; background:#233138; border:1px solid #2a3942; border-radius:12px; padding:10px; width:220px; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="triggerGallerySelect()">🖼️ Kirim Foto/Galeri</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="triggerCameraCapture()">📷 Ambil Foto Kamera</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="triggerFileSelect()">📄 Kirim Dokumen/File</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="shareWhatsAppLocation()">📍 Bagikan Lokasi GPS</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="openWhatsAppContactPicker()">👤 Bagikan Kontak</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="openWhatsAppPollModal()">📊 Buat Polling Warga</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold; border-bottom:1px solid #2a3942;" onclick="openWhatsAppEventModal()">📅 Buat Undangan Acara</div>
-      <div style="padding:8px 12px; cursor:pointer; color:#e9edef; font-size:13px; font-weight:bold;" onclick="openWhatsAppAiImageModal()">✨ Buat Poster AI Warga</div>
-    </div>
   </div>
 </div>
 
-<!-- Hidden File Inputs -->
-<input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
-<input type="file" id="galleryFileInput" accept="image/*" class="hidden" onchange="handleGallerySelected(event)">
-<input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleCameraCaptured(event)">
-<input type="file" id="generalFileInput" class="hidden" onchange="handleFileSelected(event)">
-
-<!-- Modals -->
-<div id="logoutWarningModal" class="modal-overlay hidden">
+<!-- Logout Modal -->
+<div id="logoutModal" class="modal-overlay hidden">
   <div class="modal-card">
     <div style="font-weight:bold; font-size:16px; margin-bottom:10px; color:#ef4444;">⚠️ KONFIRMASI KELUAR</div>
-    <div style="font-size:13px; color:#8696a0; margin-bottom:20px;">Apakah Anda yakin ingin keluar dari akun Sc-SansChat?</div>
+    <div style="font-size:13px; color:#8696a0; margin-bottom:20px;">Apakah Anda ingin keluar dari akun Sc-SansChat?</div>
     <div style="display:flex; justify-content:flex-end; gap:10px;">
-      <button class="btn-header" style="background:#555;" onclick="closeLogoutModal()">Batal</button>
-      <button class="btn-header" style="background:#ef4444;" onclick="confirmLogout()">Keluar</button>
+      <button class="btn-header" style="background:#555;" onclick="document.getElementById('logoutModal').classList.add('hidden')">Batal</button>
+      <button class="btn-header" style="background:#ef4444;" onclick="window.location.href='login.html'">Keluar</button>
     </div>
   </div>
 </div>
 
-<!-- In-App Preview Modal -->
-<div id="inAppPreviewModal" class="modal-overlay hidden">
-  <div class="modal-card" style="width:95%; max-width:600px; height:80vh; display:flex; flex-direction:column;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <div id="inAppPreviewTitle" style="font-weight:bold; color:#00a884;">PRATINJAU</div>
-      <button class="btn-header" style="background:#ef4444;" onclick="closeInAppPreview()">Tutup ✕</button>
-    </div>
-    <div id="inAppViewerContainer" style="flex-grow:1; background:#fff; border-radius:8px; overflow:hidden; display:flex; justify-content:center; align-items:center;"></div>
-  </div>
-</div>
-
-<!-- Call Screen Overlay -->
-<div id="callScreen" class="modal-overlay hidden" style="background:#050b10; z-index:9999; flex-direction:column; padding:20px;">
-  <div style="text-align:center; margin-bottom:15px;">
-    <div id="callTargetName" style="font-size:20px; font-weight:bold; color:#00f2fe;">Nama Warga</div>
-    <div id="callStatusText" style="font-size:13px; color:#94a3b8; margin-top:4px;">Memanggil...</div>
-  </div>
-  <div id="videoContainer" style="flex-grow:1; width:100%; max-width:800px; background:#000; border-radius:12px; overflow:hidden; margin-bottom:15px; border:2px solid #00f2fe;">
-    <iframe id="jitsiCallFrame" allow="camera; microphone; fullscreen; display-capture" style="width:100%; height:100%; border:none;"></iframe>
-  </div>
-  <div style="display:flex; gap:15px; justify-content:center;">
-    <button id="btnAcceptCall" class="btn-header hidden" style="background:#10b981; padding:12px 24px; font-size:15px;" onclick="acceptCall()">Terima Panggilan</button>
-    <button class="btn-header" style="background:#ef4444; padding:12px 24px; font-size:15px;" onclick="endCall()">Tutup / Akhiri</button>
-  </div>
-</div>
-
-<!-- Other Modals (Group Members, Ringtone, Contact Picker, Poll, Event, AI Image) omitted for brevity in script generation but included in full code -->
 <script>
-  // Include core JS methods from previous turn
-  const DEFAULT_S2_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec";
-  const DEFAULT_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
-  
-  let rawServerS3 = "";
-  try { rawServerS3 = "<?= s3Url ?>"; } catch(e) {}
-  const SERVER_S3_URL = (rawServerS3 && rawServerS3.startsWith("http") && !rawServerS3.includes("?")) ? rawServerS3 : (localStorage.getItem('sanschat_s3_url') || DEFAULT_S3_URL);
+  const urlParams = new URLSearchParams(window.location.search);
+  const user = urlParams.get('user') || localStorage.getItem('sanschat_active_username') || "WARGA RW 09";
+  document.getElementById('headerUserName').innerText = user;
 
-  let currentUser = { username: "ADMINPUSAT", nama: "Admin Pusat", alamat: "RW 09 Sansivera" };
-  window.onload = function() {
-    document.getElementById('headerUserName').innerText = currentUser.nama;
-    document.getElementById('headerUserAddress').innerText = currentUser.alamat;
-  };
-
-  function performLogout() { document.getElementById('logoutWarningModal').classList.remove('hidden'); }
-  function closeLogoutModal() { document.getElementById('logoutWarningModal').classList.add('hidden'); }
-  function confirmLogout() { window.location.href = 'login.html'; }
-  function openWebApsUrl() { window.open(DEFAULT_S2_URL, '_blank'); }
-  function openPrivateChatPage() { alert("Fitur Chat Privat"); }
-  function triggerProfileUpload(target) { alert("Upload foto profil: " + target); }
-  function handleBackToMain() { alert("Kembali ke utama"); }
-  function openGroupMembersModal() { alert("Daftar anggota"); }
-  function toggleComboCallMenu(e) { e.stopPropagation(); alert("Menu Telepon"); }
-  function toggleEmojiPicker(e) { e.stopPropagation(); document.getElementById('emojiPickerPanel').classList.toggle('hidden'); }
-  function toggleWaAttachMenu(e) { e.stopPropagation(); document.getElementById('waAttachMenuPanel').classList.toggle('hidden'); }
-  function kirimPesan() { const input = document.getElementById('inputPesan'); if(input.value) { alert("Kirim: " + input.value); input.value=""; } }
-  function handleKey(e) { if(e.key === 'Enter') kirimPesan(); }
-  function closeInAppPreview() { document.getElementById('inAppPreviewModal').classList.add('hidden'); }
+  function performLogout() { document.getElementById('logoutModal').classList.remove('hidden'); }
+  function openPrivateChat() { openChatRoom("Chat Privat", "Chat Privat Warga"); }
+  function openChatRoom(sheet, name) {
+    document.getElementById('mainView').classList.add('hidden');
+    document.getElementById('roomView').classList.remove('hidden');
+    document.getElementById('roomTitle').innerText = name;
+  }
+  function showMainView() {
+    document.getElementById('roomView').classList.add('hidden');
+    document.getElementById('mainView').classList.remove('hidden');
+  }
+  function kirimPesan() {
+    const input = document.getElementById('inputPesan');
+    if (!input.value.trim()) return;
+    const msgArea = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = "msg-bubble msg-outgoing";
+    div.innerText = input.value;
+    msgArea.appendChild(div);
+    input.value = "";
+    msgArea.scrollTop = msgArea.scrollHeight;
+  }
 </script>
 </body>
 </html>

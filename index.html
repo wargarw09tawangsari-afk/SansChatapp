@@ -107,7 +107,6 @@
 
 <script>
   let deferredInstallPrompt = null;
-  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
@@ -127,12 +126,10 @@
 
   window.onload = function() {
     updatePwaBadgeStatus();
-    prefetchSansChatUrlFromS3();
-
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
-      navigateToPage('utama');
+      window.location.href = 'utama.html';
     }
   };
 
@@ -157,50 +154,8 @@
     });
   }
 
-  function prefetchSansChatUrlFromS3() {
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run.withSuccessHandler((urlS3) => {
-        if (urlS3 && urlS3.startsWith('http')) {
-          cachedSansChatUrl = urlS3;
-          localStorage.setItem('sanschat_s3_url', urlS3);
-        }
-      }).getSansChatUrl();
-    } else if (cachedSansChatUrl && cachedSansChatUrl.startsWith('http')) {
-      fetch(cachedSansChatUrl + '?action=getConfig')
-        .then(r => r.json())
-        .then(res => {
-          if (res && res.success && res.config && res.config.sansChatUrl) {
-            cachedSansChatUrl = res.config.sansChatUrl;
-            localStorage.setItem('sanschat_s3_url', cachedSansCodeUrl);
-          }
-        }).catch(() => {});
-    }
-  }
-
-  function navigateToPage(pageName) {
-    if (pageName === 'login') {
-      window.location.href = 'login.html';
-      return;
-    }
-    if (pageName === 'utama') {
-      window.location.href = 'utama.html';
-      return;
-    }
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run.withSuccessHandler((urlS3) => {
-        const baseUrl = (urlS3 && urlS3.startsWith('http')) ? urlS3 : window.location.href.split('?')[0];
-        window.location.href = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
-      }).getSansChatUrl();
-    } else {
-      window.location.href = pageName + '.html';
-    }
-  }
-
   function proceedToLogin() {
-    const btn = document.getElementById('btnOkWelcome');
-    btn.innerText = "MEMBUKA LOGIN...";
-    btn.disabled = true;
-    navigateToPage('login');
+    window.location.href = 'login.html';
   }
 </script>
 </body>
