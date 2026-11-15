@@ -1,5 +1,7 @@
 <!-- ============================================================================
-FILE: index.html (Gabungan untuk GitHub Pages / PWA SansChat)
+FILE: index.html
+DESKRIPSI: Halaman Pertama (Selamat Datang + Logo Sc-SansChat + Email + Tombol OK
+           + Pengaturan Paksa Instal PWA Android + Sinkronisasi URL Users!S3)
 ============================================================================ -->
 <!DOCTYPE html>
 <html lang="id">
@@ -91,7 +93,6 @@ FILE: index.html (Gabungan untuk GitHub Pages / PWA SansChat)
   <div class="brand-sub">Sc-SansChat</div>
   <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
-  <!-- PANDUAN & STATUS INSTALASI PWA ANDROID -->
   <div class="pwa-instruction-box">
     <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
     <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
@@ -111,14 +112,10 @@ FILE: index.html (Gabungan untuk GitHub Pages / PWA SansChat)
 
 <script>
   let deferredInstallPrompt = null;
+  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || "";
 
-  // Registrasi Service Worker untuk dukungan PWA offline di GitHub Pages
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(reg => console.log('Service Worker terdaftar:', reg.scope))
-        .catch(err => console.error('Service Worker gagal:', err));
-    });
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -135,12 +132,12 @@ FILE: index.html (Gabungan untuk GitHub Pages / PWA SansChat)
 
   window.onload = function() {
     updatePwaBadgeStatus();
+    prefetchSansChatUrlFromS3();
 
-    // Cek apakah sudah dalam mode aplikasi terinstal (standalone) dan sesi aktif
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
-      window.location.href = './utama.html';
+      navigateToPage('utama');
     }
   };
 
@@ -159,22 +156,43 @@ FILE: index.html (Gabungan untuk GitHub Pages / PWA SansChat)
   function triggerNativePwaInstall() {
     if (!deferredInstallPrompt) return;
     deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('Pengguna menerima instalasi PWA');
-      }
+    deferredInstallPrompt.userChoice.then(() => {
       deferredInstallPrompt = null;
       document.getElementById('btnInstallPwaDirect').classList.add('hidden');
     });
+  }
+
+  function prefetchSansChatUrlFromS3() {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler((urlS3) => {
+        if (urlS3 && urlS3.startsWith('http')) {
+          cachedSansChatUrl = urlS3;
+          localStorage.setItem('sanschat_s3_url', urlS3);
+        }
+      }).getSansChatUrl();
+    }
+  }
+
+  function navigateToPage(pageName) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler((urlS3) => {
+        const baseUrl = (urlS3 && urlS3.startsWith('http')) ? urlS3 : window.location.href.split('?')[0];
+        window.location.href = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
+      }).getSansChatUrl();
+    } else {
+      if (cachedSansChatUrl && cachedSansChatUrl.startsWith('http')) {
+        window.location.href = cachedSansChatUrl + (cachedSansChatUrl.includes('?') ? '&' : '?') + 'page=' + pageName;
+      } else {
+        window.location.href = pageName + '.html';
+      }
+    }
   }
 
   function proceedToLogin() {
     const btn = document.getElementById('btnOkWelcome');
     btn.innerText = "MEMBUKA LOGIN...";
     btn.disabled = true;
-    
-    // Mengarahkan ke halaman login statis di GitHub Pages
-    window.location.href = './login.html';
+    navigateToPage('login');
   }
 </script>
 </body>
