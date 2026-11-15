@@ -516,8 +516,9 @@
 </div>
 
 <script>
-  const SERVER_INITIAL_USER = "<?= initialUsername ?>";
-  const SERVER_S3_URL = "<?= s3Url ?>";
+  const SERVER_INITIAL_USER = "";
+  const SERVER_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+  const PORTAL_S2_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXj/exec";
 
   function resolveSavedUserSession() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -629,9 +630,7 @@
   }
 
   function redirectToIndexWelcome() {
-    const base = (SERVER_S3_URL && SERVER_S3_URL.startsWith('http'))
-      ? SERVER_S3_URL.split('?')[0]
-      : window.location.href.split('?')[0];
+    const base = SERVER_S3_URL.split('?')[0];
     try {
       window.top.location.href = base + "?page=login";
     } catch (e) {
@@ -763,18 +762,18 @@
   }
 
   function openWebApsUrl() {
-    if (currentUser.webAppsUrl && currentUser.webAppsUrl.startsWith("http")) {
-      window.open(currentUser.webAppsUrl, "_blank");
+    const webUrl = currentUser.webAppsUrl || PORTAL_S2_URL;
+    if (webUrl && webUrl.startsWith("http")) {
+      window.open(webUrl, "_blank");
     } else if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run.withSuccessHandler((urlS2) => {
-        if (urlS2 && urlS2.startsWith("http")) {
-          currentUser.webAppsUrl = urlS2;
-          localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
-          window.open(urlS2, "_blank");
-        } else {
-          alert("URL Portal Web pada sheet Users kolom S2 belum diisi.");
-        }
+        const finalS2 = (urlS2 && urlS2.startsWith("http")) ? urlS2 : PORTAL_S2_URL;
+        currentUser.webAppsUrl = finalS2;
+        localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
+        window.open(finalS2, "_blank");
       }).getWebAppsUrl();
+    } else {
+      window.open(PORTAL_S2_URL, "_blank");
     }
   }
 
