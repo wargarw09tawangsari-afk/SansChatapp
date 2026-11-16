@@ -2,81 +2,227 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Sc-SansChat - Utama</title>
-<meta name="theme-color" content="#00a884">
+<meta name="theme-color" content="#111b21">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  body { background-color: #0b141a; color: #e9edef; padding: 6px; height: 100dvh; display: flex; justify-content: center; align-items: center; }
-
-  .app-container {
-    background: #111b21; border-radius: 12px; width: 100%; max-width: 480px; height: 100%;
-    display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid #222d34;
+  /* =========================================================
+     STANDAR LAYOUT & MARGIN WHATSAPP ANDROID (EDGE-TO-EDGE)
+     ========================================================= */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    width: 100%;
+    height: 100dvh;
+    background-color: #0b141a;
+    color: #e9edef;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   }
 
-  .main-header { background: #111b21; padding: 10px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2c34; gap: 4px; }
-  .header-left-section { display: flex; align-items: center; gap: 5px; min-width: 0; flex: 1; }
-  .header-right-section { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  /* Fullscreen di HP Android tanpa margin luar, max-width 480px di desktop */
+  .app-container {
+    background: #111b21;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    border-left: 1px solid #222d34;
+    border-right: 1px solid #222d34;
+  }
+  @media (max-width: 480px) {
+    .app-container {
+      border: none;
+    }
+  }
+
+  /* =========================================================
+     HEADER UTAMA (BERANDA WHATSAPP STYLE - TINGGI 58px)
+     ========================================================= */
+  .main-header {
+    background: #111b21;
+    min-height: 58px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2c34;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .header-left-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+  .header-right-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
 
   .profile-avatar-clickable {
-    width: 36px; height: 36px; border-radius: 50%; background: #2a3942; border: 2px solid #00f2fe;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; overflow: hidden;
-    box-shadow: 0 0 8px rgba(0, 242, 254, 0.4); flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #2a3942;
+    border: 1.5px solid #00a884;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
   }
-  .profile-avatar-clickable img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-avatar-clickable img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   .brand-frame-3d {
-    background: linear-gradient(135deg, #071520 0%, #0d2333 100%);
-    border: 1.5px solid #00f2fe; border-radius: 8px; padding: 2px 5px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5); line-height: 1.1; flex-shrink: 0;
+    background: #182229;
+    border: 1px solid #00a884;
+    border-radius: 8px;
+    padding: 3px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.05;
+    flex-shrink: 0;
   }
-  .brand-line-top { font-size: 10px; font-weight: 900; color: #00f2fe; letter-spacing: 1px; }
-  .brand-line-bottom { font-size: 8px; font-weight: 700; color: #ffffff; }
+  .brand-line-top { font-size: 11px; font-weight: 900; color: #00a884; letter-spacing: 0.5px; }
+  .brand-line-bottom { font-size: 8.5px; font-weight: 700; color: #e9edef; }
 
   .user-info-frame {
-    background: #182229; border: 1px solid #2a3942; border-radius: 6px; padding: 3px 6px;
-    display: flex; flex-direction: column; justify-content: center; min-width: 0; flex: 1;
+    background: transparent;
+    padding: 0 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    flex: 1;
   }
-  .user-info-name { font-size: 10px; font-weight: bold; color: #00f2fe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .user-info-address { font-size: 8px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-info-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e9edef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .user-info-address {
+    font-size: 10.5px;
+    color: #8696a0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   .btn-webaps {
-    background: linear-gradient(135deg, #fde047 0%, #fb923c 100%);
-    color: #111827; border: 1px solid #fef08a; padding: 5px 7px; border-radius: 14px;
-    font-weight: 900; font-size: 9.5px; cursor: pointer; white-space: nowrap;
+    background: #202c33;
+    color: #00a884;
+    border: 1px solid #00a884;
+    padding: 6px 9px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 10.5px;
+    cursor: pointer;
+    white-space: nowrap;
   }
 
   .btn-chat-privat {
-    border: none; padding: 3px 8px; border-radius: 14px; font-weight: 800;
-    cursor: pointer; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     line-height: 1.05;
   }
-  .btn-chat-privat .lbl-top { font-size: 9px; display: block; }
-  .btn-chat-privat .lbl-bot { font-size: 9px; display: block; }
-  .btn-privat-green { background: linear-gradient(135deg, #00a884 0%, #005c4b 100%); }
-  .btn-privat-red { background: linear-gradient(135deg, #ea4335 0%, #b31412 100%); animation: pulseRed 1.5s infinite; }
-  @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+  .btn-chat-privat .lbl-top { font-size: 9.5px; display: block; }
+  .btn-chat-privat .lbl-bot { font-size: 9.5px; display: block; }
+  .btn-privat-green { background: #00a884; color: #111b21; }
+  .btn-privat-red { background: #ea4335; color: #ffffff; animation: pulseRed 1.5s infinite; }
+  @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.72; } 100% { opacity: 1; } }
 
   .btn-logout {
-    background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
-    color: #ffffff; border: none; padding: 5px 8px; border-radius: 14px; font-weight: bold;
-    font-size: 9.5px; cursor: pointer; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    background: #202c33;
+    color: #f87171;
+    border: 1px solid #374151;
+    padding: 6px 9px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 10.5px;
+    cursor: pointer;
+    white-space: nowrap;
   }
 
   .btn-grup-plus {
-    background: linear-gradient(135deg, #00f2fe 0%, #007799 100%);
-    color: #050b10; border: none; padding: 6px 11px; border-radius: 20px; font-weight: bold;
-    font-size: 11.5px; cursor: pointer; box-shadow: 0 3px 0 #004455, 0 0 8px rgba(0, 242, 254, 0.4);
-    letter-spacing: 0.4px; white-space: nowrap;
+    background: #00a884;
+    color: #111b21;
+    border: none;
+    padding: 6px 11px;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 11.5px;
+    cursor: pointer;
+    white-space: nowrap;
   }
 
-  .announcement-perspective { perspective: 900px; margin: 8px 10px; }
+  /* =========================================================
+     BAR STATUS & PENGUMUMAN (MARGIN PRESISI WHATSAPP)
+     ========================================================= */
+  .net-status-bar {
+    font-size: 11px;
+    text-align: center;
+    padding: 4px 12px;
+    font-weight: 600;
+    background: #0d171d;
+    color: #00a884;
+    border-bottom: 1px solid #1f2c34;
+    flex-shrink: 0;
+  }
+  .net-offline { background: #450a0a; color: #fca5a5; }
+
+  .announcement-perspective {
+    perspective: 900px;
+    margin: 8px 12px 4px 12px;
+    flex-shrink: 0;
+  }
   .announcement-bar {
-    background: #182229; border: 1.5px solid #00f2fe; padding: 9px 12px;
-    border-radius: 10px; font-size: 12.5px; color: #e9edef; display: flex; align-items: flex-start; gap: 8px;
-    box-shadow: inset 0 0 10px rgba(0,242,254,0.12); min-height: 44px;
-    transform-origin: top center; backface-visibility: hidden;
+    background: #182229;
+    border: 1px solid #2a3942;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    color: #e9edef;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 44px;
+    transform-origin: top center;
+    backface-visibility: hidden;
     transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
   }
   .fold-up-out { animation: foldUpOut 0.42s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
@@ -84,190 +230,755 @@
   @keyframes foldUpOut { 0% { transform: rotateX(0deg); opacity: 1; } 100% { transform: rotateX(90deg); opacity: 0; } }
   @keyframes foldUpIn { 0% { transform: rotateX(-90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
   .announcement-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 500; line-height: 1.35; }
+  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 500; line-height: 1.38; }
 
-  .net-status-bar {
-    font-size: 10.5px; text-align: center; padding: 3px 8px; font-weight: 700;
-    background: #0d1722; color: #34d399; border-bottom: 1px solid #1f2c34;
+  /* =========================================================
+     DAFTAR CHAT / GRUP (STANDAR WHATSAPP ANDROID: PADDING 12px 16px, AVATAR 50px)
+     ========================================================= */
+  .chat-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overscroll-behavior-y: contain;
   }
-  .net-offline { background: #450a0a; color: #fca5a5; }
-
-  .chat-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-  .chat-item { display: flex; padding: 12px; border-bottom: 1px solid #1f2c34; align-items: center; cursor: pointer; transition: background 0.15s; }
-  .chat-item:hover { background: #202c33; }
-  .avatar { width: 48px; height: 48px; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; overflow: hidden; flex-shrink: 0; border: 1.5px solid #00a884; }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .chat-details { flex: 1; overflow: hidden; }
-  .chat-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-  .chat-name { font-size: 15px; font-weight: bold; color: #e9edef; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .chat-time { font-size: 10.5px; color: #00a884; font-weight: 600; flex-shrink: 0; margin-left: 6px; }
-  .chat-last-msg { font-size: 12px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-item {
+    display: flex;
+    padding: 12px 16px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .chat-item:active, .chat-item:hover {
+    background: #202c33;
+  }
+  /* Garis pemisah tipis khas WhatsApp (mulai sejajar teks, bukan di bawah avatar) */
+  .chat-item::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 80px;
+    right: 16px;
+    height: 1px;
+    background: #1f2c34;
+  }
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #2a3942;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-right: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .chat-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .chat-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3px;
+  }
+  .chat-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e9edef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chat-time {
+    font-size: 11.5px;
+    color: #8696a0;
+    font-weight: 400;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .chat-last-msg {
+    font-size: 13.5px;
+    color: #8696a0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.35;
+  }
 
   .robotic-footer {
-    background: #091015; border-top: 1px solid #1c2b36; padding: 8px; text-align: center;
-    color: #00f2fe; font-size: 11px; font-weight: bold; letter-spacing: 2px;
-    text-shadow: 0 0 6px rgba(0,242,254,0.6); text-transform: uppercase;
+    background: #111b21;
+    border-top: 1px solid #1f2c34;
+    padding: 8px 16px;
+    text-align: center;
+    color: #8696a0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
   }
 
-  .room-header { background: #202c33; padding: 8px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #2a3942; position: relative; z-index: 30; }
-  .back-btn { font-size: 18px; color: #aebac1; cursor: pointer; padding: 4px; flex-shrink: 0; }
-  .room-user-info { flex: 1; margin-left: 4px; overflow: hidden; }
-  .room-title { font-size: 14px; font-weight: bold; color: #e9edef; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .room-subtitle { font-size: 11px; color: #8696a0; }
+  /* =========================================================
+     RUANG CHAT (WHATSAPP ANDROID ROOM HEADER: HEIGHT 56px, PADDING 8px 12px)
+     ========================================================= */
+  .room-header {
+    background: #202c33;
+    min-height: 56px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 30;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .back-btn {
+    font-size: 20px;
+    color: #e9edef;
+    cursor: pointer;
+    padding: 6px 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .room-user-info {
+    flex: 1;
+    margin-left: 2px;
+    min-width: 0;
+    cursor: pointer;
+  }
+  .room-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e9edef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .room-subtitle {
+    font-size: 12px;
+    color: #8696a0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
 
-  .room-header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; position: relative; }
+  .room-header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    position: relative;
+  }
   .btn-combo-call {
-    background: #182229; border: 1.5px solid #00f2fe; color: #00f2fe;
-    padding: 5px 10px; border-radius: 20px; font-size: 14px; cursor: pointer;
-    display: flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(0, 242, 254, 0.35);
+    background: transparent;
+    border: 1px solid #374151;
+    color: #e9edef;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-combo-call:active {
+    background: #2a3942;
   }
   .combo-dropdown-menu {
-    position: absolute; top: 42px; right: 54px; background: #182229;
-    border: 1.5px solid #00f2fe; border-radius: 10px; padding: 6px;
-    display: flex; flex-direction: column; gap: 4px; min-width: 165px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.75); z-index: 80;
+    position: absolute;
+    top: 44px;
+    right: 8px;
+    background: #233138;
+    border: 1px solid #2a3942;
+    border-radius: 12px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 175px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    z-index: 80;
   }
   .combo-menu-item {
-    display: flex; align-items: center; gap: 10px; padding: 9px 12px;
-    background: transparent; border: none; color: #e9edef; font-size: 13px;
-    font-weight: 600; border-radius: 6px; cursor: pointer; text-align: left; width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    background: transparent;
+    border: none;
+    color: #e9edef;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
   }
-  .combo-menu-item:hover { background: #2a3942; color: #00f2fe; }
+  .combo-menu-item:active, .combo-menu-item:hover {
+    background: #182229;
+  }
 
-  .chat-body { flex: 1; overflow-y: auto; padding: 12px; background: #efeae2; display: flex; flex-direction: column; gap: 8px; position: relative; }
-  .msg-bubble { max-width: 85%; padding: 8px 11px; border-radius: 10px; font-size: 13.5px; line-height: 1.4; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.16); position: relative; }
-  .msg-incoming { background: #ffffff; align-self: flex-start; color: #111b21; border-top-left-radius: 2px; }
-  .msg-outgoing { background: #d9fdd3; align-self: flex-end; color: #111b21; border-top-right-radius: 2px; }
+  /* =========================================================
+     AREA PESAN & BUBBLE CHAT (PRESISI WHATSAPP ANDROID)
+     - Wallpaper: #efeae2
+     - Margin sisi kiri/kanan layar: 12px
+     - Max-width bubble: 82%
+     - Padding bubble: 6px 9px 7px 9px
+     - Border-radius: 8px (sudut atas tajam 0px di sisi pengirim)
+     - Font-size pesan: 14.5px, line-height: 1.38
+     ========================================================= */
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px 12px 12px;
+    background-color: #efeae2;
+    background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0);
+    background-size: 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overscroll-behavior-y: contain;
+  }
+  .msg-bubble {
+    max-width: 82%;
+    min-width: 84px;
+    padding: 6px 9px 6px 9px;
+    border-radius: 8px;
+    font-size: 14.5px;
+    line-height: 1.38;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+    position: relative;
+  }
+  .msg-incoming {
+    background: #ffffff;
+    align-self: flex-start;
+    color: #111b21;
+    border-top-left-radius: 0px;
+  }
+  .msg-outgoing {
+    background: #d9fdd3;
+    align-self: flex-end;
+    color: #111b21;
+    border-top-right-radius: 0px;
+  }
 
-  .msg-header-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 2px; }
-  .msg-sender-name { font-size: 11px; color: #008069; font-weight: 800; }
-  .btn-reply-msg { font-size: 11px; color: #64748b; background: none; border: none; cursor: pointer; padding: 0 3px; }
+  .msg-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+  }
+  .msg-sender-name {
+    font-size: 12.5px;
+    color: #008069;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .btn-reply-msg {
+    font-size: 12px;
+    color: #667781;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 2px;
+    opacity: 0.85;
+  }
 
   .quoted-reply-box {
-    background: rgba(0, 0, 0, 0.06); border-left: 3.5px solid #00a884;
-    padding: 4px 8px; border-radius: 5px; margin-bottom: 5px; font-size: 11.5px; color: #334155;
+    background: rgba(11, 20, 26, 0.05);
+    border-left: 4px solid #00a884;
+    padding: 5px 8px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #54656f;
+    line-height: 1.3;
   }
 
-  .msg-meta { font-size: 10px; color: #667781; text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; align-items: center; gap: 5px; }
-  .tick-blue { color: #0284c7; font-weight: 900; }
-  .tick-gray { color: #64748b; font-weight: 700; }
-
-  .reply-preview-banner {
-    background: #e2e8f0; border-top: 1px solid #cbd5e1; border-left: 4px solid #00a884;
-    padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: #0f172a;
+  .msg-text-content {
+    color: #111b21;
+    font-weight: 400;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
+  .msg-meta {
+    font-size: 11px;
+    color: #667781;
+    text-align: right;
+    margin-top: 3px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+  }
+  .tick-blue { color: #53bdeb; font-weight: 800; font-size: 12px; }
+  .tick-gray { color: #667781; font-weight: 600; font-size: 12px; }
+
+  /* =========================================================
+     MEDIA (GAMBAR, FOTO, VIDEO) RESPONSIF STABIL DALAM BUBBLE
+     ========================================================= */
+  .msg-media-wrapper {
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #e2e8f0;
+  }
   .msg-image {
-    width: 100%; max-height: 230px; object-fit: cover; border-radius: 8px;
-    margin-top: 6px; cursor: pointer; border: 1px solid rgba(0,0,0,0.1); display: block;
+    width: 100%;
+    max-width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
+  }
+  .msg-video {
+    width: 100%;
+    max-width: 100%;
+    max-height: 260px;
+    border-radius: 6px;
+    background: #000000;
+    display: block;
   }
   .inapp-link-card {
-    display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 8px 10px;
-    background: rgba(0, 168, 132, 0.12); border: 1px solid #00a884; border-radius: 8px;
-    color: #025043; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    padding: 8px 10px;
+    background: rgba(0, 168, 132, 0.1);
+    border-left: 3px solid #00a884;
+    border-radius: 6px;
+    color: #008069;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
   }
 
   .wa-card {
-    margin-top: 6px; padding: 9px 10px; border-radius: 8px;
-    background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a; font-size: 12.5px;
+    margin-top: 4px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(0,0,0,0.08);
+    color: #111b21;
+    font-size: 13px;
   }
-  .wa-card-header { font-weight: 800; color: #008069; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .wa-card-header {
+    font-weight: 700;
+    color: #008069;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+  }
   .poll-option-btn {
-    width: 100%; text-align: left; padding: 7px 10px; margin-top: 5px;
-    border-radius: 6px; border: 1px solid #00a884; background: #ffffff;
-    color: #0f172a; font-size: 12px; font-weight: 600; cursor: pointer;
-    display: flex; justify-content: space-between; align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #00a884;
+    background: #ffffff;
+    color: #111b21;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* =========================================================
+     INPUT BAR WHATSAPP ANDROID (PILL + TOMBOL HIJAU BULAT 44px)
+     ========================================================= */
+  .reply-preview-banner {
+    background: #f0f2f5;
+    border-top: 1px solid #d1d7db;
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    color: #111b21;
+    flex-shrink: 0;
+  }
+  .reply-preview-inner {
+    flex: 1;
+    background: #ffffff;
+    border-left: 4px solid #00a884;
+    border-radius: 6px;
+    padding: 5px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 8px;
   }
 
   .chat-input-wrapper {
-    position: relative; padding: 8px; background: #f0f2f5; display: flex; align-items: center; gap: 6px; border-top: 1px solid #e2e8f0;
+    position: relative;
+    padding: 6px 8px;
+    background: #efeae2;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
   }
 
   .emoji-picker-container {
-    position: absolute; bottom: 60px; left: 10px; right: 10px; background: #ffffff;
-    border: 1.5px solid #00a884; border-radius: 12px; padding: 10px; display: grid;
-    grid-template-columns: repeat(8, 1fr); gap: 6px; max-height: 185px; overflow-y: auto;
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.22); z-index: 70;
+    position: absolute;
+    bottom: 58px;
+    left: 8px;
+    right: 8px;
+    background: #ffffff;
+    border: 1px solid #d1d7db;
+    border-radius: 16px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    z-index: 70;
   }
-  .emoji-item { font-size: 20px; text-align: center; cursor: pointer; padding: 4px; border-radius: 6px; user-select: none; }
+  .emoji-item {
+    font-size: 22px;
+    text-align: center;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    user-select: none;
+  }
+  .emoji-item:active {
+    background: #f0f2f5;
+  }
 
   .wa-attach-menu {
-    position: absolute; bottom: 62px; left: 10px; right: 10px;
-    background: #ffffff; border-radius: 16px; padding: 16px 10px;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 6px;
-    box-shadow: 0 -6px 24px rgba(0,0,0,0.25); border: 1px solid #e2e8f0; z-index: 75;
+    position: absolute;
+    bottom: 60px;
+    left: 8px;
+    right: 8px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+    border: 1px solid #e2e8f0;
+    z-index: 75;
   }
-  .wa-attach-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+  .wa-attach-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
   .wa-attach-circle {
-    width: 52px; height: 42px; border-radius: 22px; background: #ffffff;
-    border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
   }
-  .wa-attach-label { font-size: 11.5px; font-weight: 600; color: #334155; text-align: center; }
+  .wa-attach-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #3b4a54;
+    text-align: center;
+  }
 
   .chat-input-pill {
-    flex: 1; background: #ffffff; border-radius: 24px; display: flex;
-    align-items: center; padding: 4px 12px; gap: 8px; border: 1px solid #cbd5e1;
+    flex: 1;
+    min-height: 44px;
+    background: #ffffff;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+    gap: 10px;
+    box-shadow: 0 1px 1px rgba(11, 20, 26, 0.08);
   }
   .chat-input-pill input {
-    flex: 1; background: none; border: none; color: #111b21; font-size: 14px; outline: none; padding: 6px 0;
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: none;
+    color: #111b21;
+    font-size: 15px;
+    outline: none;
+    padding: 6px 0;
   }
-  .pill-icon { font-size: 18px; color: #54656f; cursor: pointer; user-select: none; }
+  .chat-input-pill input::placeholder {
+    color: #667781;
+  }
+  .pill-icon {
+    font-size: 20px;
+    color: #54656f;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
   .send-btn-circle {
-    width: 42px; height: 42px; border-radius: 50%; background: #00a884;
-    color: #ffffff; display: flex; align-items: center; justify-content: center;
-    border: none; font-size: 16px; cursor: pointer; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #00a884;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .send-btn-circle:active {
+    background: #008f70;
+    transform: scale(0.96);
   }
 
+  /* =========================================================
+     OVERLAY CALL & MODAL DIALOGS (WHATSAPP DARK STYLE)
+     ========================================================= */
   .call-overlay {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #0b141a;
-    z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 30px 16px;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #0b141a;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 36px 16px;
   }
-  .call-user-avatar { width: 92px; height: 92px; border-radius: 50%; background: #2a3942; border: 3px solid #00f2fe; display: flex; align-items: center; justify-content: center; font-size: 38px; animation: pulseRing 1.5s infinite; margin: 0 auto; }
-  @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(0,242,254,0.7); } 70% { box-shadow: 0 0 0 20px rgba(0,242,254,0); } 100% { box-shadow: 0 0 0 0 rgba(0,242,254,0); } }
-  .call-status { font-size: 15px; color: #00f2fe; margin-top: 8px; font-weight: bold; }
-  .call-actions { display: flex; gap: 24px; }
-  .btn-call-action { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 24px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .call-user-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #202c33;
+    border: 2px solid #00a884;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    animation: pulseRing 1.5s infinite;
+    margin: 0 auto;
+  }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7); }
+    70% { box-shadow: 0 0 0 22px rgba(0, 168, 132, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0); }
+  }
+  .call-status {
+    font-size: 15px;
+    color: #00a884;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .call-actions {
+    display: flex;
+    gap: 28px;
+  }
+  .btn-call-action {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .btn-accept { background: #25d366; }
   .btn-reject { background: #ea4335; }
 
-  .modal-overlay { position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.88); z-index:95; display:flex; justify-content:center; align-items:center; padding:14px; }
-  .modal-card { background: #111b21; border: 2px solid #00f2fe; border-radius: 12px; width: 100%; max-height: 85%; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-  .modal-title { font-size: 14px; font-weight: bold; color: #00f2fe; text-align: center; }
-  .modal-input { width: 100%; padding: 9px 10px; border-radius: 8px; border: 1px solid #2a3942; background: #182229; color: #fff; font-size: 13px; outline: none; }
-  .btn-group-call-role {
-    width: 100%; padding: 11px; border-radius: 10px; border: none;
-    background: linear-gradient(135deg, #00a884 0%, #00f2fe 100%);
-    color: #050b10; font-weight: 900; font-size: 13px; cursor: pointer;
+  .modal-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(11, 20, 26, 0.85);
+    z-index: 95;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
   }
-  .member-list-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-  .member-row { padding: 9px 10px; background: #182229; border: 1px solid #2a3942; border-radius: 6px; color: #fff; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+  .modal-card {
+    background: #111b21;
+    border: 1px solid #2a3942;
+    border-radius: 14px;
+    width: 100%;
+    max-height: 85%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .modal-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e9edef;
+    text-align: center;
+  }
+  .modal-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #2a3942;
+    background: #182229;
+    color: #e9edef;
+    font-size: 14px;
+    outline: none;
+  }
+  .modal-input:focus {
+    border-color: #00a884;
+  }
+  .btn-group-call-role {
+    width: 100%;
+    padding: 11px;
+    border-radius: 20px;
+    border: none;
+    background: #00a884;
+    color: #111b21;
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+  }
+  .member-list-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .member-row {
+    padding: 10px 12px;
+    background: #182229;
+    border: 1px solid #222d34;
+    border-radius: 8px;
+    color: #e9edef;
+    font-size: 13.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   .inapp-viewer-box {
-    width: 100%; height: 65vh; background: #000; border-radius: 8px; overflow: hidden;
-    display: flex; align-items: center; justify-content: center; border: 1px solid #2a3942;
+    width: 100%;
+    height: 65vh;
+    background: #000000;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2a3942;
   }
-  .inapp-viewer-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-  .inapp-viewer-box iframe { width: 100%; height: 100%; border: none; background: #fff; }
+  .inapp-viewer-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .inapp-viewer-box video {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .inapp-viewer-box iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+  }
 
   .logout-modal-overlay {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(5, 11, 16, 0.85); z-index: 110;
-    display: flex; justify-content: center; align-items: center; padding: 20px;
-    backdrop-filter: blur(4px);
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(11, 20, 26, 0.85);
+    z-index: 110;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
   }
   .logout-warning-card {
-    background: #111b21; border: 2.5px solid #ef4444; border-radius: 16px;
-    width: 100%; max-width: 380px; padding: 24px 20px; text-align: center;
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
-    display: flex; flex-direction: column; gap: 16px;
+    background: #111b21;
+    border: 1px solid #2a3942;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 360px;
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
-  .logout-warning-title { font-size: 18px; font-weight: 900; color: #ef4444; }
-  .logout-warning-text { font-size: 13.5px; color: #e9edef; line-height: 1.5; }
+  .logout-warning-title { font-size: 17px; font-weight: 700; color: #f87171; }
+  .logout-warning-text { font-size: 13.5px; color: #d1d7db; line-height: 1.45; }
   .logout-modal-actions { display: flex; gap: 10px; }
-  .btn-logout-cancel { flex: 1; background: #2a3942; color: #e9edef; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-  .btn-logout-confirm { flex: 1; background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; }
+  .btn-logout-cancel {
+    flex: 1;
+    background: #202c33;
+    color: #e9edef;
+    border: none;
+    padding: 11px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-logout-confirm {
+    flex: 1;
+    background: #ea4335;
+    color: #ffffff;
+    border: none;
+    padding: 11px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+  }
 
   .hidden { display: none !important; }
 </style>
@@ -323,9 +1034,9 @@
       <span class="back-btn" onclick="handleBackToMain()">←</span>
       <div class="profile-avatar-clickable" id="roomGroupAvatar" onclick="triggerProfileUpload('group')">👥</div>
 
-      <div class="room-user-info">
+      <div class="room-user-info" onclick="openGroupMembersModal()">
         <div class="room-title" id="roomTitle">Nama Grup</div>
-        <div class="room-subtitle" id="roomSub">Sinkronisasi Sheet Aktif</div>
+        <div class="room-subtitle" id="roomSub">Ketuk ↩️ pada pesan untuk membalas</div>
       </div>
 
       <div class="room-header-right">
@@ -346,10 +1057,10 @@
     <div class="chat-body" id="chatMessages"></div>
 
     <div id="replyPreviewBanner" class="reply-preview-banner hidden">
-      <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">
+      <div class="reply-preview-inner">
         <strong style="color:#008069;">Membalas:</strong> <span id="replyPreviewText"></span>
       </div>
-      <span style="cursor:pointer; font-weight:900; padding:0 6px;" onclick="cancelReplyQuote()">✕</span>
+      <span style="cursor:pointer; font-weight:800; padding:4px 8px; color:#54656f;" onclick="cancelReplyQuote()">✕</span>
     </div>
 
     <div class="chat-input-wrapper" id="chatInputWrapper">
@@ -358,7 +1069,7 @@
       <div id="waAttachMenuPanel" class="wa-attach-menu hidden">
         <div class="wa-attach-item" onclick="triggerGallerySelect()">
           <div class="wa-attach-circle" style="color:#0284c7;">🖼️</div>
-          <span class="wa-attach-label">Galeri</span>
+          <span class="wa-attach-label">Galeri / Video</span>
         </div>
         <div class="wa-attach-item" onclick="triggerCameraCapture()">
           <div class="wa-attach-circle" style="color:#e11d48;">📷</div>
@@ -391,15 +1102,15 @@
       </div>
 
       <div class="chat-input-pill">
-        <span class="pill-icon" id="btnAttachTrigger" onclick="toggleWaAttachMenu(event)" title="Lampiran">📎</span>
         <span class="pill-icon" id="btnEmojiTrigger" onclick="toggleEmojiPicker(event)" title="Emoji">😊</span>
-        <input type="text" id="inputPesan" placeholder="Ketik pesan..." onkeypress="handleKey(event)">
+        <input type="text" id="inputPesan" placeholder="Ketik pesan" onkeypress="handleKey(event)">
+        <span class="pill-icon" id="btnAttachTrigger" onclick="toggleWaAttachMenu(event)" title="Lampiran">📎</span>
         <span class="pill-icon" onclick="triggerCameraCapture()" title="Kamera Cepat">📷</span>
       </div>
-      <button class="send-btn-circle" onclick="kirimPesan()">➤</button>
+      <button class="send-btn-circle" onclick="kirimPesan()" title="Kirim">➤</button>
     </div>
 
-    <input type="file" id="galleryFileInput" accept="image/*" class="hidden" onchange="handleGallerySelected(event)">
+    <input type="file" id="galleryFileInput" accept="image/*,video/*" class="hidden" onchange="handleGallerySelected(event)">
     <input type="file" id="generalFileInput" class="hidden" onchange="handleFileSelected(event)">
     <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleCameraCaptured(event)">
     <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
@@ -410,7 +1121,7 @@
     <div class="modal-card">
       <div class="modal-title" id="inAppPreviewTitle">PRATINJAU KONTEN</div>
       <div class="inapp-viewer-box" id="inAppViewerContainer"></div>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:10px;" onclick="closeInAppPreview()">Tutup Pratinjau</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeInAppPreview()">Tutup Pratinjau</button>
     </div>
   </div>
 
@@ -418,7 +1129,7 @@
     <div class="modal-card">
       <div class="modal-title" id="contactModalTitle">👤 BAGIKAN KONTAK WARGA</div>
       <div class="member-list-container" id="waContactList"></div>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:10px;" onclick="closeWaModal('waContactModal')">Batal</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeWaModal('waContactModal')">Batal</button>
     </div>
   </div>
 
@@ -429,8 +1140,8 @@
       <input type="text" id="pollOpt1" class="modal-input" placeholder="Pilihan 1 (contoh: Setuju)">
       <input type="text" id="pollOpt2" class="modal-input" placeholder="Pilihan 2 (contoh: Tidak Setuju)">
       <input type="text" id="pollOpt3" class="modal-input" placeholder="Pilihan 3 (Opsional)">
-      <button class="btn-grup-plus" style="width:100%; padding:10px;" onclick="submitWhatsAppPoll()">Kirim Polling</button>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:9px;" onclick="closeWaModal('waPollModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:11px;" onclick="submitWhatsAppPoll()">Kirim Polling</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waPollModal')">Batal</button>
     </div>
   </div>
 
@@ -441,8 +1152,8 @@
       <input type="date" id="eventDate" class="modal-input">
       <input type="time" id="eventTime" class="modal-input">
       <input type="text" id="eventLoc" class="modal-input" placeholder="Lokasi Acara...">
-      <button class="btn-grup-plus" style="width:100%; padding:10px;" onclick="submitWhatsAppEvent()">Kirim Undangan Acara</button>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:9px;" onclick="closeWaModal('waEventModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:11px;" onclick="submitWhatsAppEvent()">Kirim Undangan Acara</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waEventModal')">Batal</button>
     </div>
   </div>
 
@@ -455,18 +1166,18 @@
         <option value="emerald">Tema Hijau Lingkungan RT</option>
         <option value="gold">Tema Pengumuman Resmi Emas</option>
       </select>
-      <button class="btn-grup-plus" style="width:100%; padding:10px;" onclick="submitWhatsAppAiImage()">Buat & Kirim Gambar</button>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:9px;" onclick="closeWaModal('waAiImageModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:11px;" onclick="submitWhatsAppAiImage()">Buat & Kirim Gambar</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waAiImageModal')">Batal</button>
     </div>
   </div>
 
   <div id="callScreen" class="call-overlay hidden">
     <div style="text-align:center;">
       <div class="call-user-avatar" id="callAvatar">📞</div>
-      <div style="font-size:20px; font-weight:bold; margin-top:12px;" id="callTargetName">Nama Kontak</div>
+      <div style="font-size:20px; font-weight:700; margin-top:12px;" id="callTargetName">Nama Kontak</div>
       <div class="call-status" id="callStatusText">Memanggil...</div>
     </div>
-    <div id="videoContainer" class="hidden" style="width:100%; flex:1; margin:14px 0; background:#000; border-radius:12px; overflow:hidden; border:1.5px solid #00f2fe;">
+    <div id="videoContainer" class="hidden" style="width:100%; flex:1; margin:14px 0; background:#000; border-radius:12px; overflow:hidden; border:1px solid #2a3942;">
       <iframe id="jitsiCallFrame" allow="camera; microphone; fullscreen; display-capture; autoplay" style="width:100%; height:100%; border:none;"></iframe>
     </div>
     <div class="call-actions">
@@ -480,30 +1191,30 @@
       <div class="modal-title" id="modalGroupTitle">DAFTAR ANGGOTA</div>
       <button id="btnCallGroupByRole" class="btn-group-call-role hidden" onclick="startGroupCallByRole()">🔊 Call Grup</button>
       <div class="member-list-container" id="memberListContent"></div>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:10px;" onclick="closeGroupMembersModal()">Tutup</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeGroupMembersModal()">Tutup</button>
     </div>
   </div>
 
   <div id="ringtoneModal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-title">PENGATURAN NADA DERING</div>
-      <div style="padding:10px; display:flex; flex-direction:column; gap:10px;">
-        <label style="font-size:13px; color:#00f2fe;">Pilih Nada Dering Telepon:</label>
+      <div style="padding:8px 0; display:flex; flex-direction:column; gap:10px;">
+        <label style="font-size:13px; color:#00a884;">Pilih Nada Dering Telepon:</label>
         <select id="ringtoneSelect" class="modal-input">
           <option value="standard">WhatsApp Standard Ringtone</option>
           <option value="classic">Classic Digital Phone</option>
           <option value="soft">Soft Melodic Chime</option>
         </select>
-        <button class="btn-grup-plus" onclick="testPlayRingtone()">🔊 Tes Bunyi</button>
-        <button class="btn-grup-plus" onclick="saveRingtoneSetting()">Simpan Pengaturan</button>
+        <button class="btn-grup-plus" style="background:#202c33; color:#00a884; border:1px solid #00a884; padding:10px;" onclick="testPlayRingtone()">🔊 Tes Bunyi</button>
+        <button class="btn-grup-plus" style="padding:11px;" onclick="saveRingtoneSetting()">Simpan Pengaturan</button>
       </div>
-      <button class="btn-grup-plus" style="background:#52758a; color:#fff; width:100%; padding:10px;" onclick="closeRingtoneModal()">Tutup</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeRingtoneModal()">Tutup</button>
     </div>
   </div>
 
   <div id="logoutWarningModal" class="logout-modal-overlay hidden">
     <div class="logout-warning-card">
-      <div style="font-size:40px;">⚠️</div>
+      <div style="font-size:38px;">⚠️</div>
       <div class="logout-warning-title">KONFIRMASI KELUAR</div>
       <div class="logout-warning-text">Keluar dari akun ini untuk beralih ke Username warga lain atau kembali ke halaman awal?</div>
       <div class="logout-modal-actions">
@@ -583,16 +1294,15 @@
   let activeRoomPollingTimer = null;
 
   const announcementThemes = [
-    { bg: "#142731", border: "#00f2fe", text: "#e9edef", icon: "#00f2fe" },
-    { bg: "#241934", border: "#c084fc", text: "#f3e8ff", icon: "#c084fc" },
-    { bg: "#132a22", border: "#34d399", text: "#ecfdf5", icon: "#34d399" },
-    { bg: "#2d2113", border: "#fbbf24", text: "#fef3c7", icon: "#fbbf24" },
-    { bg: "#2e1622", border: "#fb7185", text: "#ffe4e6", icon: "#fb7185" }
+    { bg: "#182229", border: "#00a884", text: "#e9edef", icon: "#00a884" },
+    { bg: "#202c33", border: "#34d399", text: "#ecfdf5", icon: "#34d399" },
+    { bg: "#1b2832", border: "#38bdf8", text: "#e0f2fe", icon: "#38bdf8" },
+    { bg: "#26221b", border: "#fbbf24", text: "#fef3c7", icon: "#fbbf24" }
   ];
 
   const chatTextColors = [
-    "#075e54", "#128c7e", "#005c4b", "#1e3a8a", "#4b0082",
-    "#9a3412", "#991b1b", "#065f46", "#854d0e", "#1d4ed8"
+    "#008069", "#0284c7", "#7c3aed", "#b45309", "#be123c",
+    "#047857", "#1d4ed8", "#9333ea", "#c2410c", "#0f766e"
   ];
 
   window.onload = function() {
@@ -656,7 +1366,7 @@
       renderChatRoomList(cachedGroups);
     } else {
       document.getElementById('chatListContainer').innerHTML =
-        '<div style="padding:20px; color:#00f2fe; text-align:center; font-size:13px;">Memuat grup sesuai Role (' + currentUser.username + ')...</div>';
+        '<div style="padding:24px 16px; color:#00a884; text-align:center; font-size:13.5px;">Memuat grup sesuai Role (' + currentUser.username + ')...</div>';
     }
 
     const cachedAnn = JSON.parse(localStorage.getItem('sanschat_announcements') || 'null');
@@ -843,7 +1553,7 @@
     const container = document.getElementById('chatListContainer');
     container.innerHTML = '';
     if (!rooms || rooms.length === 0) {
-      container.innerHTML = '<div style="padding:16px; color:#8696a0; text-align:center;">Tidak ada grup yang sesuai dengan Role akun (' + currentUser.username + ').</div>';
+      container.innerHTML = '<div style="padding:20px 16px; color:#8696a0; text-align:center;">Tidak ada grup yang sesuai dengan Role akun (' + currentUser.username + ').</div>';
       return;
     }
     rooms.forEach(r => {
@@ -872,7 +1582,7 @@
     cancelReplyQuote();
 
     document.getElementById('roomTitle').innerText = name;
-    document.getElementById('roomSub').innerText = "Grup Aktif (Riwayat Tersimpan) • Ketuk ↩️ untuk membalas";
+    document.getElementById('roomSub').innerText = "Grup Aktif • Ketuk ↩️ untuk membalas";
     document.getElementById('btnGroupMembersAction').classList.remove('hidden');
     document.getElementById('btnSelectPrivateTarget').classList.add('hidden');
     closeAllInputPopups();
@@ -988,6 +1698,12 @@
            url.includes("drive.google.com/uc");
   }
 
+  function isVideoUrl(url) {
+    if (!url) return false;
+    if (url.startsWith("data:video")) return true;
+    return /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url);
+  }
+
   function renderRichTextWithInAppLinks(rawText, mediaUrl, tipe, rowNumber) {
     let htmlOutput = "";
 
@@ -1001,7 +1717,7 @@
           const count = Object.values(votes).filter(v => v === idx).length;
           htmlOutput += `<button class="poll-option-btn" onclick="castPollVote(${rowNumber}, ${idx})"><span>${opt}</span><span style="color:#008069;">${count} suara</span></button>`;
         });
-        htmlOutput += `<div style="font-size:10px; color:#64748b; margin-top:5px;">Total partisipasi: ${totalVotes} warga</div></div>`;
+        htmlOutput += `<div style="font-size:11px; color:#667781; margin-top:6px;">Total partisipasi: ${totalVotes} warga</div></div>`;
         return htmlOutput;
       } catch (e) {}
     }
@@ -1012,9 +1728,9 @@
         htmlOutput += `
           <div class="wa-card">
             <div class="wa-card-header">📅 UNDANGAN ACARA WARGA</div>
-            <div style="font-weight:800; font-size:13.5px;">${ev.title}</div>
-            <div style="margin-top:4px; color:#334155;">🗓️ ${ev.date} • ⏰ ${ev.time}</div>
-            <div style="color:#334155;">📍 ${ev.location}</div>
+            <div style="font-weight:700; font-size:14px;">${ev.title}</div>
+            <div style="margin-top:4px; color:#3b4a54;">🗓️ ${ev.date} • ⏰ ${ev.time}</div>
+            <div style="color:#3b4a54;">📍 ${ev.location}</div>
           </div>`;
         return htmlOutput;
       } catch (e) {}
@@ -1028,22 +1744,28 @@
 
     let formattedText = rawText.replace(urlRegex, (url) => {
       const safeUrl = url.replace(/'/g, "\'");
-      return `<a href="javascript:void(0)" onclick="openInAppPreview('${safeUrl}')" style="color:#025043; text-decoration:underline; font-weight:700;">${url}</a>`;
+      return `<a href="javascript:void(0)" onclick="openInAppPreview('${safeUrl}')" style="color:#027eb5; text-decoration:underline; font-weight:500;">${url}</a>`;
     });
 
-    htmlOutput += `<div>${formattedText}</div>`;
+    htmlOutput += `<div class="msg-text-content">${formattedText}</div>`;
 
-    if (mediaUrl && mediaUrl.startsWith("data:image")) {
-      htmlOutput += `<img src="${mediaUrl}" class="msg-image" onclick="openInAppPreview('${mediaUrl}')" />`;
+    if (mediaUrl && (mediaUrl.startsWith("data:image") || tipe === "image")) {
+      const safeMedia = mediaUrl.replace(/'/g, "\'");
+      htmlOutput += `<div class="msg-media-wrapper"><img src="${mediaUrl}" class="msg-image" loading="lazy" onclick="openInAppPreview('${safeMedia}')" /></div>`;
+    } else if (mediaUrl && (mediaUrl.startsWith("data:video") || tipe === "video" || isVideoUrl(mediaUrl))) {
+      htmlOutput += `<div class="msg-media-wrapper"><video src="${mediaUrl}" class="msg-video" controls playsinline preload="metadata"></video></div>`;
     } else if (mediaUrl && !mediaUrl.startsWith("http") && mediaUrl.startsWith("data:")) {
-      htmlOutput += `<a href="javascript:void(0)" onclick="openInAppPreview('${mediaUrl}')" class="inapp-link-card">📄 Buka Lampiran Dokumen di Layar</a>`;
+      const safeDoc = mediaUrl.replace(/'/g, "\'");
+      htmlOutput += `<a href="javascript:void(0)" onclick="openInAppPreview('${safeDoc}')" class="inapp-link-card">📄 Buka Lampiran Dokumen di Layar</a>`;
     }
 
     foundUrls.forEach(u => {
       const safeU = u.replace(/'/g, "\'");
-      if (isImageUrl(u)) {
-        htmlOutput += `<img src="${u}" class="msg-image" alt="Lampiran Gambar" onclick="openInAppPreview('${safeU}')" />`;
-      } else {
+      if (isImageUrl(u) && tipe !== "image") {
+        htmlOutput += `<div class="msg-media-wrapper"><img src="${u}" class="msg-image" alt="Lampiran Gambar" loading="lazy" onclick="openInAppPreview('${safeU}')" /></div>`;
+      } else if (isVideoUrl(u) && tipe !== "video") {
+        htmlOutput += `<div class="msg-media-wrapper"><video src="${u}" class="msg-video" controls playsinline preload="metadata"></video></div>`;
+      } else if (!isImageUrl(u) && !isVideoUrl(u)) {
         htmlOutput += `<div class="inapp-link-card" onclick="openInAppPreview('${safeU}')">🌐 Buka Tautan di Halaman Ini</div>`;
       }
     });
@@ -1059,6 +1781,9 @@
     if (isImageUrl(urlOrData)) {
       title.innerText = "PRATINJAU GAMBAR";
       container.innerHTML = `<img src="${urlOrData}" alt="Pratinjau" />`;
+    } else if (isVideoUrl(urlOrData)) {
+      title.innerText = "PRATINJAU VIDEO";
+      container.innerHTML = `<video src="${urlOrData}" controls autoplay playsinline></video>`;
     } else {
       title.innerText = "PRATINJAU HALAMAN WEB";
       container.innerHTML = `<iframe src="${urlOrData}" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>`;
@@ -1098,7 +1823,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#667781; margin-top:20px;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> di kanan atas untuk memilih warga.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; font-size:13px; margin:16px auto; max-width:85%;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> di kanan atas untuk memilih warga.</div>';
       return;
     }
 
@@ -1109,7 +1834,7 @@
 
       let pesanColD = m.pesanD || "";
       let pesanColF = m.pesanF || "";
-      let combinedText = (pesanColD !== "" && pesanColF !== "")
+      let combinedText = (pesanColD !== "" && pesanColF !== "" && !pesanColF.startsWith("data:") && !pesanColF.startsWith("{"))
         ? `${pesanColD} - ${pesanColF}`
         : (pesanColD !== "" ? pesanColD : pesanColF);
 
@@ -1126,10 +1851,10 @@
           <button class="btn-reply-msg" onclick="setReplyQuote('${safeReplySender}', '${safeReplyMsg}')" title="Balas pesan">↩️</button>
         </div>
         ${quoteHtml}
-        <div style="color:#111b21; font-weight:500;">${renderedBody}</div>
+        <div>${renderedBody}</div>
         <div class="msg-meta">
           <span>${m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
-          ${tickHtml}
+          ${isMe ? tickHtml : ''}
         </div>
       `;
       area.appendChild(div);
@@ -1150,7 +1875,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#667781; margin-top:20px;">Belum ada riwayat pesan di grup ini.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; font-size:13px; margin:16px auto; max-width:85%;">Belum ada riwayat pesan di grup ini.</div>';
       return;
     }
 
@@ -1174,7 +1899,7 @@
           <button class="btn-reply-msg" onclick="setReplyQuote('${safeReplySender}', '${safeReplyMsg}')" title="Balas pesan">↩️</button>
         </div>
         ${quoteHtml}
-        <div style="color:#111b21; font-weight:500;">${renderedBody}</div>
+        <div>${renderedBody}</div>
         <div class="msg-meta">
           <span>${m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
           ${isMe ? tickHtml : ''}
@@ -1242,9 +1967,14 @@
   function handleGallerySelected(e) {
     const file = e.target.files[0];
     if (!file) return;
+    const isVideo = file.type && file.type.startsWith('video/');
     const reader = new FileReader();
     reader.onload = function(evt) {
-      dispatchChatPayload("🖼️ Galeri: " + file.name, "image", evt.target.result);
+      if (isVideo) {
+        dispatchChatPayload("🎥 Video: " + file.name, "video", evt.target.result);
+      } else {
+        dispatchChatPayload("🖼️ Galeri: " + file.name, "image", evt.target.result);
+      }
     };
     reader.readAsDataURL(file);
   }
@@ -1312,10 +2042,10 @@
         const btnLabel = mode === "recipient" ? "Pilih" : "Kirim";
         row.innerHTML = `
           <div>
-            <div style="font-weight:bold;">${c.nama}</div>
-            <div style="font-size:11px; color:#8696a0;">${c.username} • ${c.alamat || '-'}</div>
+            <div style="font-weight:600;">${c.nama}</div>
+            <div style="font-size:11.5px; color:#8696a0;">${c.username} • ${c.alamat || '-'}</div>
           </div>
-          <button class="btn-grup-plus" style="padding:5px 10px; font-size:11px;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "\'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "\'")}')">${btnLabel}</button>
+          <button class="btn-grup-plus" style="padding:6px 12px; font-size:11.5px;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "\'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "\'")}')">${btnLabel}</button>
         `;
         list.appendChild(row);
       });
@@ -1540,7 +2270,7 @@
           row.className = 'member-row';
           row.innerHTML = `
             <span>${m.nama} <small style="color:#8696a0;">(${m.username})</small></span>
-            <button class="btn-grup-plus" style="padding:4px 10px; font-size:11px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', '${type}')">Panggil</button>
+            <button class="btn-grup-plus" style="padding:5px 11px; font-size:11.5px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', '${type}')">Panggil</button>
           `;
           list.appendChild(row);
         });
@@ -1672,6 +2402,7 @@
   }
 
   function openGroupMembersModal() {
+    if (isPrivateChatMode) return;
     document.getElementById('btnCallGroupByRole').classList.add('hidden');
     document.getElementById('modalGroupTitle').innerText = "DAFTAR ANGGOTA: " + activeGroupName;
     const list = document.getElementById('memberListContent');
