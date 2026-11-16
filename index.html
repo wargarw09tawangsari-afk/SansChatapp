@@ -41,129 +41,131 @@
   .welcome-container {
     background: var(--wa-panel);
     width: 100%;
+    max-width: 680px;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: clamp(40px, 8vh, 80px) clamp(24px, 6vw, 48px);
+    padding: clamp(24px, 5vh, 48px) clamp(20px, 5vw, 36px);
     text-align: center;
     overflow-y: auto;
+    border-left: 1px solid var(--wa-border);
+    border-right: 1px solid var(--wa-border);
   }
   .welcome-title {
-    font-size: clamp(48px, 12vw, 90px);
+    font-size: clamp(28px, 7vw, 44px);
     font-weight: 800;
     color: var(--wa-text);
-    margin-bottom: clamp(24px, 5vh, 40px);
-    letter-spacing: 2px;
+    margin-bottom: clamp(16px, 3vh, 24px);
+    letter-spacing: 1.5px;
   }
   .logo-sc-3d-large {
-    width: clamp(280px, 60vw, 450px);
-    height: clamp(280px, 60vw, 450px);
-    margin: 0 auto clamp(30px, 6vh, 50px) auto;
+    width: clamp(130px, 32vw, 190px);
+    height: clamp(130px, 32vw, 190px);
+    margin: 0 auto clamp(16px, 3vh, 24px) auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 64px;
+    border-radius: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: clamp(120px, 30vw, 220px);
+    font-size: clamp(64px, 16vw, 96px);
     color: #ffffff;
-    box-shadow: 0 16px 48px rgba(0, 168, 132, 0.45);
-    border: 6px solid var(--wa-green-light);
+    box-shadow: 0 12px 32px rgba(0, 168, 132, 0.4);
+    border: 4px solid var(--wa-green-light);
   }
   .brand-sub {
-    font-size: clamp(38px, 9vw, 64px);
+    font-size: clamp(24px, 6vw, 34px);
     font-weight: 800;
     color: var(--wa-green);
-    margin-bottom: clamp(20px, 4vh, 32px);
-    letter-spacing: 1.5px;
+    margin-bottom: clamp(12px, 2.5vh, 18px);
+    letter-spacing: 1px;
   }
   .welcome-email {
-    font-size: clamp(26px, 7vw, 40px);
+    font-size: clamp(14px, 3.8vw, 18px);
     color: var(--wa-text-secondary);
-    margin-bottom: clamp(36px, 6vh, 54px);
+    margin-bottom: clamp(20px, 4vh, 30px);
     background: var(--wa-card);
-    padding: clamp(18px, 3vh, 28px) clamp(36px, 8vw, 54px);
-    border-radius: 40px;
-    border: 3px solid var(--wa-border);
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 1.5px solid var(--wa-border);
     font-weight: 600;
   }
   .pwa-instruction-box {
     background: var(--wa-card);
-    border: 3px solid var(--wa-border);
-    border-radius: 28px;
-    padding: clamp(30px, 6vh, 45px);
-    margin-bottom: clamp(36px, 6vh, 54px);
+    border: 1.5px solid var(--wa-border);
+    border-radius: 20px;
+    padding: clamp(18px, 3.5vh, 26px);
+    margin-bottom: clamp(20px, 4vh, 30px);
     text-align: left;
     width: 100%;
-    max-width: 750px;
   }
   .pwa-instruction-title {
-    font-size: clamp(26px, 6.5vw, 36px);
+    font-size: clamp(15px, 4vw, 19px);
     font-weight: 800;
     color: var(--wa-green);
-    margin-bottom: clamp(18px, 3vh, 24px);
+    margin-bottom: 12px;
     text-transform: uppercase;
     text-align: center;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
   }
   .pwa-instruction-steps {
-    font-size: clamp(24px, 6vw, 34px);
+    font-size: clamp(13px, 3.6vw, 16px);
     color: #d1d7db;
-    line-height: 1.6;
-    padding-left: 32px;
+    line-height: 1.55;
+    padding-left: 22px;
   }
   .pwa-instruction-steps li {
-    margin-bottom: 14px;
+    margin-bottom: 8px;
   }
   .pwa-status-badge {
     display: inline-block;
-    font-size: clamp(24px, 6vw, 34px);
+    font-size: clamp(13px, 3.6vw, 16px);
     font-weight: 700;
-    padding: clamp(18px, 3vh, 26px) clamp(26px, 6vw, 38px);
-    border-radius: 20px;
-    margin-bottom: clamp(20px, 4vh, 32px);
+    padding: 10px 16px;
+    border-radius: 14px;
+    margin-bottom: 14px;
     width: 100%;
     text-align: center;
   }
   .badge-installed {
     background: rgba(0, 168, 132, 0.18);
     color: var(--wa-green-light);
-    border: 3px solid var(--wa-green);
+    border: 1.5px solid var(--wa-green);
   }
   .badge-browser {
     background: rgba(234, 67, 53, 0.15);
     color: #fca5a5;
-    border: 3px solid #ea4335;
+    border: 1.5px solid #ea4335;
   }
   .btn-install-native {
     width: 100%;
-    margin-top: 24px;
-    padding: clamp(24px, 4.5vh, 34px);
-    border-radius: 40px;
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 30px;
     border: none;
     background: var(--wa-green);
     color: var(--wa-panel);
     font-weight: 800;
-    font-size: clamp(26px, 6.5vw, 36px);
+    font-size: clamp(14px, 3.8vw, 17px);
     cursor: pointer;
     text-transform: uppercase;
   }
   .btn-ok-robotic {
     width: 100%;
-    max-width: 650px;
+    max-width: 420px;
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: clamp(26px, 5vh, 38px);
-    border-radius: 48px;
-    font-size: clamp(32px, 8vw, 48px);
+    padding: 16px 24px;
+    border-radius: 36px;
+    font-size: clamp(18px, 4.5vw, 22px);
     font-weight: 800;
     cursor: pointer;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    box-shadow: 0 8px 28px rgba(0, 168, 132, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.35);
     transition: transform 0.1s, background 0.15s;
   }
   .btn-ok-robotic:active {
@@ -171,11 +173,10 @@
     background: #008f70;
   }
   .footer-tag {
-    margin-top: clamp(36px, 6vh, 54px);
-    margin-bottom: clamp(20px, 4vh, 30px);
-    font-size: clamp(22px, 5.5vw, 32px);
+    margin-top: clamp(20px, 4vh, 30px);
+    font-size: clamp(12px, 3.2vw, 15px);
     color: var(--wa-text-secondary);
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     font-weight: 600;
   }
   .hidden { display: none !important; }
