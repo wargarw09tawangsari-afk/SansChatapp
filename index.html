@@ -56,49 +56,85 @@
     border-right: 1px solid var(--wa-border);
   }
 
-  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 2px border, larger font & images */
-  @media all and (display-mode: standalone), (max-width: 500px) {
+  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 8px margin from screen edges, huge fonts & images */
+  @media all and (display-mode: standalone), (max-width: 600px) {
+    html, body {
+      padding: 8px !important;
+      background-color: var(--wa-bg) !important;
+    }
     .welcome-container {
-      border: 2px solid var(--wa-green) !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      height: 100% !important;
-      min-height: 100dvh !important;
+      border: 3px solid var(--wa-green) !important;
+      width: calc(100% - 16px) !important;
+      max-width: calc(100% - 16px) !important;
+      margin: 8px auto !important;
+      border-radius: 24px !important;
+      padding: 32px 24px !important;
+      min-height: calc(100dvh - 16px) !important;
+      box-sizing: border-box !important;
     }
     .welcome-title {
-      font-size: 34px !important;
-      letter-spacing: 1.5px !important;
+      font-size: 52px !important;
+      letter-spacing: 2px !important;
+      margin-bottom: 24px !important;
     }
     .logo-sc-3d-large {
-      width: 140px !important;
-      height: 140px !important;
-      font-size: 68px !important;
-      border-radius: 32px !important;
+      width: 220px !important;
+      height: 220px !important;
+      font-size: 110px !important;
+      border-radius: 48px !important;
+      border: 5px solid var(--wa-green-light) !important;
+      margin-bottom: 24px !important;
     }
     .brand-sub {
-      font-size: 26px !important;
+      font-size: 38px !important;
+      margin-bottom: 20px !important;
     }
     .welcome-email {
-      font-size: 17px !important;
-      padding: 16px 20px !important;
+      font-size: 26px !important;
+      padding: 22px 28px !important;
+      border-radius: 18px !important;
+      margin-bottom: 24px !important;
     }
     .pwa-instruction-box {
-      padding: 20px !important;
+      padding: 28px !important;
+      border-radius: 22px !important;
+      margin-bottom: 24px !important;
     }
     .pwa-instruction-title {
-      font-size: 16px !important;
+      font-size: 24px !important;
+      margin-bottom: 14px !important;
     }
     .pwa-instruction-steps {
-      font-size: 15px !important;
+      font-size: 22px !important;
+      line-height: 1.6 !important;
+      padding-left: 28px !important;
+    }
+    .pwa-instruction-steps li {
+      margin-bottom: 12px !important;
     }
     .pwa-status-badge {
-      font-size: 16px !important;
-      padding: 14px !important;
-    }
-    .btn-ok-robotic {
       font-size: 22px !important;
       padding: 20px !important;
-      min-height: 64px !important;
+      border-radius: 18px !important;
+      margin-bottom: 18px !important;
+    }
+    .btn-install-native {
+      font-size: 24px !important;
+      padding: 24px !important;
+      border-radius: 20px !important;
+      margin-top: 16px !important;
+    }
+    .btn-ok-robotic {
+      font-size: 34px !important;
+      padding: 28px !important;
+      border-radius: 22px !important;
+      min-height: 88px !important;
+      letter-spacing: 2px !important;
+    }
+    .footer-tag {
+      font-size: 18px !important;
+      margin-top: 20px !important;
+      letter-spacing: 1.5px !important;
     }
   }
 
@@ -256,10 +292,15 @@
       <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
         📲 INSTAL APLIKASI SEKARANG
       </button>
+    </div>
+  </div>
+
   <div style="width:100%; margin-bottom: 10px;">
     <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
     <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
   </div>
+</div>
+
 <script>
   let deferredInstallPrompt = null;
 
@@ -317,7 +358,6 @@
     btn.innerText = "MEMBUKA LOGIN...";
     btn.disabled = true;
 
-    // Flush cache & update permissions on OK click
     if ('caches' in window) {
       caches.keys().then((names) => {
         names.forEach(name => caches.delete(name));

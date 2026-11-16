@@ -50,43 +50,268 @@
     border-right: 1px solid var(--wa-border);
   }
 
-  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 2px border, larger font & images */
-  @media all and (display-mode: standalone), (max-width: 500px) {
+  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 8px margin from screen edges, huge fonts & images */
+  @media all and (display-mode: standalone), (max-width: 600px) {
+    html, body {
+      padding: 8px !important;
+      background-color: var(--wa-bg) !important;
+      overflow: hidden !important;
+    }
     .app-container {
-      border: 2px solid var(--wa-green) !important;
+      border: 3px solid var(--wa-green) !important;
+      width: calc(100% - 16px) !important;
+      height: calc(100dvh - 16px) !important;
+      max-width: calc(100% - 16px) !important;
+      max-height: calc(100dvh - 16px) !important;
+      margin: 8px auto !important;
+      border-radius: 20px !important;
+      box-sizing: border-box !important;
+    }
+    .main-header {
+      padding: 16px !important;
+      gap: 16px !important;
     }
     .user-info-name {
-      font-size: 24px !important;
+      font-size: 34px !important;
+      line-height: 1.35 !important;
     }
     .user-info-address {
-      font-size: 16px !important;
+      font-size: 22px !important;
+      margin-top: 6px !important;
     }
     .profile-avatar-clickable, .avatar {
-      width: 70px !important;
-      height: 70px !important;
-      font-size: 32px !important;
+      width: 95px !important;
+      height: 95px !important;
+      font-size: 45px !important;
+      border-width: 3px !important;
     }
-    .chat-name {
-      font-size: 22px !important;
+    .brand-frame-3d {
+      padding: 12px 18px !important;
+      border-radius: 16px !important;
     }
-    .chat-last-msg {
-      font-size: 17px !important;
+    .brand-line-top {
+      font-size: 20px !important;
     }
-    .room-title {
-      font-size: 22px !important;
-    }
-    .room-subtitle {
+    .brand-line-bottom {
       font-size: 15px !important;
     }
-    .msg-bubble {
+    .btn-webaps, .btn-logout, .btn-grup-plus {
       font-size: 18px !important;
-      padding: 14px 18px !important;
+      padding: 14px 20px !important;
+      border-radius: 16px !important;
     }
-    .msg-sender-name {
+    .btn-chat-privat {
+      padding: 12px 16px !important;
+      border-radius: 16px !important;
+    }
+    .btn-chat-privat .lbl-top, .btn-chat-privat .lbl-bot {
       font-size: 16px !important;
     }
+    .announcement-perspective {
+      margin: 16px !important;
+    }
+    .announcement-bar {
+      padding: 20px 24px !important;
+      border-radius: 20px !important;
+      font-size: 22px !important;
+      min-height: 70px !important;
+    }
+    .announcement-icon {
+      font-size: 28px !important;
+    }
+    .chat-item {
+      padding: 22px 20px !important;
+    }
+    .chat-item::after {
+      left: 115px !important;
+      right: 20px !important;
+    }
+    .chat-name {
+      font-size: 28px !important;
+    }
+    .chat-time {
+      font-size: 18px !important;
+    }
+    .chat-last-msg {
+      font-size: 22px !important;
+      margin-top: 4px !important;
+    }
+    .robotic-footer {
+      font-size: 16px !important;
+      padding: 14px !important;
+    }
+    .room-header {
+      height: 92px !important;
+      padding: 14px 18px !important;
+      gap: 16px !important;
+    }
+    .back-btn {
+      font-size: 38px !important;
+      padding: 6px 14px !important;
+    }
+    .room-title {
+      font-size: 28px !important;
+    }
+    .room-subtitle {
+      font-size: 18px !important;
+      margin-top: 4px !important;
+    }
+    .btn-combo-call {
+      padding: 14px 18px !important;
+      font-size: 24px !important;
+      border-radius: 18px !important;
+    }
+    .combo-dropdown-menu {
+      top: 76px !important;
+      min-width: 280px !important;
+      padding: 16px !important;
+      border-radius: 20px !important;
+    }
+    .combo-menu-item {
+      font-size: 20px !important;
+      padding: 18px 20px !important;
+      border-radius: 16px !important;
+    }
+    .chat-body {
+      padding: 18px !important;
+      gap: 16px !important;
+    }
+    .msg-bubble {
+      font-size: 24px !important;
+      padding: 18px 22px 16px 22px !important;
+      border-radius: 22px !important;
+      max-width: 92% !important;
+    }
+    .msg-sender-name {
+      font-size: 20px !important;
+    }
+    .btn-reply-msg {
+      font-size: 20px !important;
+      padding: 4px 14px !important;
+    }
+    .quoted-reply-box {
+      font-size: 20px !important;
+      padding: 14px 16px !important;
+      border-radius: 14px !important;
+      margin-bottom: 14px !important;
+    }
+    .msg-meta {
+      font-size: 16px !important;
+      margin-top: 10px !important;
+      gap: 10px !important;
+    }
+    .tick-blue, .tick-gray {
+      font-size: 18px !important;
+    }
+    .wa-card {
+      padding: 20px !important;
+      border-radius: 18px !important;
+      font-size: 22px !important;
+    }
+    .wa-card-header {
+      font-size: 24px !important;
+      margin-bottom: 14px !important;
+    }
+    .poll-option-btn {
+      padding: 18px 20px !important;
+      font-size: 22px !important;
+      border-radius: 16px !important;
+      margin-top: 14px !important;
+    }
+    .reply-preview-banner {
+      padding: 14px 18px !important;
+      font-size: 20px !important;
+    }
+    .reply-preview-inner {
+      padding: 14px 18px !important;
+      border-radius: 14px !important;
+    }
+    .chat-input-wrapper {
+      padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px)) 18px !important;
+      gap: 14px !important;
+    }
+    .chat-input-pill {
+      min-height: 72px !important;
+      border-radius: 36px !important;
+      padding: 4px 22px !important;
+      gap: 14px !important;
+    }
     .chat-input-pill input {
-      font-size: 19px !important;
+      font-size: 24px !important;
+      padding: 14px 0 !important;
+    }
+    .pill-icon {
+      font-size: 34px !important;
+    }
+    .send-btn-circle {
+      width: 72px !important;
+      height: 72px !important;
+      font-size: 28px !important;
+    }
+    .emoji-picker-container {
+      bottom: 96px !important;
+      left: 16px !important;
+      right: 16px !important;
+      padding: 20px !important;
+      gap: 14px !important;
+      max-height: 340px !important;
+      border-radius: 24px !important;
+    }
+    .emoji-item {
+      font-size: 38px !important;
+      padding: 12px !important;
+    }
+    .wa-attach-menu {
+      bottom: 96px !important;
+      left: 16px !important;
+      right: 16px !important;
+      padding: 26px 20px !important;
+      gap: 24px 18px !important;
+      border-radius: 28px !important;
+    }
+    .wa-attach-circle {
+      width: 76px !important;
+      height: 76px !important;
+      font-size: 34px !important;
+    }
+    .wa-attach-label {
+      font-size: 16px !important;
+    }
+    .modal-card {
+      max-width: 94% !important;
+      padding: 28px !important;
+      border-radius: 26px !important;
+      gap: 20px !important;
+    }
+    .modal-title {
+      font-size: 24px !important;
+    }
+    .modal-input {
+      padding: 20px 22px !important;
+      font-size: 22px !important;
+      border-radius: 18px !important;
+    }
+    .member-row {
+      padding: 18px 22px !important;
+      font-size: 20px !important;
+      border-radius: 16px !important;
+    }
+    .call-overlay {
+      padding: 50px 24px !important;
+    }
+    .call-user-avatar {
+      width: 160px !important;
+      height: 160px !important;
+      font-size: 68px !important;
+    }
+    .call-status {
+      font-size: 24px !important;
+      margin-top: 20px !important;
+    }
+    .btn-call-action {
+      width: 84px !important;
+      height: 84px !important;
+      font-size: 36px !important;
     }
   }
 
@@ -1487,7 +1712,6 @@
   function confirmLogout() {
     document.getElementById('logoutWarningModal').classList.add('hidden');
     
-    // Clear cache, memory, and permissions completely on logout
     try {
       localStorage.clear();
       sessionStorage.clear();
