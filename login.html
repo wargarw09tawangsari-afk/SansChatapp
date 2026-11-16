@@ -29,62 +29,53 @@
     min-height: 100dvh;
     background-color: var(--wa-bg);
     color: var(--wa-text);
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: env(safe-area-inset-top, 12px) env(safe-area-inset-right, 12px) env(safe-area-inset-bottom, 24px) env(safe-area-inset-left, 12px);
+    padding: 0;
   }
   .login-container {
     background: var(--wa-panel);
     width: 100%;
-    max-width: 480px;
+    height: 100%;
+    max-width: 100%;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 24px 20px;
+    padding: 20px 14px;
     position: relative;
     margin: 0 auto;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
-    border-radius: 0;
-  }
-  @media (min-width: 500px) {
-    .login-container {
-      min-height: auto;
-      border-radius: 24px;
-      padding: 36px 28px;
-    }
   }
   .logo-sc-3d-large {
-    width: 110px;
-    height: 110px;
-    margin: 0 auto 18px auto;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 16px auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 24px;
+    border-radius: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 52px;
+    font-size: 55px;
     color: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
     border: 3px solid var(--wa-green-light);
   }
   .login-title {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 800;
     color: var(--wa-text);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     text-align: center;
     letter-spacing: 1px;
   }
   .login-subtitle {
-    font-size: 15px;
+    font-size: 16px;
     color: var(--wa-green);
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 700;
@@ -93,47 +84,47 @@
     background: rgba(234, 67, 53, 0.12);
     border: 1px solid #ea4335;
     border-radius: 14px;
-    padding: 16px 14px;
-    margin-bottom: 20px;
+    padding: 14px 12px;
+    margin-bottom: 16px;
     color: #fca5a5;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.4;
   }
   .pwa-warning-title {
     font-weight: 800;
     color: #f87171;
-    margin-bottom: 6px;
-    font-size: 15px;
+    margin-bottom: 4px;
+    font-size: 14px;
     text-transform: uppercase;
   }
   .pwa-warning-box ol {
-    padding-left: 18px;
-    margin-top: 6px;
+    padding-left: 16px;
+    margin-top: 4px;
   }
   .pwa-warning-box li {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     color: var(--wa-text);
   }
   .field-group {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     position: relative;
   }
   .field-group label {
     display: block;
     font-size: 14px;
     color: var(--wa-green);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 700;
     letter-spacing: 0.5px;
   }
   .field-group input {
     width: 100%;
-    padding: 14px 50px 14px 16px;
+    padding: 16px 50px 16px 16px;
     background: var(--wa-card);
     border: 1px solid var(--wa-border);
     border-radius: 14px;
     color: var(--wa-text);
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     outline: none;
     transition: border-color 0.15s;
@@ -144,10 +135,10 @@
   .password-toggle {
     position: absolute;
     right: 16px;
-    top: 56%;
+    top: 58%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 22px;
+    font-size: 24px;
     user-select: none;
     color: var(--wa-text-secondary);
   }
@@ -156,16 +147,16 @@
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: 16px;
+    padding: 18px;
     border-radius: 20px;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
     cursor: pointer;
     margin-top: 6px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.45);
   }
   .btn-3d-robotic:disabled {
     background: var(--wa-border);
@@ -176,8 +167,8 @@
   }
   .help-btn-3d {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 14px;
+    right: 14px;
     background: #202c33;
     color: var(--wa-green);
     border: 1px solid var(--wa-border);

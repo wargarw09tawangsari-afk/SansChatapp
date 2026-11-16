@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sanschat-v12';
+const CACHE_NAME = 'sanschat-v13';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
