@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sc-SansChat - Login</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00a884">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
   body { background-color: #050b10; color: #00f2fe; padding: 8px; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
@@ -87,32 +85,7 @@
 </div>
 
 <script>
-  const DEFAULT_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
-  const ACTIVE_S3_URL = localStorage.getItem('sanschat_s3_url') || DEFAULT_S3_URL;
-
-  function callBackendApi(action, payloadObj) {
-    return new Promise((resolve, reject) => {
-      // Gunakan mode 'no-cors' atau fallback JSONP / img ping jika fetch CORS dari GitHub Pages terblokir oleh Google Apps Script redirect
-      fetch(ACTIVE_S3_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(Object.assign({ action: action }, payloadObj || {}))
-      })
-      .then(() => {
-        // Karena no-cors mengembalikan response opaque, kita lakukan fallback verifikasi langsung lokal atau ambil dari cache spreadsheet jika offline/CORS
-        resolve({ success: true, user: { username: payloadObj.username, nama: payloadObj.username, alamat: "RW 09 Sansivera" } });
-      })
-      .catch((err) => {
-        // Fallback jika fetch gagal total (misal offline)
-        if (payloadObj.username) {
-          resolve({ success: true, user: { username: payloadObj.username, nama: payloadObj.username, alamat: "RW 09 Sansivera (Offline Mode)" } });
-        } else {
-          reject(err);
-        }
-      });
-    });
-  }
+  const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 
   window.onload = function() {
     const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
@@ -151,6 +124,21 @@
     }
   }
 
+  function saveUserMemoryAndRedirect(userObj) {
+    const cleanUsername = String(userObj.username || "").trim().toUpperCase();
+    try {
+      localStorage.setItem('sanschat_active_username', cleanUsername);
+      localStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+      sessionStorage.setItem('sanschat_active_username', cleanUsername);
+      sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+    } catch (e) {}
+
+    const base = window.location.href.split('?')[0].replace(/login\.html$/, '').replace(/index\.html$/, '');
+    const finalUtamaUrl = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(cleanUsername);
+
+    window.location.href = finalUtamaUrl;
+  }
+
   function doLogin() {
     const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -168,25 +156,28 @@
     btn.innerText = "MEMVERIFIKASI...";
     btn.disabled = true;
 
-    callBackendApi('loginUser', { username: u, password: p })
-      .then((res) => {
-        if (res && res.success && res.user) {
-          btn.innerText = "MEMBUKA HALAMAN UTAMA...";
-          const cleanUsername = res.user.username;
-          localStorage.setItem('sanschat_active_username', cleanUsername);
-          localStorage.setItem('sanschat_user_session', JSON.stringify(res.user));
-          window.location.href = 'utama.html?user=' + encodeURIComponent(cleanUsername);
-        } else {
-          btn.innerText = "VERIFIKASI & MASUK";
-          btn.disabled = false;
-          alert((res && res.message) ? res.message : "Login gagal!");
-        }
-      })
-      .catch((err) => {
+    fetch(S3_API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
+    })
+    .then(r => r.json())
+    .then(resObj => {
+      const res = resObj.data;
+      if (res && res.success && res.user) {
+        btn.innerText = "MEMBUKA HALAMAN UTAMA...";
+        saveUserMemoryAndRedirect(res.user);
+      } else {
         btn.innerText = "VERIFIKASI & MASUK";
         btn.disabled = false;
-        alert("Koneksi bermasalah: " + err.message);
-      });
+        alert((res && res.message) ? res.message : "Login gagal!");
+      }
+    })
+    .catch(err => {
+      btn.innerText = "VERIFIKASI & MASUK";
+      btn.disabled = false;
+      alert("Koneksi bermasalah: " + err.message);
+    });
   }
 </script>
 </body>

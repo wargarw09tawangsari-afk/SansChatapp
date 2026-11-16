@@ -516,13 +516,25 @@
 </div>
 
 <script>
-  const DEFAULT_S2_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec";
-  const DEFAULT_S3_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+  const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+  const S1_HELP_URL = "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec";
+  const S2_PORTAL_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec";
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlUser = (urlParams.get('user') || "").trim().toUpperCase();
+  function callServerAPI(action, payload = {}) {
+    payload.action = action;
+    return fetch(S3_API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(res => res.data);
+  }
 
   function resolveSavedUserSession() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlUser = (urlParams.get('user') || "").trim().toUpperCase();
+
     let storedObj = null;
     try {
       storedObj = JSON.parse(localStorage.getItem('sanschat_user_session') || sessionStorage.getItem('sanschat_user_session') || 'null');
@@ -583,23 +595,6 @@
     "#9a3412", "#991b1b", "#065f46", "#854d0e", "#1d4ed8"
   ];
 
-  function callBackendApi(action, payloadObj) {
-    return new Promise((resolve, reject) => {
-      fetch(DEFAULT_S3_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(Object.assign({ action: action }, payloadObj || {}))
-      })
-      .then(() => {
-        resolve({ success: true });
-      })
-      .catch((err) => {
-        reject(new Error(err.message || 'Gagal sinkronisasi server'));
-      });
-    });
-  }
-
   window.onload = function() {
     if (!currentUser || !currentUser.username) {
       redirectToIndexWelcome();
@@ -645,7 +640,8 @@
   }
 
   function redirectToIndexWelcome() {
-    window.location.href = 'login.html';
+    const base = window.location.href.split('?')[0].replace(/utama\.html$/, '').replace(/login\.html$/, '');
+    window.location.href = base.endsWith('/') ? base + 'index.html' : base + '/index.html';
   }
 
   function renderCachedDashboard() {
@@ -672,7 +668,7 @@
   }
 
   function syncInitialDashboardBundle() {
-    callBackendApi('getInitialDashboardBundle', { username: currentUser.username }).then((bundle) => {
+    callServerAPI('getInitialDashboardBundle', { username: currentUser.username }).then((bundle) => {
       if (!bundle) return;
       if (bundle.profile) {
         currentUser = Object.assign({}, currentUser, bundle.profile);
@@ -709,11 +705,11 @@
   function backgroundSyncWatcher() {
     if (!currentUser || !currentUser.username || !navigator.onLine) return;
 
-    callBackendApi('checkIncomingCall', { username: currentUser.username }).then((incoming) => {
+    callServerAPI('checkIncomingCall', { username: currentUser.username }).then((incoming) => {
       if (incoming) startIncomingCallUI(incoming);
     }).catch(() => {});
 
-    callBackendApi('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnread) => {
+    callServerAPI('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnread) => {
       updatePrivateButtonBadge(hasUnread);
       if (hasUnread && !isPrivateChatMode) {
         triggerBackgroundAlert("Pesan Privat Baru di Sc-SansChat", "Ada pesan privat masuk untuk " + currentUser.username);
@@ -770,7 +766,7 @@
   }
 
   function openWebApsUrl() {
-    window.open(DEFAULT_S2_URL, "_blank");
+    window.open(S2_PORTAL_URL, "_blank");
   }
 
   function triggerProfileUpload(target) {
@@ -792,14 +788,16 @@
         const resized = canvas.toDataURL('image/jpeg', 0.78);
 
         if (uploadTargetType === 'user') {
-          callBackendApi('updateProfilePicture', { username: currentUser.username, base64Data: resized }).then((res) => {
-            currentUser.foto = resized;
-            localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
-            document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${resized}" />`;
+          callServerAPI('updateProfilePicture', { username: currentUser.username, base64Data: resized }).then((res) => {
+            if (res && res.success) {
+              currentUser.foto = resized;
+              localStorage.setItem('sanschat_user_session', JSON.stringify(currentUser));
+              document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${resized}" />`;
+            }
           });
         } else {
           document.getElementById('roomGroupAvatar').innerHTML = `<img src="${resized}" />`;
-          callBackendApi('updateGroupProfilePicture', { sheetName: activeChatSheet, base64Data: resized });
+          callServerAPI('updateGroupProfilePicture', { sheetName: activeChatSheet, base64Data: resized });
         }
       };
       img.src = event.target.result;
@@ -946,9 +944,9 @@
     closeAllInputPopups();
     stopActiveRoomAutoRefresh();
     if (isPrivateChatMode) {
-      callBackendApi('markPrivateMessagesAsRead', { username: currentUser.username }).then(() => {
+      callServerAPI('markPrivateMessagesAsRead', { username: currentUser.username }).then(() => {
         showMainView();
-      }).catch(() => showMainView());
+      });
     } else {
       showMainView();
     }
@@ -1075,15 +1073,15 @@
 
   function loadMessages(isSilentPoll = false) {
     if (isPrivateChatMode) {
-      callBackendApi('getPrivateChatSheetRecords', { username: currentUser.username }).then((msgs) => {
+      callServerAPI('getPrivateChatSheetRecords', { username: currentUser.username }).then((msgs) => {
         localStorage.setItem('sanschat_priv_' + currentUser.username, JSON.stringify(msgs || []));
         renderPrivateMessageList(msgs, isSilentPoll);
-      }).catch(() => {});
+      });
     } else {
-      callBackendApi('getMessages', { chatSheetName: activeChatSheet, username: currentUser.username }).then((msgs) => {
+      callServerAPI('getMessages', { chatSheetName: activeChatSheet, username: currentUser.username }).then((msgs) => {
         localStorage.setItem('sanschat_msgs_' + activeChatSheet, JSON.stringify(msgs || []));
         renderMessageList(msgs, isSilentPoll);
-      }).catch(() => {});
+      });
     }
   }
 
@@ -1193,7 +1191,7 @@
 
     if (isPrivateChatMode) {
       const targetUser = privateTargetUsername || currentUser.username;
-      callBackendApi('sendPrivateMessage', {
+      callServerAPI('sendPrivateMessage', {
         username: currentUser.username,
         nama: currentUser.nama,
         pesan: pesanText,
@@ -1203,7 +1201,7 @@
         replyTo: replyPayload
       }).then(() => loadMessages(false));
     } else {
-      callBackendApi('sendMessage', {
+      callServerAPI('sendMessage', {
         chatSheetName: activeChatSheet,
         username: currentUser.username,
         nama: currentUser.nama,
@@ -1302,7 +1300,7 @@
     list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga...</div>';
     document.getElementById('waContactModal').classList.remove('hidden');
 
-    callBackendApi('getAllWargaContacts', {}).then((contacts) => {
+    callServerAPI('getAllWargaContacts').then((contacts) => {
       list.innerHTML = '';
       if (!contacts || contacts.length === 0) {
         list.innerHTML = '<div style="color:#8696a0; text-align:center;">Tidak ada data warga.</div>';
@@ -1378,7 +1376,7 @@
 
   function castPollVote(rowNumber, optionindex) {
     if (isPrivateChatMode) return;
-    callBackendApi('votePollOption', {
+    callServerAPI('votePollOption', {
       chatSheetName: activeChatSheet,
       rowNumber: rowNumber,
       optionindex: optionindex,
@@ -1529,8 +1527,9 @@
     document.getElementById('groupMembersModal').classList.remove('hidden');
 
     const loaderFn = isPrivateChatMode ? 'getAllWargaContacts' : 'getGroupMembersByRole';
-    const loaderPayload = isPrivateChatMode ? {} : { groupName: activeGroupName };
-    callBackendApi(loaderFn, loaderPayload).then((members) => {
+    const payload = isPrivateChatMode ? {} : { groupName: activeGroupName };
+
+    callServerAPI(loaderFn, payload).then((members) => {
       list.innerHTML = '';
       if (!members || members.length === 0) {
         list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Tidak ada warga terdaftar.</div>';
@@ -1568,7 +1567,7 @@
     document.getElementById('callScreen').classList.remove('hidden');
     playRingtone();
 
-    callBackendApi('initiateCall', {
+    callServerAPI('initiateCall', {
       targetUsername: targetUsername,
       callerUsername: currentUser.username,
       callerName: currentUser.nama,
@@ -1607,14 +1606,14 @@
     document.getElementById('videoContainer').classList.remove('hidden');
     document.getElementById('jitsiCallFrame').src = activeCallRoomUrl;
 
-    callBackendApi('updateCallStatus', { username: currentUser.username, status: "ANSWERED" });
+    callServerAPI('updateCallStatus', { username: currentUser.username, status: "ANSWERED" });
   }
 
   function endCall() {
     stopRingtone();
     document.getElementById('jitsiCallFrame').src = "";
     document.getElementById('callScreen').classList.add('hidden');
-    callBackendApi('updateCallStatus', { username: currentUser.username, status: "ENDED" });
+    callServerAPI('updateCallStatus', { username: currentUser.username, status: "ENDED" });
   }
 
   function playRingtone() {
@@ -1679,7 +1678,7 @@
     list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat data...</div>';
     document.getElementById('groupMembersModal').classList.remove('hidden');
 
-    callBackendApi('getGroupMembersByRole', { groupName: activeGroupName }).then((members) => {
+    callServerAPI('getGroupMembersByRole', { groupName: activeGroupName }).then((members) => {
       list.innerHTML = '';
       if (!members || members.length === 0) {
         list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Tidak ada anggota terdaftar.</div>';

@@ -88,6 +88,7 @@
   <div class="brand-sub">Sc-SansChat</div>
   <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
+  <!-- PANDUAN & STATUS INSTALASI PWA ANDROID -->
   <div class="pwa-instruction-box">
     <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
     <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
@@ -107,7 +108,6 @@
 
 <script>
   let deferredInstallPrompt = null;
-  let cachedSansChatUrl = localStorage.getItem('sanschat_s3_url') || "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').catch(() => {});
@@ -127,10 +127,12 @@
 
   window.onload = function() {
     updatePwaBadgeStatus();
+
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
-      window.location.href = 'utama.html?user=' + encodeURIComponent(savedSession.username);
+      const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
+      window.location.href = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(savedSession.username);
     }
   };
 
@@ -156,7 +158,11 @@
   }
 
   function proceedToLogin() {
-    window.location.href = 'login.html';
+    const btn = document.getElementById('btnOkWelcome');
+    btn.innerText = "MEMBUKA LOGIN...";
+    btn.disabled = true;
+    const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
+    window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
   }
 </script>
 </body>
