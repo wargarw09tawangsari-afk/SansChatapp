@@ -43,108 +43,116 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 24px 20px;
+    padding: 24px 18px;
     position: relative;
     margin: 0 auto;
     box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    border-left: 1px solid var(--wa-border);
+    border-right: 1px solid var(--wa-border);
   }
   .login-content-top {
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin: auto 0;
   }
   .logo-sc-3d-large {
-    width: 100px;
-    height: 100px;
-    margin: 12px auto 14px auto;
+    width: 110px;
+    height: 110px;
+    margin: 14px auto 16px auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 24px;
+    border-radius: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 48px;
+    font-size: 52px;
     color: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
+    box-shadow: 0 10px 28px rgba(0, 168, 132, 0.45);
     border: 3px solid var(--wa-green-light);
   }
   .login-title {
-    font-size: 24px;
-    font-weight: 800;
+    font-size: 26px;
+    font-weight: 900;
     color: var(--wa-text);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     text-align: center;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
   .login-subtitle {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--wa-green);
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
+    letter-spacing: 1px;
+    font-weight: 800;
   }
   .pwa-warning-box {
-    background: rgba(234, 67, 53, 0.15);
+    background: rgba(234, 67, 53, 0.18);
     border: 1px solid #ea4335;
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 16px;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 18px;
     color: #fca5a5;
-    font-size: 13px;
-    line-height: 1.45;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   }
   .pwa-warning-title {
-    font-weight: 800;
+    font-weight: 900;
     color: #f87171;
-    margin-bottom: 6px;
-    font-size: 13px;
+    margin-bottom: 8px;
+    font-size: 14px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   .pwa-warning-box ol {
-    padding-left: 18px;
-    margin-top: 6px;
+    padding-left: 20px;
+    margin-top: 8px;
+    font-weight: 600;
   }
   .pwa-warning-box li {
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     color: var(--wa-text);
   }
   .field-group {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     position: relative;
   }
   .field-group label {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--wa-green);
-    margin-bottom: 6px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
   }
   .field-group input {
     width: 100%;
-    padding: 16px 50px 16px 16px;
+    padding: 18px 52px 18px 18px;
     background: var(--wa-card);
     border: 1px solid var(--wa-border);
-    border-radius: 14px;
+    border-radius: 16px;
     color: var(--wa-text);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: 700;
     outline: none;
     transition: border-color 0.15s;
-    min-height: 52px;
+    min-height: 56px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
   }
   .field-group input:focus {
     border-color: var(--wa-green);
   }
   .password-toggle {
     position: absolute;
-    right: 16px;
-    top: 58%;
+    right: 18px;
+    top: 59%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 22px;
+    font-size: 24px;
     user-select: none;
     color: var(--wa-text-secondary);
   }
@@ -153,16 +161,16 @@
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: 16px;
+    padding: 18px;
     border-radius: 16px;
-    font-size: 17px;
-    font-weight: 800;
+    font-size: 18px;
+    font-weight: 900;
     cursor: pointer;
-    margin-top: 8px;
-    letter-spacing: 1px;
+    margin-top: 10px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
-    min-height: 52px;
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
+    min-height: 58px;
   }
   .btn-3d-robotic:disabled {
     background: var(--wa-border);
@@ -173,17 +181,18 @@
   }
   .help-btn-3d {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 18px;
+    right: 18px;
     background: #202c33;
     color: var(--wa-green);
     border: 1px solid var(--wa-border);
-    padding: 8px 12px;
-    border-radius: 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
     text-decoration: none;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 800;
     z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
   .hidden { display: none !important; }
 </style>
@@ -220,7 +229,7 @@
     </div>
   </div>
 
-  <div style="width:100%; padding-bottom: 10px;">
+  <div style="width:100%; padding-bottom: 12px;">
     <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
   </div>
 </div>
