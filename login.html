@@ -34,20 +34,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
   }
   .login-container {
     background: var(--wa-panel);
     width: 100%;
-    max-width: 500px;
+    max-width: 480px;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 24px 18px 20px 18px;
+    padding: 24px 20px;
     position: relative;
     margin: 0 auto;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
   }
   .login-content-top {
     display: flex;
@@ -55,30 +54,30 @@
     width: 100%;
   }
   .logo-sc-3d-large {
-    width: 110px;
-    height: 110px;
-    margin: 10px auto 14px auto;
+    width: 100px;
+    height: 100px;
+    margin: 12px auto 14px auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
     border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 52px;
+    font-size: 48px;
     color: #ffffff;
     box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
     border: 3px solid var(--wa-green-light);
   }
   .login-title {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
     color: var(--wa-text);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     text-align: center;
     letter-spacing: 0.5px;
   }
   .login-subtitle {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--wa-green);
     text-align: center;
     margin-bottom: 16px;
@@ -89,23 +88,23 @@
   .pwa-warning-box {
     background: rgba(234, 67, 53, 0.15);
     border: 1px solid #ea4335;
-    border-radius: 12px;
-    padding: 12px 12px;
+    border-radius: 14px;
+    padding: 14px;
     margin-bottom: 16px;
     color: #fca5a5;
     font-size: 13px;
-    line-height: 1.4;
+    line-height: 1.45;
   }
   .pwa-warning-title {
     font-weight: 800;
     color: #f87171;
-    margin-bottom: 4px;
-    font-size: 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
     text-transform: uppercase;
   }
   .pwa-warning-box ol {
-    padding-left: 16px;
-    margin-top: 4px;
+    padding-left: 18px;
+    margin-top: 6px;
   }
   .pwa-warning-box li {
     margin-bottom: 4px;
@@ -117,7 +116,7 @@
   }
   .field-group label {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--wa-green);
     margin-bottom: 6px;
     font-weight: 700;
@@ -130,10 +129,11 @@
     border: 1px solid var(--wa-border);
     border-radius: 14px;
     color: var(--wa-text);
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
     outline: none;
     transition: border-color 0.15s;
+    min-height: 52px;
   }
   .field-group input:focus {
     border-color: var(--wa-green);
@@ -144,7 +144,7 @@
     top: 58%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 24px;
+    font-size: 22px;
     user-select: none;
     color: var(--wa-text-secondary);
   }
@@ -154,14 +154,15 @@
     color: var(--wa-panel);
     border: none;
     padding: 16px;
-    border-radius: 18px;
-    font-size: 18px;
+    border-radius: 16px;
+    font-size: 17px;
     font-weight: 800;
     cursor: pointer;
-    margin-top: 6px;
+    margin-top: 8px;
     letter-spacing: 1px;
     text-transform: uppercase;
     box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+    min-height: 52px;
   }
   .btn-3d-robotic:disabled {
     background: var(--wa-border);
@@ -210,10 +211,10 @@
       <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
     </div>
 
-    <div class="field-group" style="position:relative;">
+    <div class="field-group">
       <label>KODE AKSES / PASSWORD</label>
       <div style="position:relative;">
-        <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()" style="padding-right: 50px;">
+        <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()">
         <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
       </div>
     </div>
