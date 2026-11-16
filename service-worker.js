@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sanschat-v13';
+const CACHE_NAME = 'sanschat-v10';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -40,7 +40,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-self.addEventListener('notificationcall', (event) => {
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
