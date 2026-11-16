@@ -29,7 +29,8 @@
     min-height: 100dvh;
     background-color: var(--wa-bg);
     color: var(--wa-text);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,29 +39,34 @@
   .login-container {
     background: var(--wa-panel);
     width: 100%;
-    height: 100%;
-    max-width: 100%;
+    max-width: 500px;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 20px 14px;
+    justify-content: space-between;
+    padding: 24px 18px 20px 18px;
     position: relative;
     margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  }
+  .login-content-top {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
   }
   .logo-sc-3d-large {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 16px auto;
+    width: 110px;
+    height: 110px;
+    margin: 10px auto 14px auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 26px;
+    border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 55px;
+    font-size: 52px;
     color: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
     border: 3px solid var(--wa-green-light);
   }
   .login-title {
@@ -69,22 +75,22 @@
     color: var(--wa-text);
     margin-bottom: 4px;
     text-align: center;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
   }
   .login-subtitle {
-    font-size: 16px;
+    font-size: 15px;
     color: var(--wa-green);
     text-align: center;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 700;
   }
   .pwa-warning-box {
-    background: rgba(234, 67, 53, 0.12);
+    background: rgba(234, 67, 53, 0.15);
     border: 1px solid #ea4335;
-    border-radius: 14px;
-    padding: 14px 12px;
+    border-radius: 12px;
+    padding: 12px 12px;
     margin-bottom: 16px;
     color: #fca5a5;
     font-size: 13px;
@@ -124,7 +130,7 @@
     border: 1px solid var(--wa-border);
     border-radius: 14px;
     color: var(--wa-text);
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     outline: none;
     transition: border-color 0.15s;
@@ -147,16 +153,15 @@
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: 18px;
-    border-radius: 20px;
+    padding: 16px;
+    border-radius: 18px;
     font-size: 18px;
     font-weight: 800;
     cursor: pointer;
     margin-top: 6px;
-    margin-bottom: 16px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.45);
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
   }
   .btn-3d-robotic:disabled {
     background: var(--wa-border);
@@ -167,8 +172,8 @@
   }
   .help-btn-3d {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 16px;
+    right: 16px;
     background: #202c33;
     color: var(--wa-green);
     border: 1px solid var(--wa-border);
@@ -184,35 +189,39 @@
 </head>
 <body>
 <div class="login-container">
-  <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
-  <div class="logo-sc-3d-large">Sc</div>
-  <div class="login-title">SANSCHAT SYSTEM</div>
-  <div class="login-subtitle">Otentikasi Warga RT/RW</div>
+  <div class="login-content-top">
+    <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
+    <div class="logo-sc-3d-large">Sc</div>
+    <div class="login-title">SANSCHAT SYSTEM</div>
+    <div class="login-subtitle">Otentikasi Warga RT/RW</div>
 
-  <div id="pwaWarningCard" class="pwa-warning-box hidden">
-    <div class="pwa-warning-title">⚠️ AKSES DIBATASI (BELUM DIINSTAL)</div>
-    <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
-    <ol>
-      <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
-      <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
-      <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
-    </ol>
-  </div>
+    <div id="pwaWarningCard" class="pwa-warning-box hidden">
+      <div class="pwa-warning-title">⚠️ AKSES DIBATASI (BELUM DIINSTAL)</div>
+      <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
+      <ol>
+        <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
+        <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
+        <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
+      </ol>
+    </div>
 
-  <div class="field-group">
-    <label>USERNAME WARGA</label>
-    <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
-  </div>
+    <div class="field-group">
+      <label>USERNAME WARGA</label>
+      <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
+    </div>
 
-  <div class="field-group" style="position:relative;">
-    <label>KODE AKSES / PASSWORD</label>
-    <div style="position:relative;">
-      <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()" style="padding-right: 50px;">
-      <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+    <div class="field-group" style="position:relative;">
+      <label>KODE AKSES / PASSWORD</label>
+      <div style="position:relative;">
+        <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()" style="padding-right: 50px;">
+        <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+      </div>
     </div>
   </div>
 
-  <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
+  <div style="width:100%; padding-bottom: 10px;">
+    <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
+  </div>
 </div>
 
 <script>

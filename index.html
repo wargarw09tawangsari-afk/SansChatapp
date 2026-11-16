@@ -33,7 +33,8 @@
     min-height: 100dvh;
     background-color: var(--wa-bg);
     color: var(--wa-text);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,52 +43,58 @@
   .welcome-container {
     background: var(--wa-panel);
     width: 100%;
-    height: 100%;
-    max-width: 100%;
+    max-width: 500px;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px 14px;
+    padding: 24px 18px 20px 18px;
     text-align: center;
     margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  }
+  .welcome-header-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
   .welcome-title {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 800;
     color: var(--wa-text);
-    margin-bottom: 16px;
-    letter-spacing: 1px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
   }
   .logo-sc-3d-large {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 20px auto;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 14px auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 30px;
+    border-radius: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 65px;
+    font-size: 56px;
     color: #ffffff;
-    box-shadow: 0 10px 30px rgba(0, 168, 132, 0.45);
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
     border: 3px solid var(--wa-green-light);
   }
   .brand-sub {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
     color: var(--wa-green);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
   .welcome-email {
-    font-size: 16px;
+    font-size: 15px;
     color: var(--wa-text-secondary);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     background: var(--wa-card);
-    padding: 12px 16px;
-    border-radius: 14px;
+    padding: 10px 14px;
+    border-radius: 12px;
     border: 1px solid var(--wa-border);
     font-weight: 600;
     word-break: break-all;
@@ -96,36 +103,36 @@
   .pwa-instruction-box {
     background: var(--wa-card);
     border: 1px solid var(--wa-border);
-    border-radius: 16px;
-    padding: 16px 14px;
-    margin-bottom: 20px;
+    border-radius: 14px;
+    padding: 14px 12px;
+    margin-bottom: 14px;
     text-align: left;
     width: 100%;
   }
   .pwa-instruction-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     color: var(--wa-green);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-transform: uppercase;
     text-align: center;
   }
   .pwa-instruction-steps {
-    font-size: 14px;
+    font-size: 13px;
     color: #d1d7db;
-    line-height: 1.5;
-    padding-left: 18px;
+    line-height: 1.4;
+    padding-left: 16px;
   }
   .pwa-instruction-steps li {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .pwa-status-badge {
     display: inline-block;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     width: 100%;
     text-align: center;
   }
@@ -141,14 +148,14 @@
   }
   .btn-install-native {
     width: 100%;
-    margin-top: 10px;
-    padding: 14px;
-    border-radius: 14px;
+    margin-top: 8px;
+    padding: 12px;
+    border-radius: 12px;
     border: none;
     background: var(--wa-green);
     color: var(--wa-panel);
     font-weight: 800;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     text-transform: uppercase;
   }
@@ -157,18 +164,18 @@
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: 18px;
-    border-radius: 20px;
-    font-size: 20px;
+    padding: 16px;
+    border-radius: 18px;
+    font-size: 18px;
     font-weight: 800;
     cursor: pointer;
     letter-spacing: 1px;
     text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.45);
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
   }
   .footer-tag {
-    margin-top: 16px;
-    font-size: 12px;
+    margin-top: 10px;
+    font-size: 11px;
     color: var(--wa-text-secondary);
     letter-spacing: 1px;
     font-weight: 600;
@@ -179,26 +186,30 @@
 <body>
 
 <div class="welcome-container">
-  <div class="welcome-title">SELAMAT DATANG</div>
-  <div class="logo-sc-3d-large">Sc</div>
-  <div class="brand-sub">Sc-SansChat</div>
-  <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
+  <div class="welcome-header-group">
+    <div class="welcome-title">SELAMAT DATANG</div>
+    <div class="logo-sc-3d-large">Sc</div>
+    <div class="brand-sub">Sc-SansChat</div>
+    <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
-  <div class="pwa-instruction-box">
-    <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
-    <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
-    <ol class="pwa-instruction-steps">
-      <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
-      <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
-      <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
-    </ol>
-    <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
-      📲 INSTAL APLIKASI SEKARANG
-    </button>
+    <div class="pwa-instruction-box">
+      <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
+      <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
+      <ol class="pwa-instruction-steps">
+        <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
+        <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
+        <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
+      </ol>
+      <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
+        📲 INSTAL APLIKASI SEKARANG
+      </button>
+    </div>
   </div>
 
-  <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
-  <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
+  <div style="width:100%;">
+    <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
+    <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
+  </div>
 </div>
 
 <script>

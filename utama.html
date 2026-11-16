@@ -48,36 +48,35 @@
     position: relative;
   }
 
-  /* Header menggantikan baris status akun dengan Nama & Alamat */
+  /* Header rapi dan elegan, menyatu sempurna dengan informasi pengguna besar */
   .main-header {
     background: var(--wa-panel);
-    height: auto;
-    min-height: 60px;
-    padding: 8px 10px;
+    min-height: 72px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #1f2c34;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
   }
   .header-left-section {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     min-width: 0;
     flex: 1;
   }
   .header-right-section {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
   }
 
   .profile-avatar-clickable {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: #2a3942;
     border: 2px solid var(--wa-green);
@@ -85,9 +84,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
     overflow: hidden;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
   .profile-avatar-clickable img {
     width: 100%;
@@ -98,8 +98,8 @@
   .brand-frame-3d {
     background: var(--wa-card);
     border: 1px solid var(--wa-green);
-    border-radius: 8px;
-    padding: 3px 6px;
+    border-radius: 10px;
+    padding: 4px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -107,15 +107,15 @@
     line-height: 1.1;
     flex-shrink: 0;
   }
-  .brand-line-top { font-size: 12px; font-weight: 900; color: var(--wa-green); }
-  .brand-line-bottom { font-size: 9px; font-weight: 700; color: var(--wa-text); }
+  .brand-line-top { font-size: 13px; font-weight: 900; color: var(--wa-green); }
+  .brand-line-bottom { font-size: 10px; font-weight: 700; color: var(--wa-text); }
 
-  /* Nama & Alamat menggantikan baris terhubung akun secara full & rapi */
+  /* Nama & Alamat tampil elegan, font besar dan mudah dibaca */
   .user-info-frame {
     background: var(--wa-card);
     border: 1px solid var(--wa-border);
-    border-radius: 10px;
-    padding: 6px 10px;
+    border-radius: 12px;
+    padding: 6px 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -123,39 +123,40 @@
     flex: 1;
   }
   .user-info-name {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
     color: var(--wa-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
   }
   .user-info-address {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--wa-green-light);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 1px;
-    font-weight: 600;
+    margin-top: 2px;
+    font-weight: 700;
   }
 
   .btn-webaps {
     background: #202c33;
     color: var(--wa-green);
     border: 1px solid var(--wa-green);
-    padding: 6px 8px;
-    border-radius: 12px;
+    padding: 8px 10px;
+    border-radius: 14px;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
     white-space: nowrap;
   }
 
   .btn-chat-privat {
     border: none;
-    padding: 5px 8px;
-    border-radius: 12px;
+    padding: 6px 10px;
+    border-radius: 14px;
     font-weight: 700;
     cursor: pointer;
     color: #ffffff;
@@ -163,10 +164,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    line-height: 1.05;
+    line-height: 1.1;
   }
-  .btn-chat-privat .lbl-top { font-size: 10px; display: block; }
-  .btn-chat-privat .lbl-bot { font-size: 10px; display: block; }
+  .btn-chat-privat .lbl-top { font-size: 11px; display: block; }
+  .btn-chat-privat .lbl-bot { font-size: 11px; display: block; }
   .btn-privat-green { background: var(--wa-green); color: var(--wa-panel); }
   .btn-privat-red { background: #ea4335; color: #ffffff; animation: pulseRed 1.5s infinite; }
   @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
@@ -175,10 +176,10 @@
     background: #202c33;
     color: #f87171;
     border: 1px solid #374151;
-    padding: 6px 8px;
-    border-radius: 12px;
+    padding: 8px 10px;
+    border-radius: 14px;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
     white-space: nowrap;
   }
@@ -187,30 +188,30 @@
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: 6px 10px;
-    border-radius: 14px;
+    padding: 8px 14px;
+    border-radius: 16px;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     cursor: pointer;
     white-space: nowrap;
   }
 
   .announcement-perspective {
     perspective: 1000px;
-    margin: 6px 8px 4px 8px;
+    margin: 8px 10px 6px 10px;
     flex-shrink: 0;
   }
   .announcement-bar {
     background: var(--wa-card);
     border: 1px solid var(--wa-border);
-    padding: 8px 10px;
-    border-radius: 10px;
-    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 15px;
     color: var(--wa-text);
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    min-height: 38px;
+    gap: 10px;
+    min-height: 44px;
     transform-origin: top center;
     backface-visibility: hidden;
   }
@@ -218,8 +219,8 @@
   .fold-up-in { animation: foldUpIn 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
   @keyframes foldUpOut { 0% { transform: rotateX(0deg); opacity: 1; } 100% { transform: rotateX(90deg); opacity: 0; } }
   @keyframes foldUpIn { 0% { transform: rotateX(-90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
-  .announcement-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 500; line-height: 1.35; }
+  .announcement-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 600; line-height: 1.4; }
 
   .chat-list {
     flex: 1;
@@ -227,11 +228,11 @@
     display: flex;
     flex-direction: column;
     overscroll-behavior-y: contain;
-    padding: 2px 0;
+    padding: 4px 0;
   }
   .chat-item {
     display: flex;
-    padding: 10px 12px;
+    padding: 14px 16px;
     align-items: center;
     cursor: pointer;
     transition: background 0.15s;
@@ -244,24 +245,25 @@
     content: "";
     position: absolute;
     bottom: 0;
-    left: 64px;
-    right: 12px;
+    left: 76px;
+    right: 16px;
     height: 1px;
     background: #1f2c34;
   }
 
   .avatar {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: #2a3942;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    margin-right: 10px;
+    font-size: 24px;
+    margin-right: 14px;
     overflow: hidden;
     flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
   .avatar img {
     width: 100%;
@@ -279,40 +281,41 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
   .chat-name {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: var(--wa-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .chat-time {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--wa-text-secondary);
-    font-weight: 500;
+    font-weight: 600;
     flex-shrink: 0;
-    margin-left: 6px;
+    margin-left: 8px;
   }
   .chat-last-msg {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--wa-text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.3;
+    line-height: 1.35;
+    font-weight: 500;
   }
 
   .robotic-footer {
     background: var(--wa-panel);
     border-top: 1px solid #1f2c34;
-    padding: 4px 10px;
+    padding: 6px 12px;
     text-align: center;
     color: var(--wa-text-secondary);
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
     flex-shrink: 0;
@@ -320,21 +323,21 @@
 
   .room-header {
     background: #202c33;
-    height: 60px;
-    padding: 8px 10px;
+    height: 68px;
+    padding: 10px 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     position: relative;
     z-index: 30;
     flex-shrink: 0;
     box-shadow: 0 1px 4px rgba(0,0,0,0.3);
   }
   .back-btn {
-    font-size: 24px;
+    font-size: 26px;
     color: var(--wa-text);
     cursor: pointer;
-    padding: 4px 6px;
+    padding: 4px 8px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -347,8 +350,8 @@
     cursor: pointer;
   }
   .room-title {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: var(--wa-text);
     white-space: nowrap;
     overflow: hidden;
@@ -356,19 +359,19 @@
     line-height: 1.2;
   }
   .room-subtitle {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--wa-green-light);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 1px;
-    font-weight: 600;
+    margin-top: 2px;
+    font-weight: 700;
   }
 
   .room-header-right {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
     position: relative;
   }
@@ -376,9 +379,9 @@
     background: transparent;
     border: 1px solid #374151;
     color: var(--wa-text);
-    padding: 6px 8px;
-    border-radius: 14px;
-    font-size: 16px;
+    padding: 8px 10px;
+    border-radius: 16px;
+    font-size: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -386,30 +389,30 @@
   }
   .combo-dropdown-menu {
     position: absolute;
-    top: 48px;
+    top: 54px;
     right: 0;
     background: #233138;
     border: 1px solid var(--wa-border);
-    border-radius: 12px;
-    padding: 8px;
+    border-radius: 14px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    min-width: 190px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+    gap: 8px;
+    min-width: 210px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     z-index: 80;
   }
   .combo-menu-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
+    gap: 12px;
+    padding: 12px 14px;
     background: transparent;
     border: none;
     color: var(--wa-text);
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
     cursor: pointer;
     text-align: left;
     width: 100%;
@@ -421,27 +424,27 @@
   .chat-body {
     flex: 1;
     overflow-y: auto;
-    padding: 10px;
+    padding: 12px;
     background-color: var(--wa-chat-bg);
     background-image: radial-gradient(rgba(0,0,0,0.04) 1.5px, transparent 0);
     background-size: 20px 20px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     position: relative;
     overscroll-behavior-y: contain;
   }
 
   .msg-bubble {
-    max-width: 85%;
-    min-width: 100px;
-    padding: 8px 12px 6px 12px;
-    border-radius: 12px;
-    font-size: 15px;
-    line-height: 1.4;
+    max-width: 86%;
+    min-width: 110px;
+    padding: 10px 14px 8px 14px;
+    border-radius: 14px;
+    font-size: 16px;
+    line-height: 1.45;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    box-shadow: 0 1px 3px rgba(11, 20, 26, 0.12);
+    box-shadow: 0 1px 3px rgba(11, 20, 26, 0.15);
     position: relative;
   }
   .msg-incoming {
@@ -461,33 +464,33 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 2px;
+    gap: 12px;
+    margin-bottom: 4px;
   }
   .msg-sender-name {
-    font-size: 13px;
+    font-size: 14px;
     color: #008069;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.2;
   }
   .btn-reply-msg {
-    font-size: 13px;
+    font-size: 14px;
     color: #667781;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 2px 6px;
+    padding: 2px 8px;
   }
 
   .quoted-reply-box {
-    background: rgba(11, 20, 26, 0.05);
+    background: rgba(11, 20, 26, 0.06);
     border-left: 4px solid var(--wa-green);
-    padding: 6px 8px;
-    border-radius: 6px;
-    margin-bottom: 6px;
-    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
     color: #54656f;
-    line-height: 1.3;
+    line-height: 1.35;
   }
 
   .msg-text-content {
@@ -498,89 +501,90 @@
   }
 
   .msg-meta {
-    font-size: 11px;
+    font-size: 12px;
     color: #667781;
     text-align: right;
-    margin-top: 3px;
+    margin-top: 4px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     line-height: 1;
+    font-weight: 600;
   }
-  .tick-blue { color: #53bdeb; font-weight: 800; font-size: 12px; }
-  .tick-gray { color: #667781; font-weight: 600; font-size: 12px; }
+  .tick-blue { color: #53bdeb; font-weight: 900; font-size: 13px; }
+  .tick-gray { color: #667781; font-weight: 700; font-size: 13px; }
 
   .msg-media-wrapper {
     width: 100%;
-    margin-top: 6px;
-    margin-bottom: 4px;
-    border-radius: 8px;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    border-radius: 10px;
     overflow: hidden;
     background: #e2e8f0;
   }
   .msg-image {
     width: 100%;
     max-width: 100%;
-    max-height: 280px;
+    max-height: 320px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     display: block;
   }
   .msg-video {
     width: 100%;
     max-width: 100%;
-    max-height: 280px;
-    border-radius: 8px;
+    max-height: 320px;
+    border-radius: 10px;
     background: #000000;
     display: block;
   }
   .inapp-link-card {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 6px;
-    padding: 8px 10px;
-    background: rgba(0, 168, 132, 0.1);
+    gap: 10px;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: rgba(0, 168, 132, 0.12);
     border-left: 4px solid var(--wa-green);
-    border-radius: 8px;
+    border-radius: 10px;
     color: #008069;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
     text-decoration: none;
   }
 
   .wa-card {
-    margin-top: 6px;
-    padding: 10px 12px;
-    border-radius: 8px;
+    margin-top: 8px;
+    padding: 12px 14px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(0,0,0,0.1);
     color: #111b21;
-    font-size: 14px;
+    font-size: 15px;
   }
   .wa-card-header {
-    font-weight: 700;
+    font-weight: 800;
     color: #008069;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 15px;
+    gap: 8px;
+    font-size: 16px;
   }
   .poll-option-btn {
     width: 100%;
     text-align: left;
-    padding: 8px 10px;
-    margin-top: 6px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    border-radius: 10px;
     border: 1px solid var(--wa-green);
     background: #ffffff;
     color: #111b21;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -590,11 +594,11 @@
   .reply-preview-banner {
     background: #f0f2f5;
     border-top: 1px solid #d1d7db;
-    padding: 6px 10px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    font-size: 15px;
     color: #111b21;
     flex-shrink: 0;
   }
@@ -602,21 +606,22 @@
     flex: 1;
     background: #ffffff;
     border-left: 4px solid var(--wa-green);
-    border-radius: 6px;
-    padding: 6px 8px;
+    border-radius: 8px;
+    padding: 8px 12px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-right: 8px;
+    margin-right: 10px;
+    font-weight: 500;
   }
 
   .chat-input-wrapper {
     position: relative;
-    padding: 6px 8px 8px 8px;
+    padding: 8px 10px 10px 10px;
     background: var(--wa-chat-bg);
     display: flex;
     align-items: flex-end;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
     z-index: 50;
     border-top: 1px solid #d1d7db;
@@ -624,27 +629,27 @@
 
   .emoji-picker-container {
     position: absolute;
-    bottom: 56px;
-    left: 8px;
-    right: 8px;
+    bottom: 64px;
+    left: 10px;
+    right: 10px;
     background: #ffffff;
     border: 1px solid #d1d7db;
-    border-radius: 14px;
-    padding: 10px;
+    border-radius: 16px;
+    padding: 12px;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    max-height: 200px;
+    gap: 8px;
+    max-height: 220px;
     overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     z-index: 70;
   }
   .emoji-item {
-    font-size: 26px;
+    font-size: 28px;
     text-align: center;
     cursor: pointer;
-    padding: 4px;
-    border-radius: 6px;
+    padding: 6px;
+    border-radius: 8px;
     user-select: none;
   }
   .emoji-item:active {
@@ -653,16 +658,16 @@
 
   .wa-attach-menu {
     position: absolute;
-    bottom: 56px;
-    left: 8px;
-    right: 8px;
+    bottom: 64px;
+    left: 10px;
+    right: 10px;
     background: #ffffff;
-    border-radius: 18px;
-    padding: 16px 10px;
+    border-radius: 20px;
+    padding: 18px 12px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    gap: 16px 10px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.35);
     border: 1px solid #e2e8f0;
     z-index: 75;
   }
@@ -670,39 +675,39 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     cursor: pointer;
     user-select: none;
   }
   .wa-attach-circle {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 24px;
   }
   .wa-attach-label {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     color: #3b4a54;
     text-align: center;
   }
 
   .chat-input-pill {
     flex: 1;
-    min-height: 42px;
+    min-height: 48px;
     background: #ffffff;
-    border-radius: 20px;
+    border-radius: 24px;
     display: flex;
     align-items: center;
-    padding: 2px 10px;
-    gap: 6px;
-    box-shadow: 0 1px 3px rgba(11, 20, 26, 0.1);
+    padding: 2px 14px;
+    gap: 8px;
+    box-shadow: 0 1px 4px rgba(11, 20, 26, 0.12);
     border: 1px solid #d1d7db;
   }
   .chat-input-pill input {
@@ -711,15 +716,15 @@
     background: none;
     border: none;
     color: #111b21;
-    font-size: 15px;
+    font-size: 17px;
     outline: none;
-    padding: 6px 0;
+    padding: 8px 0;
   }
   .chat-input-pill input::placeholder {
     color: #667781;
   }
   .pill-icon {
-    font-size: 22px;
+    font-size: 24px;
     color: #54656f;
     cursor: pointer;
     user-select: none;
@@ -729,8 +734,8 @@
     flex-shrink: 0;
   }
   .send-btn-circle {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: var(--wa-green);
     color: #ffffff;
@@ -738,10 +743,10 @@
     align-items: center;
     justify-content: center;
     border: none;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     flex-shrink: 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
   .send-btn-circle:active {
     background: #008f70;
@@ -757,49 +762,49 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 28px 12px;
+    padding: 32px 16px;
   }
   .call-user-avatar {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     background: #202c33;
     border: 3px solid var(--wa-green);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 42px;
+    font-size: 46px;
     animation: pulseRing 1.5s infinite;
     margin: 0 auto;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
   }
   @keyframes pulseRing {
     0% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7); }
-    70% { box-shadow: 0 0 0 20px rgba(0, 168, 132, 0); }
+    70% { box-shadow: 0 0 0 22px rgba(0, 168, 132, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0); }
   }
   .call-status {
-    font-size: 14px;
+    font-size: 16px;
     color: var(--wa-green);
-    margin-top: 8px;
-    font-weight: 600;
+    margin-top: 10px;
+    font-weight: 700;
   }
   .call-actions {
     display: flex;
-    gap: 24px;
+    gap: 28px;
   }
   .btn-call-action {
-    width: 58px;
-    height: 58px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     border: none;
-    font-size: 24px;
+    font-size: 26px;
     color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 5px 14px rgba(0,0,0,0.4);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
   }
   .btn-accept { background: #25d366; }
   .btn-reject { background: #ea4335; }
@@ -812,35 +817,35 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
   }
   .modal-card {
     background: var(--wa-panel);
     border: 1px solid var(--wa-border);
-    border-radius: 16px;
+    border-radius: 18px;
     width: 100%;
     max-width: 100%;
-    max-height: 90%;
-    padding: 16px;
+    max-height: 92%;
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.8);
+    gap: 12px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.8);
   }
   .modal-title {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: var(--wa-text);
     text-align: center;
   }
   .modal-input {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
     border: 1px solid var(--wa-border);
     background: var(--wa-card);
     color: var(--wa-text);
-    font-size: 14px;
+    font-size: 15px;
     outline: none;
   }
   .modal-input:focus {
@@ -848,13 +853,13 @@
   }
   .btn-group-call-role {
     width: 100%;
-    padding: 10px;
-    border-radius: 18px;
+    padding: 12px;
+    border-radius: 20px;
     border: none;
     background: var(--wa-green);
     color: var(--wa-panel);
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: 800;
+    font-size: 15px;
     cursor: pointer;
   }
   .member-list-container {
@@ -862,25 +867,26 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
   .member-row {
-    padding: 8px 12px;
+    padding: 10px 14px;
     background: var(--wa-card);
     border: 1px solid #222d34;
-    border-radius: 8px;
+    border-radius: 10px;
     color: var(--wa-text);
-    font-size: 13px;
+    font-size: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 600;
   }
 
   .inapp-viewer-box {
     width: 100%;
-    height: 52vh;
+    height: 55vh;
     background: #000000;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -911,33 +917,33 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 12px;
   }
   .logout-warning-card {
     background: var(--wa-panel);
     border: 1px solid var(--wa-border);
-    border-radius: 16px;
+    border-radius: 18px;
     width: 100%;
-    max-width: 340px;
-    padding: 20px 16px;
+    max-width: 360px;
+    padding: 22px 18px;
     text-align: center;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.8);
+    box-shadow: 0 16px 45px rgba(0,0,0,0.8);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
   }
-  .logout-warning-title { font-size: 17px; font-weight: 700; color: #f87171; }
-  .logout-warning-text { font-size: 13px; color: #d1d7db; line-height: 1.45; }
-  .logout-modal-actions { display: flex; gap: 10px; }
+  .logout-warning-title { font-size: 18px; font-weight: 800; color: #f87171; }
+  .logout-warning-text { font-size: 14px; color: #d1d7db; line-height: 1.5; font-weight: 500; }
+  .logout-modal-actions { display: flex; gap: 12px; }
   .btn-logout-cancel {
     flex: 1;
     background: #202c33;
     color: var(--wa-text);
     border: none;
-    padding: 8px;
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 13px;
+    padding: 10px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 14px;
     cursor: pointer;
   }
   .btn-logout-confirm {
@@ -945,10 +951,10 @@
     background: #ea4335;
     color: #ffffff;
     border: none;
-    padding: 8px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 13px;
+    padding: 10px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 14px;
     cursor: pointer;
   }
 
@@ -1092,7 +1098,7 @@
     <div class="modal-card">
       <div class="modal-title" id="inAppPreviewTitle">PRATINJAU KONTEN</div>
       <div class="inapp-viewer-box" id="inAppViewerContainer"></div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeInAppPreview()">Tutup Pratinjau</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeInAppPreview()">Tutup Pratinjau</button>
     </div>
   </div>
 
@@ -1100,7 +1106,7 @@
     <div class="modal-card">
       <div class="modal-title" id="contactModalTitle">👤 BAGIKAN KONTAK WARGA</div>
       <div class="member-list-container" id="waContactList"></div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waContactModal')">Batal</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeWaModal('waContactModal')">Batal</button>
     </div>
   </div>
 
@@ -1111,8 +1117,8 @@
       <input type="text" id="pollOpt1" class="modal-input" placeholder="Pilihan 1 (contoh: Setuju)">
       <input type="text" id="pollOpt2" class="modal-input" placeholder="Pilihan 2 (contoh: Tidak Setuju)">
       <input type="text" id="pollOpt3" class="modal-input" placeholder="Pilihan 3 (Opsional)">
-      <button class="btn-grup-plus" style="width:100%; padding:10px;" onclick="submitWhatsAppPoll()">Kirim Polling</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waPollModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:12px;" onclick="submitWhatsAppPoll()">Kirim Polling</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeWaModal('waPollModal')">Batal</button>
     </div>
   </div>
 
@@ -1123,8 +1129,8 @@
       <input type="date" id="eventDate" class="modal-input">
       <input type="time" id="eventTime" class="modal-input">
       <input type="text" id="eventLoc" class="modal-input" placeholder="Lokasi Acara...">
-      <button class="btn-grup-plus" style="width:100%; padding:10px;" onclick="submitWhatsAppEvent()">Kirim Undangan Acara</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waEventModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:12px;" onclick="submitWhatsAppEvent()">Kirim Undangan Acara</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeWaModal('waEventModal')">Batal</button>
     </div>
   </div>
 
@@ -1137,18 +1143,18 @@
         <option value="emerald">Tema Hijau Lingkungan RT</option>
         <option value="gold">Tema Pengumuman Resmi Emas</option>
       </select>
-      <button class="btn-grup-plus" style="width:100%; padding:10px;" onclick="submitWhatsAppAiImage()">Buat & Kirim Gambar</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waAiImageModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:12px;" onclick="submitWhatsAppAiImage()">Buat & Kirim Gambar</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeWaModal('waAiImageModal')">Batal</button>
     </div>
   </div>
 
   <div id="callScreen" class="call-overlay hidden">
     <div style="text-align:center;">
       <div class="call-user-avatar" id="callAvatar">📞</div>
-      <div style="font-size: 18px; font-weight:700; margin-top:12px;" id="callTargetName">Nama Kontak</div>
+      <div style="font-size: 20px; font-weight:800; margin-top:14px;" id="callTargetName">Nama Kontak</div>
       <div class="call-status" id="callStatusText">Memanggil...</div>
     </div>
-    <div id="videoContainer" class="hidden" style="width:100%; flex:1; margin:12px 0; background:#000; border-radius:10px; overflow:hidden; border:1px solid var(--wa-border);">
+    <div id="videoContainer" class="hidden" style="width:100%; flex:1; margin:14px 0; background:#000; border-radius:12px; overflow:hidden; border:1px solid var(--wa-border);">
       <iframe id="jitsiCallFrame" allow="camera; microphone; fullscreen; display-capture; autoplay" style="width:100%; height:100%; border:none;"></iframe>
     </div>
     <div class="call-actions">
@@ -1162,30 +1168,30 @@
       <div class="modal-title" id="modalGroupTitle">DAFTAR ANGGOTA</div>
       <button id="btnCallGroupByRole" class="btn-group-call-role hidden" onclick="startGroupCallByRole()">🔊 Call Grup</button>
       <div class="member-list-container" id="memberListContent"></div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeGroupMembersModal()">Tutup</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeGroupMembersModal()">Tutup</button>
     </div>
   </div>
 
   <div id="ringtoneModal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-title">PENGATURAN NADA DERING</div>
-      <div style="padding:6px 0; display:flex; flex-direction:column; gap:10px;">
-        <label style="font-size: 13px; color:var(--wa-green);">Pilih Nada Dering Telepon:</label>
+      <div style="padding:8px 0; display:flex; flex-direction:column; gap:12px;">
+        <label style="font-size: 14px; color:var(--wa-green); font-weight:700;">Pilih Nada Dering Telepon:</label>
         <select id="ringtoneSelect" class="modal-input">
           <option value="standard">WhatsApp Standard Ringtone</option>
           <option value="classic">Classic Digital Phone</option>
           <option value="soft">Soft Melodic Chime</option>
         </select>
-        <button class="btn-grup-plus" style="background:#202c33; color:var(--wa-green); border:1px solid var(--wa-green); padding:10px;" onclick="testPlayRingtone()">🔊 Tes Bunyi</button>
-        <button class="btn-grup-plus" style="padding:10px;" onclick="saveRingtoneSetting()">Simpan Pengaturan</button>
+        <button class="btn-grup-plus" style="background:#202c33; color:var(--wa-green); border:1px solid var(--wa-green); padding:12px;" onclick="testPlayRingtone()">🔊 Tes Bunyi</button>
+        <button class="btn-grup-plus" style="padding:12px;" onclick="saveRingtoneSetting()">Simpan Pengaturan</button>
       </div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeRingtoneModal()">Tutup</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeRingtoneModal()">Tutup</button>
     </div>
   </div>
 
   <div id="logoutWarningModal" class="logout-modal-overlay hidden">
     <div class="logout-warning-card">
-      <div style="font-size:32px;">⚠️</div>
+      <div style="font-size:36px;">⚠️</div>
       <div class="logout-warning-title">KONFIRMASI KELUAR</div>
       <div class="logout-warning-text">Keluar dari akun ini untuk beralih ke Username warga lain atau kembali ke halaman awal?</div>
       <div class="logout-modal-actions">
@@ -1320,7 +1326,7 @@
       renderChatRoomList(cachedGroups);
     } else {
       document.getElementById('chatListContainer').innerHTML =
-        '<div style="padding:16px; color:#00a884; text-align:center; font-size:14px;">Memuat grup sesuai Role (' + currentUser.username + ')...</div>';
+        '<div style="padding:18px; color:#00a884; text-align:center; font-size:15px;">Memuat grup sesuai Role (' + currentUser.username + ')...</div>';
     }
 
     const cachedAnn = JSON.parse(localStorage.getItem('sanschat_announcements') || 'null');
@@ -1494,7 +1500,7 @@
         applyThemeAndText();
         card.classList.remove('fold-up-out');
         card.classList.add('fold-up-in');
-      }, 350);
+      }, 380);
     }
 
     let displayDuration = Math.max(5000, currentText.length * 65);
@@ -1507,7 +1513,7 @@
     const container = document.getElementById('chatListContainer');
     container.innerHTML = '';
     if (!rooms || rooms.length === 0) {
-      container.innerHTML = '<div style="padding:16px; color:#8696a0; text-align:center; font-size:14px;">Tidak ada grup yang sesuai dengan Role akun (' + currentUser.username + ').</div>';
+      container.innerHTML = '<div style="padding:20px; color:#8696a0; text-align:center; font-size:15px;">Tidak ada grup yang sesuai dengan Role akun (' + currentUser.username + ').</div>';
       return;
     }
     rooms.forEach(r => {
@@ -1666,12 +1672,12 @@
         const poll = JSON.parse(mediaUrl);
         const votes = poll.votes || {};
         const totalVotes = Object.keys(votes).length;
-        htmlOutput += `<div class="wa-card"><div class="wa-card-header">📊 POLLING WARGA</div><div style="font-weight:700; margin-bottom:6px;">${poll.question}</div>`;
+        htmlOutput += `<div class="wa-card"><div class="wa-card-header">📊 POLLING WARGA</div><div style="font-weight:700; margin-bottom:8px;">${poll.question}</div>`;
         poll.options.forEach((opt, idx) => {
           const count = Object.values(votes).filter(v => v === idx).length;
           htmlOutput += `<button class="poll-option-btn" onclick="castPollVote(${rowNumber}, ${idx})"><span>${opt}</span><span style="color:#008069;">${count} suara</span></button>`;
         });
-        htmlOutput += `<div style="font-size:11px; color:#667781; margin-top:6px;">Total partisipasi: ${totalVotes} warga</div></div>`;
+        htmlOutput += `<div style="font-size:12px; color:#667781; margin-top:8px;">Total partisipasi: ${totalVotes} warga</div></div>`;
         return htmlOutput;
       } catch (e) {}
     }
@@ -1682,8 +1688,8 @@
         htmlOutput += `
           <div class="wa-card">
             <div class="wa-card-header">📅 UNDANGAN ACARA WARGA</div>
-            <div style="font-weight:700; font-size:14px;">${ev.title}</div>
-            <div style="margin-top:4px; color:#3b4a54;">🗓️ ${ev.date} • ⏰ ${ev.time}</div>
+            <div style="font-weight:700; font-size:15px;">${ev.title}</div>
+            <div style="margin-top:6px; color:#3b4a54;">🗓️ ${ev.date} • ⏰ ${ev.time}</div>
             <div style="color:#3b4a54;">📍 ${ev.location}</div>
           </div>`;
         return htmlOutput;
@@ -1698,7 +1704,7 @@
 
     let formattedText = rawText.replace(urlRegex, (url) => {
       const safeUrl = url.replace(/'/g, "'");
-      return `<a href="javascript:void(0)" onclick="openInAppPreview('${safeUrl}')" style="color:#027eb5; text-decoration:underline; font-weight:500;">${url}</a>`;
+      return `<a href="javascript:void(0)" onclick="openInAppPreview('${safeUrl}')" style="color:#027eb5; text-decoration:underline; font-weight:600;">${url}</a>`;
     });
 
     htmlOutput += `<div class="msg-text-content">${formattedText}</div>`;
@@ -1777,7 +1783,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:12px 14px; border-radius:10px; font-size:14px; margin:10px auto; max-width:96%;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> di kanan atas untuk memilih warga.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:14px 16px; border-radius:12px; font-size:15px; margin:12px auto; max-width:96%;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> di kanan atas untuk memilih warga.</div>';
       return;
     }
 
@@ -1829,7 +1835,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:12px 14px; border-radius:10px; font-size:14px; margin:10px auto; max-width:96%;">Belum ada riwayat pesan di grup ini.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:14px 16px; border-radius:12px; font-size:15px; margin:12px auto; max-width:96%;">Belum ada riwayat pesan di grup ini.</div>';
       return;
     }
 
@@ -1981,7 +1987,7 @@
     document.getElementById('contactModalTitle').innerText = mode === "recipient"
       ? "🔒 PILIH WARGA TUJUAN CHAT PRIVAT"
       : "👤 BAGIKAN KONTAK WARGA";
-    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga...</div>';
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:14px;">Memuat daftar warga...</div>';
     document.getElementById('waContactModal').classList.remove('hidden');
 
     callServerAPI('getAllWargaContacts').then((contacts) => {
@@ -1996,10 +2002,10 @@
         const btnLabel = mode === "recipient" ? "Pilih" : "Kirim";
         row.innerHTML = `
           <div>
-            <div style="font-weight:600; font-size:14px;">${c.nama}</div>
-            <div style="font-size:12px; color:#8696a0;">${c.username} • ${c.alamat || '-'}</div>
+            <div style="font-weight:700; font-size:15px;">${c.nama}</div>
+            <div style="font-size:13px; color:#8696a0;">${c.username} • ${c.alamat || '-'}</div>
           </div>
-          <button class="btn-grup-plus" style="padding:6px 10px; font-size:12px;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "'")}')">${btnLabel}</button>
+          <button class="btn-grup-plus" style="padding:8px 12px; font-size:13px;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "'")}')">${btnLabel}</button>
         `;
         list.appendChild(row);
       });
@@ -2207,7 +2213,7 @@
     }
 
     const list = document.getElementById('memberListContent');
-    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat daftar warga...</div>';
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:14px;">Memuat daftar warga...</div>';
     document.getElementById('groupMembersModal').classList.remove('hidden');
 
     const loaderFn = isPrivateChatMode ? 'getAllWargaContacts' : 'getGroupMembersByRole';
@@ -2216,7 +2222,7 @@
     callServerAPI(loaderFn, payload).then((members) => {
       list.innerHTML = '';
       if (!members || members.length === 0) {
-        list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Tidak ada warga terdaftar.</div>';
+        list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:14px;">Tidak ada warga terdaftar.</div>';
       } else {
         members.forEach(m => {
           if (m.username.toUpperCase() === currentUser.username.toUpperCase()) return;
@@ -2224,7 +2230,7 @@
           row.className = 'member-row';
           row.innerHTML = `
             <span>${m.nama} <small style="color:#8696a0;">(${m.username})</small></span>
-            <button class="btn-grup-plus" style="padding:6px 10px; font-size:12px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'")}', '${type}')">Panggil</button>
+            <button class="btn-grup-plus" style="padding:8px 12px; font-size:13px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'")}', '${type}')">Panggil</button>
           `;
           list.appendChild(row);
         });
@@ -2360,13 +2366,13 @@
     document.getElementById('btnCallGroupByRole').classList.add('hidden');
     document.getElementById('modalGroupTitle').innerText = "DAFTAR ANGGOTA: " + activeGroupName;
     const list = document.getElementById('memberListContent');
-    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Memuat data...</div>';
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:14px;">Memuat data...</div>';
     document.getElementById('groupMembersModal').classList.remove('hidden');
 
     callServerAPI('getGroupMembersByRole', { groupName: activeGroupName }).then((members) => {
       list.innerHTML = '';
       if (!members || members.length === 0) {
-        list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:12px;">Tidak ada anggota terdaftar.</div>';
+        list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:14px;">Tidak ada anggota terdaftar.</div>';
       } else {
         members.forEach(m => {
           const row = document.createElement('div');
