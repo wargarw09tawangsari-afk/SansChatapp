@@ -50,7 +50,6 @@
     border-right: 1px solid var(--wa-border);
   }
 
-  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 14px margin from screen edges, 350px image size, all bottom buttons and message input area fully visible in 1 screen */
   @media all and (display-mode: standalone), (max-width: 600px) {
     html, body {
       padding: 14px !important;
@@ -325,7 +324,6 @@
     }
   }
 
-  /* Header utama dengan nama & alamat di bawah foto profil, serta tombol navigasi tersusun rapi */
   .main-header {
     background: var(--wa-panel);
     padding: 12px 14px 14px 14px;
@@ -388,7 +386,6 @@
   .brand-line-top { font-size: 14px; font-weight: 900; color: var(--wa-green); }
   .brand-line-bottom { font-size: 11px; font-weight: 800; color: var(--wa-text); }
 
-  /* Nama & Alamat tepat di bawah foto profil */
   .user-info-section {
     display: flex;
     flex-direction: column;
@@ -473,7 +470,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
 
-  /* Area pengumuman dinamis */
   .announcement-perspective {
     perspective: 1000px;
     margin: 14px 14px 10px 14px;
@@ -600,7 +596,6 @@
     flex-shrink: 0;
   }
 
-  /* Room View (Halaman Kedua / Chat Room) */
   .room-header {
     background: #202c33;
     height: 72px;
@@ -899,7 +894,6 @@
     font-weight: 600;
   }
 
-  /* Area ketik pesan & tombol fitur di bagian bawah */
   .chat-input-wrapper {
     position: relative;
     padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)) 14px;
@@ -1279,14 +1273,12 @@
         </div>
       </div>
 
-      <!-- NAMA & ALAMAT TEPAT DI BAWAH FOTO PROFIL -->
       <div class="user-info-section">
         <div class="user-info-name" id="headerUserName">Memuat...</div>
         <div class="user-info-address" id="headerUserAddress">...</div>
       </div>
     </div>
 
-    <!-- PENGUMUMAN DINAMIS -->
     <div class="announcement-perspective">
       <div class="announcement-bar" id="announcementCard">
         <span class="announcement-icon" id="announcementIcon">📢</span>
@@ -1294,7 +1286,6 @@
       </div>
     </div>
 
-    <!-- DAFTAR GRUP BERDASARKAN ROLE -->
     <div class="chat-list" id="chatListContainer"></div>
 
     <div class="robotic-footer">ProJack12-2026</div>
@@ -1335,7 +1326,6 @@
       <span style="cursor:pointer; font-weight:900; padding:4px 10px; color:#54656f;" onclick="cancelReplyQuote()">✕</span>
     </div>
 
-    <!-- AREA KETIK PESAN & TOMBOL FITUR DI BAGIAN BAWAH -->
     <div class="chat-input-wrapper" id="chatInputWrapper">
       <div id="emojiPickerPanel" class="emoji-picker-container hidden"></div>
 
@@ -1489,10 +1479,10 @@
     <div class="logout-warning-card">
       <div style="font-size:36px;">⚠️</div>
       <div class="logout-warning-title">KONFIRMASI KELUAR</div>
-      <div class="logout-warning-text">Keluar dari akun ini akan mengosongkan cache, memori, dan izin untuk memastikan pembaruan sistem/upgrade baru di HP terunduh sempurna!</div>
+      <div class="logout-warning-text">Keluar akan menghapus data, mengosongkan cache memory, dan mereset izin ke status null (kosong) secara total!</div>
       <div class="logout-modal-actions">
         <button class="btn-logout-cancel" onclick="closeLogoutModal()">Batal</button>
-        <button class="btn-logout-confirm" onclick="confirmLogout()">Ya, Keluar & Kosongkan Data</button>
+        <button class="btn-logout-confirm" onclick="confirmLogout()">Ya, Keluar & Reset Total</button>
       </div>
     </div>
   </div>
@@ -1719,14 +1709,17 @@
     document.getElementById('logoutWarningModal').classList.add('hidden');
   }
 
+  // Tombol logout reset total: hapus data, hapus cache memory, dan reset izin ke status null
   function confirmLogout() {
     document.getElementById('logoutWarningModal').classList.add('hidden');
     
+    // 1. Reset & Hapus Data
     try {
       localStorage.clear();
       sessionStorage.clear();
     } catch (e) {}
 
+    // 2. Hapus Cache Memory secara Total
     if ('caches' in window) {
       caches.keys().then((names) => {
         names.forEach(name => caches.delete(name));
@@ -1738,6 +1731,13 @@
         regs.forEach(reg => reg.unregister());
       });
     }
+
+    // 3. Reset Izin (permissions status ke null / default)
+    try {
+      if (navigator.permissions && navigator.permissions.revoke) {
+        navigator.permissions.revoke({ name: 'notifications' }).catch(() => {});
+      }
+    } catch (e) {}
 
     currentUser = null;
     redirectToIndexWelcome();
