@@ -6,9 +6,6 @@
 <title>Sc-SansChat - Utama</title>
 <meta name="theme-color" content="#111b21">
 <style>
-  /* =========================================================
-     STANDAR LAYOUT & MARGIN WHATSAPP ANDROID (EDGE-TO-EDGE)
-     ========================================================= */
   * {
     box-sizing: border-box;
     margin: 0;
@@ -28,28 +25,17 @@
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   }
 
-  /* Fullscreen di HP Android tanpa margin luar, max-width 480px di desktop */
+  /* 100% mengisi penuh layar HP Android secara responsif tanpa batas lebar kaku */
   .app-container {
     background: #111b21;
     width: 100%;
-    max-width: 480px;
     height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    border-left: 1px solid #222d34;
-    border-right: 1px solid #222d34;
-  }
-  @media (max-width: 480px) {
-    .app-container {
-      border: none;
-    }
   }
 
-  /* =========================================================
-     HEADER UTAMA (BERANDA WHATSAPP STYLE - TINGGI 58px)
-     ========================================================= */
   .main-header {
     background: #111b21;
     min-height: 58px;
@@ -120,7 +106,7 @@
     flex: 1;
   }
   .user-info-name {
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 700;
     color: #e9edef;
     white-space: nowrap;
@@ -128,7 +114,7 @@
     text-overflow: ellipsis;
   }
   .user-info-address {
-    font-size: 10.5px;
+    font-size: 11px;
     color: #8696a0;
     white-space: nowrap;
     overflow: hidden;
@@ -139,10 +125,10 @@
     background: #202c33;
     color: #00a884;
     border: 1px solid #00a884;
-    padding: 6px 9px;
+    padding: 6px 10px;
     border-radius: 16px;
     font-weight: 700;
-    font-size: 10.5px;
+    font-size: 11px;
     cursor: pointer;
     white-space: nowrap;
   }
@@ -170,10 +156,10 @@
     background: #202c33;
     color: #f87171;
     border: 1px solid #374151;
-    padding: 6px 9px;
+    padding: 6px 10px;
     border-radius: 16px;
     font-weight: 700;
-    font-size: 10.5px;
+    font-size: 11px;
     cursor: pointer;
     white-space: nowrap;
   }
@@ -182,21 +168,18 @@
     background: #00a884;
     color: #111b21;
     border: none;
-    padding: 6px 11px;
+    padding: 6px 12px;
     border-radius: 18px;
     font-weight: 700;
-    font-size: 11.5px;
+    font-size: 12px;
     cursor: pointer;
     white-space: nowrap;
   }
 
-  /* =========================================================
-     BAR STATUS & PENGUMUMAN (MARGIN PRESISI WHATSAPP)
-     ========================================================= */
   .net-status-bar {
-    font-size: 11px;
+    font-size: 11.5px;
     text-align: center;
-    padding: 4px 12px;
+    padding: 5px 12px;
     font-weight: 600;
     background: #0d171d;
     color: #00a884;
@@ -207,20 +190,20 @@
 
   .announcement-perspective {
     perspective: 900px;
-    margin: 8px 12px 4px 12px;
+    margin: 10px 14px 6px 14px;
     flex-shrink: 0;
   }
   .announcement-bar {
     background: #182229;
     border: 1px solid #2a3942;
-    padding: 10px 12px;
+    padding: 11px 14px;
     border-radius: 10px;
-    font-size: 12.5px;
+    font-size: 13px;
     color: #e9edef;
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    min-height: 44px;
+    gap: 10px;
+    min-height: 46px;
     transform-origin: top center;
     backface-visibility: hidden;
     transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
@@ -230,11 +213,8 @@
   @keyframes foldUpOut { 0% { transform: rotateX(0deg); opacity: 1; } 100% { transform: rotateX(90deg); opacity: 0; } }
   @keyframes foldUpIn { 0% { transform: rotateX(-90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
   .announcement-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 500; line-height: 1.38; }
+  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 500; line-height: 1.4; }
 
-  /* =========================================================
-     DAFTAR CHAT / GRUP (STANDAR WHATSAPP ANDROID: PADDING 12px 16px, AVATAR 50px)
-     ========================================================= */
   .chat-list {
     flex: 1;
     overflow-y: auto;
@@ -244,7 +224,7 @@
   }
   .chat-item {
     display: flex;
-    padding: 12px 16px;
+    padding: 13px 18px;
     align-items: center;
     cursor: pointer;
     transition: background 0.15s;
@@ -253,26 +233,25 @@
   .chat-item:active, .chat-item:hover {
     background: #202c33;
   }
-  /* Garis pemisah tipis khas WhatsApp (mulai sejajar teks, bukan di bawah avatar) */
   .chat-item::after {
     content: "";
     position: absolute;
     bottom: 0;
-    left: 80px;
-    right: 16px;
+    left: 86px;
+    right: 18px;
     height: 1px;
     background: #1f2c34;
   }
   .avatar {
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: #2a3942;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
-    margin-right: 14px;
+    font-size: 24px;
+    margin-right: 16px;
     overflow: hidden;
     flex-shrink: 0;
   }
@@ -292,10 +271,10 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .chat-name {
-    font-size: 16px;
+    font-size: 16.5px;
     font-weight: 600;
     color: #e9edef;
     white-space: nowrap;
@@ -303,51 +282,48 @@
     text-overflow: ellipsis;
   }
   .chat-time {
-    font-size: 11.5px;
+    font-size: 12px;
     color: #8696a0;
     font-weight: 400;
     flex-shrink: 0;
     margin-left: 8px;
   }
   .chat-last-msg {
-    font-size: 13.5px;
+    font-size: 14px;
     color: #8696a0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.35;
+    line-height: 1.38;
   }
 
   .robotic-footer {
     background: #111b21;
     border-top: 1px solid #1f2c34;
-    padding: 8px 16px;
+    padding: 9px 16px;
     text-align: center;
     color: #8696a0;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     flex-shrink: 0;
   }
 
-  /* =========================================================
-     RUANG CHAT (WHATSAPP ANDROID ROOM HEADER: HEIGHT 56px, PADDING 8px 12px)
-     ========================================================= */
   .room-header {
     background: #202c33;
-    min-height: 56px;
-    padding: 8px 10px;
+    min-height: 58px;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     position: relative;
     z-index: 30;
     flex-shrink: 0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
   .back-btn {
-    font-size: 20px;
+    font-size: 22px;
     color: #e9edef;
     cursor: pointer;
     padding: 6px 4px;
@@ -363,7 +339,7 @@
     cursor: pointer;
   }
   .room-title {
-    font-size: 16px;
+    font-size: 16.5px;
     font-weight: 600;
     color: #e9edef;
     white-space: nowrap;
@@ -372,7 +348,7 @@
     line-height: 1.2;
   }
   .room-subtitle {
-    font-size: 12px;
+    font-size: 12.5px;
     color: #8696a0;
     white-space: nowrap;
     overflow: hidden;
@@ -391,7 +367,7 @@
     background: transparent;
     border: 1px solid #374151;
     color: #e9edef;
-    padding: 6px 10px;
+    padding: 6px 11px;
     border-radius: 20px;
     font-size: 15px;
     cursor: pointer;
@@ -404,7 +380,7 @@
   }
   .combo-dropdown-menu {
     position: absolute;
-    top: 44px;
+    top: 46px;
     right: 8px;
     background: #233138;
     border: 1px solid #2a3942;
@@ -413,7 +389,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    min-width: 175px;
+    min-width: 180px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.55);
     z-index: 80;
   }
@@ -436,35 +412,26 @@
     background: #182229;
   }
 
-  /* =========================================================
-     AREA PESAN & BUBBLE CHAT (PRESISI WHATSAPP ANDROID)
-     - Wallpaper: #efeae2
-     - Margin sisi kiri/kanan layar: 12px
-     - Max-width bubble: 82%
-     - Padding bubble: 6px 9px 7px 9px
-     - Border-radius: 8px (sudut atas tajam 0px di sisi pengirim)
-     - Font-size pesan: 14.5px, line-height: 1.38
-     ========================================================= */
   .chat-body {
     flex: 1;
     overflow-y: auto;
-    padding: 10px 12px 12px 12px;
+    padding: 12px 14px 14px 14px;
     background-color: #efeae2;
     background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0);
     background-size: 16px 16px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     position: relative;
     overscroll-behavior-y: contain;
   }
   .msg-bubble {
     max-width: 82%;
-    min-width: 84px;
-    padding: 6px 9px 6px 9px;
+    min-width: 86px;
+    padding: 7px 10px 7px 10px;
     border-radius: 8px;
-    font-size: 14.5px;
-    line-height: 1.38;
+    font-size: 15px;
+    line-height: 1.4;
     word-wrap: break-word;
     overflow-wrap: break-word;
     box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
@@ -491,13 +458,13 @@
     margin-bottom: 2px;
   }
   .msg-sender-name {
-    font-size: 12.5px;
+    font-size: 13px;
     color: #008069;
     font-weight: 700;
     line-height: 1.2;
   }
   .btn-reply-msg {
-    font-size: 12px;
+    font-size: 12.5px;
     color: #667781;
     background: none;
     border: none;
@@ -509,12 +476,12 @@
   .quoted-reply-box {
     background: rgba(11, 20, 26, 0.05);
     border-left: 4px solid #00a884;
-    padding: 5px 8px;
+    padding: 6px 9px;
     border-radius: 6px;
-    margin-bottom: 5px;
-    font-size: 12px;
+    margin-bottom: 6px;
+    font-size: 12.5px;
     color: #54656f;
-    line-height: 1.3;
+    line-height: 1.35;
   }
 
   .msg-text-content {
@@ -525,7 +492,7 @@
   }
 
   .msg-meta {
-    font-size: 11px;
+    font-size: 11.5px;
     color: #667781;
     text-align: right;
     margin-top: 3px;
@@ -535,16 +502,13 @@
     gap: 4px;
     line-height: 1;
   }
-  .tick-blue { color: #53bdeb; font-weight: 800; font-size: 12px; }
-  .tick-gray { color: #667781; font-weight: 600; font-size: 12px; }
+  .tick-blue { color: #53bdeb; font-weight: 800; font-size: 12.5px; }
+  .tick-gray { color: #667781; font-weight: 600; font-size: 12.5px; }
 
-  /* =========================================================
-     MEDIA (GAMBAR, FOTO, VIDEO) RESPONSIF STABIL DALAM BUBBLE
-     ========================================================= */
   .msg-media-wrapper {
     width: 100%;
-    margin-top: 4px;
-    margin-bottom: 2px;
+    margin-top: 5px;
+    margin-bottom: 3px;
     border-radius: 6px;
     overflow: hidden;
     background: #e2e8f0;
@@ -552,7 +516,7 @@
   .msg-image {
     width: 100%;
     max-width: 100%;
-    max-height: 260px;
+    max-height: 280px;
     object-fit: cover;
     border-radius: 6px;
     cursor: pointer;
@@ -561,7 +525,7 @@
   .msg-video {
     width: 100%;
     max-width: 100%;
-    max-height: 260px;
+    max-height: 280px;
     border-radius: 6px;
     background: #000000;
     display: block;
@@ -570,46 +534,46 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 5px;
-    padding: 8px 10px;
+    margin-top: 6px;
+    padding: 9px 11px;
     background: rgba(0, 168, 132, 0.1);
     border-left: 3px solid #00a884;
     border-radius: 6px;
     color: #008069;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
   }
 
   .wa-card {
-    margin-top: 4px;
-    padding: 9px 10px;
+    margin-top: 5px;
+    padding: 10px 12px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(0,0,0,0.08);
     color: #111b21;
-    font-size: 13px;
+    font-size: 13.5px;
   }
   .wa-card-header {
     font-weight: 700;
     color: #008069;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12.5px;
+    font-size: 13px;
   }
   .poll-option-btn {
     width: 100%;
     text-align: left;
-    padding: 8px 10px;
-    margin-top: 5px;
+    padding: 9px 11px;
+    margin-top: 6px;
     border-radius: 8px;
     border: 1px solid #00a884;
     background: #ffffff;
     color: #111b21;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -617,17 +581,14 @@
     align-items: center;
   }
 
-  /* =========================================================
-     INPUT BAR WHATSAPP ANDROID (PILL + TOMBOL HIJAU BULAT 44px)
-     ========================================================= */
   .reply-preview-banner {
     background: #f0f2f5;
     border-top: 1px solid #d1d7db;
-    padding: 6px 12px;
+    padding: 7px 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12.5px;
+    font-size: 13px;
     color: #111b21;
     flex-shrink: 0;
   }
@@ -636,7 +597,7 @@
     background: #ffffff;
     border-left: 4px solid #00a884;
     border-radius: 6px;
-    padding: 5px 10px;
+    padding: 6px 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -645,33 +606,33 @@
 
   .chat-input-wrapper {
     position: relative;
-    padding: 6px 8px;
+    padding: 8px 10px;
     background: #efeae2;
     display: flex;
     align-items: flex-end;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
   }
 
   .emoji-picker-container {
     position: absolute;
-    bottom: 58px;
-    left: 8px;
-    right: 8px;
+    bottom: 62px;
+    left: 10px;
+    right: 10px;
     background: #ffffff;
     border: 1px solid #d1d7db;
     border-radius: 16px;
-    padding: 10px;
+    padding: 12px;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 6px;
-    max-height: 200px;
+    max-height: 220px;
     overflow-y: auto;
     box-shadow: 0 4px 16px rgba(0,0,0,0.18);
     z-index: 70;
   }
   .emoji-item {
-    font-size: 22px;
+    font-size: 24px;
     text-align: center;
     cursor: pointer;
     padding: 4px;
@@ -684,15 +645,15 @@
 
   .wa-attach-menu {
     position: absolute;
-    bottom: 60px;
-    left: 8px;
-    right: 8px;
+    bottom: 64px;
+    left: 10px;
+    right: 10px;
     background: #ffffff;
     border-radius: 16px;
-    padding: 18px 12px;
+    padding: 20px 14px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px 8px;
+    gap: 16px 10px;
     box-shadow: 0 6px 24px rgba(0,0,0,0.22);
     border: 1px solid #e2e8f0;
     z-index: 75;
@@ -706,8 +667,8 @@
     user-select: none;
   }
   .wa-attach-circle {
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
     border-radius: 50%;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -715,10 +676,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
   }
   .wa-attach-label {
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 500;
     color: #3b4a54;
     text-align: center;
@@ -726,12 +687,12 @@
 
   .chat-input-pill {
     flex: 1;
-    min-height: 44px;
+    min-height: 46px;
     background: #ffffff;
     border-radius: 24px;
     display: flex;
     align-items: center;
-    padding: 4px 12px;
+    padding: 4px 14px;
     gap: 10px;
     box-shadow: 0 1px 1px rgba(11, 20, 26, 0.08);
   }
@@ -741,7 +702,7 @@
     background: none;
     border: none;
     color: #111b21;
-    font-size: 15px;
+    font-size: 15.5px;
     outline: none;
     padding: 6px 0;
   }
@@ -749,7 +710,7 @@
     color: #667781;
   }
   .pill-icon {
-    font-size: 20px;
+    font-size: 21px;
     color: #54656f;
     cursor: pointer;
     user-select: none;
@@ -759,8 +720,8 @@
     flex-shrink: 0;
   }
   .send-btn-circle {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background: #00a884;
     color: #ffffff;
@@ -768,7 +729,7 @@
     align-items: center;
     justify-content: center;
     border: none;
-    font-size: 18px;
+    font-size: 19px;
     cursor: pointer;
     flex-shrink: 0;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
@@ -778,9 +739,6 @@
     transform: scale(0.96);
   }
 
-  /* =========================================================
-     OVERLAY CALL & MODAL DIALOGS (WHATSAPP DARK STYLE)
-     ========================================================= */
   .call-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -790,42 +748,42 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 36px 16px;
+    padding: 40px 20px;
   }
   .call-user-avatar {
-    width: 96px;
-    height: 96px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     background: #202c33;
     border: 2px solid #00a884;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 42px;
     animation: pulseRing 1.5s infinite;
     margin: 0 auto;
   }
   @keyframes pulseRing {
     0% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7); }
-    70% { box-shadow: 0 0 0 22px rgba(0, 168, 132, 0); }
+    70% { box-shadow: 0 0 0 24px rgba(0, 168, 132, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0); }
   }
   .call-status {
-    font-size: 15px;
+    font-size: 15.5px;
     color: #00a884;
-    margin-top: 8px;
+    margin-top: 10px;
     font-weight: 600;
   }
   .call-actions {
     display: flex;
-    gap: 28px;
+    gap: 32px;
   }
   .btn-call-action {
-    width: 62px;
-    height: 62px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     border: none;
-    font-size: 24px;
+    font-size: 25px;
     color: #fff;
     cursor: pointer;
     display: flex;
@@ -843,34 +801,35 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 16px;
+    padding: 20px;
   }
   .modal-card {
     background: #111b21;
     border: 1px solid #2a3942;
     border-radius: 14px;
     width: 100%;
+    max-width: 440px;
     max-height: 85%;
-    padding: 16px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
   .modal-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #e9edef;
     text-align: center;
   }
   .modal-input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 11px 14px;
     border-radius: 8px;
     border: 1px solid #2a3942;
     background: #182229;
     color: #e9edef;
-    font-size: 14px;
+    font-size: 14.5px;
     outline: none;
   }
   .modal-input:focus {
@@ -878,13 +837,13 @@
   }
   .btn-group-call-role {
     width: 100%;
-    padding: 11px;
+    padding: 12px;
     border-radius: 20px;
     border: none;
     background: #00a884;
     color: #111b21;
     font-weight: 700;
-    font-size: 13.5px;
+    font-size: 14px;
     cursor: pointer;
   }
   .member-list-container {
@@ -895,12 +854,12 @@
     gap: 6px;
   }
   .member-row {
-    padding: 10px 12px;
+    padding: 11px 14px;
     background: #182229;
     border: 1px solid #222d34;
     border-radius: 8px;
     color: #e9edef;
-    font-size: 13.5px;
+    font-size: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -948,23 +907,23 @@
     border: 1px solid #2a3942;
     border-radius: 16px;
     width: 100%;
-    max-width: 360px;
-    padding: 22px 18px;
+    max-width: 380px;
+    padding: 24px 20px;
     text-align: center;
     box-shadow: 0 12px 32px rgba(0,0,0,0.55);
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
   }
-  .logout-warning-title { font-size: 17px; font-weight: 700; color: #f87171; }
-  .logout-warning-text { font-size: 13.5px; color: #d1d7db; line-height: 1.45; }
-  .logout-modal-actions { display: flex; gap: 10px; }
+  .logout-warning-title { font-size: 18px; font-weight: 700; color: #f87171; }
+  .logout-warning-text { font-size: 14px; color: #d1d7db; line-height: 1.5; }
+  .logout-modal-actions { display: flex; gap: 12px; }
   .btn-logout-cancel {
     flex: 1;
     background: #202c33;
     color: #e9edef;
     border: none;
-    padding: 11px;
+    padding: 12px;
     border-radius: 20px;
     font-weight: 600;
     cursor: pointer;
@@ -974,7 +933,7 @@
     background: #ea4335;
     color: #ffffff;
     border: none;
-    padding: 11px;
+    padding: 12px;
     border-radius: 20px;
     font-weight: 700;
     cursor: pointer;
@@ -1121,7 +1080,7 @@
     <div class="modal-card">
       <div class="modal-title" id="inAppPreviewTitle">PRATINJAU KONTEN</div>
       <div class="inapp-viewer-box" id="inAppViewerContainer"></div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeInAppPreview()">Tutup Pratinjau</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeInAppPreview()">Tutup Pratinjau</button>
     </div>
   </div>
 
@@ -1129,7 +1088,7 @@
     <div class="modal-card">
       <div class="modal-title" id="contactModalTitle">👤 BAGIKAN KONTAK WARGA</div>
       <div class="member-list-container" id="waContactList"></div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeWaModal('waContactModal')">Batal</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeWaModal('waContactModal')">Batal</button>
     </div>
   </div>
 
@@ -1140,8 +1099,8 @@
       <input type="text" id="pollOpt1" class="modal-input" placeholder="Pilihan 1 (contoh: Setuju)">
       <input type="text" id="pollOpt2" class="modal-input" placeholder="Pilihan 2 (contoh: Tidak Setuju)">
       <input type="text" id="pollOpt3" class="modal-input" placeholder="Pilihan 3 (Opsional)">
-      <button class="btn-grup-plus" style="width:100%; padding:11px;" onclick="submitWhatsAppPoll()">Kirim Polling</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waPollModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:12px;" onclick="submitWhatsAppPoll()">Kirim Polling</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeWaModal('waPollModal')">Batal</button>
     </div>
   </div>
 
@@ -1152,8 +1111,8 @@
       <input type="date" id="eventDate" class="modal-input">
       <input type="time" id="eventTime" class="modal-input">
       <input type="text" id="eventLoc" class="modal-input" placeholder="Lokasi Acara...">
-      <button class="btn-grup-plus" style="width:100%; padding:11px;" onclick="submitWhatsAppEvent()">Kirim Undangan Acara</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waEventModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:12px;" onclick="submitWhatsAppEvent()">Kirim Undangan Acara</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeWaModal('waEventModal')">Batal</button>
     </div>
   </div>
 
@@ -1166,18 +1125,18 @@
         <option value="emerald">Tema Hijau Lingkungan RT</option>
         <option value="gold">Tema Pengumuman Resmi Emas</option>
       </select>
-      <button class="btn-grup-plus" style="width:100%; padding:11px;" onclick="submitWhatsAppAiImage()">Buat & Kirim Gambar</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:10px;" onclick="closeWaModal('waAiImageModal')">Batal</button>
+      <button class="btn-grup-plus" style="width:100%; padding:12px;" onclick="submitWhatsAppAiImage()">Buat & Kirim Gambar</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeWaModal('waAiImageModal')">Batal</button>
     </div>
   </div>
 
   <div id="callScreen" class="call-overlay hidden">
     <div style="text-align:center;">
       <div class="call-user-avatar" id="callAvatar">📞</div>
-      <div style="font-size:20px; font-weight:700; margin-top:12px;" id="callTargetName">Nama Kontak</div>
+      <div style="font-size:21px; font-weight:700; margin-top:12px;" id="callTargetName">Nama Kontak</div>
       <div class="call-status" id="callStatusText">Memanggil...</div>
     </div>
-    <div id="videoContainer" class="hidden" style="width:100%; flex:1; margin:14px 0; background:#000; border-radius:12px; overflow:hidden; border:1px solid #2a3942;">
+    <div id="videoContainer" class="hidden" style="width:100%; flex:1; margin:16px 0; background:#000; border-radius:12px; overflow:hidden; border:1px solid #2a3942;">
       <iframe id="jitsiCallFrame" allow="camera; microphone; fullscreen; display-capture; autoplay" style="width:100%; height:100%; border:none;"></iframe>
     </div>
     <div class="call-actions">
@@ -1191,30 +1150,30 @@
       <div class="modal-title" id="modalGroupTitle">DAFTAR ANGGOTA</div>
       <button id="btnCallGroupByRole" class="btn-group-call-role hidden" onclick="startGroupCallByRole()">🔊 Call Grup</button>
       <div class="member-list-container" id="memberListContent"></div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeGroupMembersModal()">Tutup</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeGroupMembersModal()">Tutup</button>
     </div>
   </div>
 
   <div id="ringtoneModal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-title">PENGATURAN NADA DERING</div>
-      <div style="padding:8px 0; display:flex; flex-direction:column; gap:10px;">
-        <label style="font-size:13px; color:#00a884;">Pilih Nada Dering Telepon:</label>
+      <div style="padding:8px 0; display:flex; flex-direction:column; gap:12px;">
+        <label style="font-size:13.5px; color:#00a884;">Pilih Nada Dering Telepon:</label>
         <select id="ringtoneSelect" class="modal-input">
           <option value="standard">WhatsApp Standard Ringtone</option>
           <option value="classic">Classic Digital Phone</option>
           <option value="soft">Soft Melodic Chime</option>
         </select>
-        <button class="btn-grup-plus" style="background:#202c33; color:#00a884; border:1px solid #00a884; padding:10px;" onclick="testPlayRingtone()">🔊 Tes Bunyi</button>
-        <button class="btn-grup-plus" style="padding:11px;" onclick="saveRingtoneSetting()">Simpan Pengaturan</button>
+        <button class="btn-grup-plus" style="background:#202c33; color:#00a884; border:1px solid #00a884; padding:11px;" onclick="testPlayRingtone()">🔊 Tes Bunyi</button>
+        <button class="btn-grup-plus" style="padding:12px;" onclick="saveRingtoneSetting()">Simpan Pengaturan</button>
       </div>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:11px;" onclick="closeRingtoneModal()">Tutup</button>
+      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%; padding:12px;" onclick="closeRingtoneModal()">Tutup</button>
     </div>
   </div>
 
   <div id="logoutWarningModal" class="logout-modal-overlay hidden">
     <div class="logout-warning-card">
-      <div style="font-size:38px;">⚠️</div>
+      <div style="font-size:40px;">⚠️</div>
       <div class="logout-warning-title">KONFIRMASI KELUAR</div>
       <div class="logout-warning-text">Keluar dari akun ini untuk beralih ke Username warga lain atau kembali ke halaman awal?</div>
       <div class="logout-modal-actions">
@@ -1717,7 +1676,7 @@
           const count = Object.values(votes).filter(v => v === idx).length;
           htmlOutput += `<button class="poll-option-btn" onclick="castPollVote(${rowNumber}, ${idx})"><span>${opt}</span><span style="color:#008069;">${count} suara</span></button>`;
         });
-        htmlOutput += `<div style="font-size:11px; color:#667781; margin-top:6px;">Total partisipasi: ${totalVotes} warga</div></div>`;
+        htmlOutput += `<div style="font-size:11.5px; color:#667781; margin-top:6px;">Total partisipasi: ${totalVotes} warga</div></div>`;
         return htmlOutput;
       } catch (e) {}
     }
@@ -1728,7 +1687,7 @@
         htmlOutput += `
           <div class="wa-card">
             <div class="wa-card-header">📅 UNDANGAN ACARA WARGA</div>
-            <div style="font-weight:700; font-size:14px;">${ev.title}</div>
+            <div style="font-weight:700; font-size:14.5px;">${ev.title}</div>
             <div style="margin-top:4px; color:#3b4a54;">🗓️ ${ev.date} • ⏰ ${ev.time}</div>
             <div style="color:#3b4a54;">📍 ${ev.location}</div>
           </div>`;
@@ -1823,7 +1782,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; font-size:13px; margin:16px auto; max-width:85%;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> di kanan atas untuk memilih warga.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; font-size:13.5px; margin:16px auto; max-width:88%;">Belum ada riwayat pesan privat. Ketuk <b>👤 Tujuan</b> di kanan atas untuk memilih warga.</div>';
       return;
     }
 
@@ -1875,7 +1834,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; font-size:13px; margin:16px auto; max-width:85%;">Belum ada riwayat pesan di grup ini.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.85); padding:10px 14px; border-radius:10px; font-size:13.5px; margin:16px auto; max-width:88%;">Belum ada riwayat pesan di grup ini.</div>';
       return;
     }
 
@@ -2270,7 +2229,7 @@
           row.className = 'member-row';
           row.innerHTML = `
             <span>${m.nama} <small style="color:#8696a0;">(${m.username})</small></span>
-            <button class="btn-grup-plus" style="padding:5px 11px; font-size:11.5px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', '${type}')">Panggil</button>
+            <button class="btn-grup-plus" style="padding:6px 12px; font-size:12px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', '${type}')">Panggil</button>
           `;
           list.appendChild(row);
         });
