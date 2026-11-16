@@ -29,10 +29,12 @@
   }
   html, body {
     width: 100%;
-    height: 100dvh;
+    height: 100%;
+    min-height: 100dvh;
     background-color: var(--wa-bg);
     color: var(--wa-text);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,129 +43,131 @@
   .welcome-container {
     background: var(--wa-panel);
     width: 100%;
-    height: 100%;
+    max-width: 650px;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: clamp(40px, 8vh, 80px) clamp(24px, 6vw, 48px);
+    padding: clamp(30px, 5vh, 60px) clamp(20px, 5vw, 36px);
     text-align: center;
-    overflow-y: auto;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
   }
   .welcome-title {
-    font-size: clamp(48px, 12vw, 90px);
+    font-size: clamp(32px, 8vw, 64px);
     font-weight: 800;
     color: var(--wa-text);
-    margin-bottom: clamp(24px, 5vh, 40px);
-    letter-spacing: 2px;
+    margin-bottom: clamp(16px, 3vh, 28px);
+    letter-spacing: 1.5px;
   }
   .logo-sc-3d-large {
-    width: clamp(280px, 60vw, 450px);
-    height: clamp(280px, 60vw, 450px);
-    margin: 0 auto clamp(30px, 6vh, 50px) auto;
+    width: clamp(180px, 40vw, 280px);
+    height: clamp(180px, 40vw, 280px);
+    margin: 0 auto clamp(20px, 4vh, 36px) auto;
     background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 64px;
+    border-radius: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: clamp(120px, 30vw, 220px);
+    font-size: clamp(80px, 20vw, 140px);
     color: #ffffff;
-    box-shadow: 0 16px 48px rgba(0, 168, 132, 0.45);
-    border: 6px solid var(--wa-green-light);
+    box-shadow: 0 12px 36px rgba(0, 168, 132, 0.4);
+    border: 4px solid var(--wa-green-light);
   }
   .brand-sub {
-    font-size: clamp(38px, 9vw, 64px);
+    font-size: clamp(26px, 6vw, 42px);
     font-weight: 800;
     color: var(--wa-green);
-    margin-bottom: clamp(20px, 4vh, 32px);
-    letter-spacing: 1.5px;
+    margin-bottom: clamp(16px, 3vh, 24px);
+    letter-spacing: 1px;
   }
   .welcome-email {
-    font-size: clamp(26px, 7vw, 40px);
+    font-size: clamp(18px, 4.5vw, 28px);
     color: var(--wa-text-secondary);
-    margin-bottom: clamp(36px, 6vh, 54px);
+    margin-bottom: clamp(24px, 4vh, 36px);
     background: var(--wa-card);
-    padding: clamp(18px, 3vh, 28px) clamp(36px, 8vw, 54px);
-    border-radius: 40px;
-    border: 3px solid var(--wa-border);
+    padding: clamp(12px, 2vh, 20px) clamp(20px, 5vw, 36px);
+    border-radius: 28px;
+    border: 2px solid var(--wa-border);
     font-weight: 600;
+    word-break: break-all;
   }
   .pwa-instruction-box {
     background: var(--wa-card);
-    border: 3px solid var(--wa-border);
-    border-radius: 28px;
-    padding: clamp(30px, 6vh, 45px);
-    margin-bottom: clamp(36px, 6vh, 54px);
+    border: 2px solid var(--wa-border);
+    border-radius: 22px;
+    padding: clamp(20px, 4vh, 32px);
+    margin-bottom: clamp(24px, 4vh, 36px);
     text-align: left;
     width: 100%;
-    max-width: 750px;
   }
   .pwa-instruction-title {
-    font-size: clamp(26px, 6.5vw, 36px);
+    font-size: clamp(20px, 5vw, 28px);
     font-weight: 800;
     color: var(--wa-green);
-    margin-bottom: clamp(18px, 3vh, 24px);
+    margin-bottom: clamp(12px, 2vh, 18px);
     text-transform: uppercase;
     text-align: center;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
   }
   .pwa-instruction-steps {
-    font-size: clamp(24px, 6vw, 34px);
+    font-size: clamp(16px, 4.2vw, 24px);
     color: #d1d7db;
-    line-height: 1.6;
-    padding-left: 32px;
+    line-height: 1.5;
+    padding-left: 24px;
   }
   .pwa-instruction-steps li {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   .pwa-status-badge {
     display: inline-block;
-    font-size: clamp(24px, 6vw, 34px);
+    font-size: clamp(16px, 4.2vw, 24px);
     font-weight: 700;
-    padding: clamp(18px, 3vh, 26px) clamp(26px, 6vw, 38px);
-    border-radius: 20px;
-    margin-bottom: clamp(20px, 4vh, 32px);
+    padding: clamp(14px, 2.5vh, 20px) clamp(18px, 4vw, 28px);
+    border-radius: 16px;
+    margin-bottom: clamp(16px, 3vh, 24px);
     width: 100%;
     text-align: center;
   }
   .badge-installed {
     background: rgba(0, 168, 132, 0.18);
     color: var(--wa-green-light);
-    border: 3px solid var(--wa-green);
+    border: 2px solid var(--wa-green);
   }
   .badge-browser {
     background: rgba(234, 67, 53, 0.15);
     color: #fca5a5;
-    border: 3px solid #ea4335;
+    border: 2px solid #ea4335;
   }
   .btn-install-native {
     width: 100%;
-    margin-top: 24px;
-    padding: clamp(24px, 4.5vh, 34px);
-    border-radius: 40px;
+    margin-top: 16px;
+    padding: clamp(16px, 3vh, 24px);
+    border-radius: 28px;
     border: none;
     background: var(--wa-green);
     color: var(--wa-panel);
     font-weight: 800;
-    font-size: clamp(26px, 6.5vw, 36px);
+    font-size: clamp(18px, 4.5vw, 26px);
     cursor: pointer;
     text-transform: uppercase;
   }
   .btn-ok-robotic {
     width: 100%;
-    max-width: 650px;
+    max-width: 100%;
     background: var(--wa-green);
     color: var(--wa-panel);
     border: none;
-    padding: clamp(26px, 5vh, 38px);
-    border-radius: 48px;
-    font-size: clamp(32px, 8vw, 48px);
+    padding: clamp(18px, 3.5vh, 28px);
+    border-radius: 32px;
+    font-size: clamp(22px, 6vw, 36px);
     font-weight: 800;
     cursor: pointer;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    box-shadow: 0 8px 28px rgba(0, 168, 132, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
     transition: transform 0.1s, background 0.15s;
   }
   .btn-ok-robotic:active {
@@ -171,11 +175,11 @@
     background: #008f70;
   }
   .footer-tag {
-    margin-top: clamp(36px, 6vh, 54px);
-    margin-bottom: clamp(20px, 4vh, 30px);
-    font-size: clamp(22px, 5.5vw, 32px);
+    margin-top: clamp(24px, 4vh, 36px);
+    margin-bottom: clamp(12px, 2vh, 20px);
+    font-size: clamp(15px, 3.8vw, 22px);
     color: var(--wa-text-secondary);
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     font-weight: 600;
   }
   .hidden { display: none !important; }
