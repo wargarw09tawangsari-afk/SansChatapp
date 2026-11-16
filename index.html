@@ -1,88 +1,448 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Warga RW 09 - Index</title>
-    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Sc-SansChat - Selamat Datang</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b141a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
-/* ========================================================================== */
-/* ANDROID MOBILE ACCESSIBILITY & ENLARGED VIEWPORT STYLES (12px Edge Margin)  */
-/* ========================================================================== */
-@media screen and (max-width: 768px), (pointer: coarse) {
+  :root {
+    --wa-bg: #0b141a;
+    --wa-panel: #111b21;
+    --wa-card: #182229;
+    --wa-border: #2a3942;
+    --wa-green: #00a884;
+    --wa-green-light: #25d366;
+    --wa-text: #e9edef;
+    --wa-text-secondary: #8696a0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    background-color: var(--wa-bg);
+    color: var(--wa-text);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .welcome-container {
+    background: var(--wa-panel);
+    width: 100%;
+    max-width: 480px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 16px;
+    text-align: center;
+    margin: 0 auto;
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    border-left: 1px solid var(--wa-border);
+    border-right: 1px solid var(--wa-border);
+  }
+
+  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 8px margin from screen edges, huge fonts & images */
+  @media all and (display-mode: standalone), (max-width: 600px) {
     html, body {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
-        box-sizing: border-box !important;
-        font-size: 20px !important; /* Besarkan font tulisan */
-        line-height: 1.6 !important;
+      padding: 8px !important;
+      background-color: var(--wa-bg) !important;
     }
+    .welcome-container {
+      border: 3px solid var(--wa-green) !important;
+      width: calc(100% - 16px) !important;
+      max-width: calc(100% - 16px) !important;
+      margin: 8px auto !important;
+      border-radius: 24px !important;
+      padding: 32px 24px !important;
+      min-height: calc(100dvh - 16px) !important;
+      box-sizing: border-box !important;
+    }
+    .welcome-title {
+      font-size: 52px !important;
+      letter-spacing: 2px !important;
+      margin-bottom: 24px !important;
+    }
+    .logo-sc-3d-large {
+      width: 220px !important;
+      height: 220px !important;
+      font-size: 110px !important;
+      border-radius: 48px !important;
+      border: 5px solid var(--wa-green-light) !important;
+      margin-bottom: 24px !important;
+    }
+    .brand-sub {
+      font-size: 38px !important;
+      margin-bottom: 20px !important;
+    }
+    .welcome-email {
+      font-size: 26px !important;
+      padding: 22px 28px !important;
+      border-radius: 18px !important;
+      margin-bottom: 24px !important;
+    }
+    .pwa-instruction-box {
+      padding: 28px !important;
+      border-radius: 22px !important;
+      margin-bottom: 24px !important;
+    }
+    .pwa-instruction-title {
+      font-size: 24px !important;
+      margin-bottom: 14px !important;
+    }
+    .pwa-instruction-steps {
+      font-size: 22px !important;
+      line-height: 1.6 !important;
+      padding-left: 28px !important;
+    }
+    .pwa-instruction-steps li {
+      margin-bottom: 12px !important;
+    }
+    .pwa-status-badge {
+      font-size: 22px !important;
+      padding: 20px !important;
+      border-radius: 18px !important;
+      margin-bottom: 18px !important;
+    }
+    .btn-install-native {
+      font-size: 24px !important;
+      padding: 24px !important;
+      border-radius: 20px !important;
+      margin-top: 16px !important;
+    }
+    .btn-ok-robotic {
+      font-size: 34px !important;
+      padding: 28px !important;
+      border-radius: 22px !important;
+      min-height: 88px !important;
+      letter-spacing: 2px !important;
+    }
+    .footer-tag {
+      font-size: 18px !important;
+      margin-top: 20px !important;
+      letter-spacing: 1.5px !important;
+    }
+  }
 
-    body {
-        padding: 0 12px !important; /* Pembatasan 12 px dari pinggir layar hp android */
-    }
+  .welcome-header-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: auto 0;
+  }
+  .welcome-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--wa-text);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .logo-sc-3d-large {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 14px auto;
+    background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
+    border-radius: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 52px;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
+    border: 3px solid var(--wa-green-light);
+  }
+  .brand-sub {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--wa-green);
+    margin-bottom: 12px;
+  }
+  .welcome-email {
+    font-size: 14px;
+    color: var(--wa-text-secondary);
+    margin-bottom: 16px;
+    background: var(--wa-card);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--wa-border);
+    font-weight: 700;
+    word-break: break-all;
+    width: 100%;
+  }
+  .pwa-instruction-box {
+    background: var(--wa-card);
+    border: 1px solid var(--wa-border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: left;
+    width: 100%;
+  }
+  .pwa-instruction-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--wa-green);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .pwa-instruction-steps {
+    font-size: 13px;
+    color: #d1d7db;
+    line-height: 1.5;
+    padding-left: 18px;
+    font-weight: 600;
+  }
+  .pwa-instruction-steps li {
+    margin-bottom: 6px;
+  }
+  .pwa-status-badge {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    text-align: center;
+  }
+  .badge-installed {
+    background: rgba(0, 168, 132, 0.18);
+    color: var(--wa-green-light);
+    border: 1px solid var(--wa-green);
+  }
+  .badge-browser {
+    background: rgba(234, 67, 53, 0.15);
+    color: #fca5a5;
+    border: 1px solid #ea4335;
+  }
+  .btn-install-native {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: var(--wa-green);
+    color: var(--wa-panel);
+    font-weight: 900;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .btn-ok-robotic {
+    width: 100%;
+    background: var(--wa-green);
+    color: var(--wa-panel);
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+    min-height: 52px;
+  }
+  .footer-tag {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--wa-text-secondary);
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  .hidden { display: none !important; }
 
-    /* Wrapper / Container adjustments for 12px margin */
-    .container, .card, .main-container, .wrapper, header, footer, nav, form, .form-group {
-        width: 100% !important;
-        max-width: calc(100vw - 24px) !important;
-        margin-left: 12px !important;
-        margin-right: 12px !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        box-sizing: border-box !important;
+  /* --- ANDROID MOBILE 12PX PADDING & 2.5X FONT/IMAGE ENLARGEMENT --- */
+  @media all and (display-mode: standalone), (max-width: 768px), screen and (pointer: coarse) {
+    html, body {
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      box-sizing: border-box !important;
     }
-
-    /* Besarkan semua ukuran font dan elemen teks */
-    h1 { font-size: 2.8rem !important; margin-bottom: 20px !important; }
-    h2 { font-size: 2.3rem !important; margin-bottom: 18px !important; }
-    h3 { font-size: 1.9rem !important; margin-bottom: 15px !important; }
-    p, span, a, label, li, input, select, textarea, button {
-        font-size: 1.25rem !important;
+    .welcome-container, .login-container, .app-container {
+      width: calc(100% - 24px) !important;
+      max-width: calc(100% - 24px) !important;
+      margin-left: 12px !important;
+      margin-right: 12px !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+      box-sizing: border-box !important;
     }
-
-    /* Besarkan tombol & input agar mudah disentuh di HP Android */
-    button, .btn, input[type="submit"], input[type="button"], .button {
-        width: 100% !important;
-        padding: 18px 24px !important;
-        font-size: 1.4rem !important;
-        border-radius: 12px !important;
-        margin: 12px 0 !important;
-        min-height: 56px !important;
+    body, p, span, a, label, input, select, button, td, th {
+      font-size: 24px !important;
+      line-height: 1.4 !important;
     }
-
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], select, textarea {
-        width: 100% !important;
-        padding: 16px !important;
-        font-size: 1.25rem !important;
-        border-radius: 10px !important;
-        margin-bottom: 15px !important;
-        box-sizing: border-box !important;
+    h1, .welcome-title, .login-title, .user-info-name {
+      font-size: 50px !important;
+      line-height: 1.25 !important;
     }
-
-    /* Besarkan gambar dan icon */
-    img, svg, .avatar, .icon, figure {
-        max-width: 100% !important;
-        height: auto !important;
-        transform: scale(1.15); /* Membesarkan tampilan gambar */
-        transform-origin: center;
-        margin: 15px auto !important;
-        display: block !important;
+    h2, .room-title, .modal-title {
+      font-size: 42px !important;
+      line-height: 1.25 !important;
     }
-}
+    h3, .brand-sub, .login-subtitle {
+      font-size: 34px !important;
+      line-height: 1.25 !important;
+    }
+    button, .btn-3d-robotic, .btn-ok-robotic, .btn-install-native, .btn-webaps, .btn-logout, .btn-grup-plus, .btn-combo-call, .poll-option-btn, input, select {
+      min-height: 76px !important;
+      padding: 18px 22px !important;
+      font-size: 24px !important;
+      border-radius: 18px !important;
+    }
+    .chat-input-pill {
+      min-height: 80px !important;
+      border-radius: 40px !important;
+      padding: 6px 20px !important;
+    }
+    .chat-input-pill input {
+      font-size: 24px !important;
+    }
+    .send-btn-circle {
+      width: 76px !important;
+      height: 76px !important;
+      font-size: 30px !important;
+    }
+    .msg-bubble {
+      font-size: 24px !important;
+      padding: 18px 22px !important;
+      border-radius: 20px !important;
+      max-width: 92% !important;
+    }
+    .chat-item {
+      padding: 22px 16px !important;
+    }
+    .chat-name {
+      font-size: 30px !important;
+    }
+    .chat-time {
+      font-size: 20px !important;
+    }
+  }
 </style>
 
 </head>
 <body>
-    <div class="container" style="padding: 20px; text-align: center;">
-        <h1>Portal Warga RW 09</h1>
-        <p>Selamat datang di sistem informasi warga Sansiviera. Silakan masuk untuk melanjutkan ke menu utama.</p>
-        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80" alt="Ilustrasi Warga" style="border-radius: 12px; margin: 20px 0;">
-        <br>
-        <a href="login.html"><button class="btn">Login ke Sistem</button></a>
+
+<div class="welcome-container">
+  <div class="welcome-header-group">
+    <div class="welcome-title">SELAMAT DATANG</div>
+    <div class="logo-sc-3d-large">Sc</div>
+    <div class="brand-sub">Sc-SansChat</div>
+    <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
+
+    <div class="pwa-instruction-box">
+      <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
+      <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
+      <ol class="pwa-instruction-steps">
+        <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
+        <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
+        <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
+      </ol>
+      <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
+        📲 INSTAL APLIKASI SEKARANG
+      </button>
     </div>
+  </div>
+
+  <div style="width:100%; margin-bottom: 10px;">
+    <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
+    <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
+  </div>
+</div>
+
+<script>
+  let deferredInstallPrompt = null;
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').then((reg) => {
+      reg.update();
+    }).catch(() => {});
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    document.getElementById('btnInstallPwaDirect').classList.remove('hidden');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+    updatePwaBadgeStatus();
+  });
+
+  window.onload = function() {
+    updatePwaBadgeStatus();
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
+    if (isStandalone && savedSession && savedSession.username) {
+      const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
+      window.location.href = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(savedSession.username);
+    }
+  };
+
+  function updatePwaBadgeStatus() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const badge = document.getElementById('pwaStatusBadge');
+    if (isStandalone) {
+      badge.className = "pwa-status-badge badge-installed";
+      badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda";
+    } else {
+      badge.className = "pwa-status-badge badge-browser";
+      badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama";
+    }
+  }
+
+  function triggerNativePwaInstall() {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(() => {
+      deferredInstallPrompt = null;
+      document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+    });
+  }
+
+  function proceedToLogin() {
+    const btn = document.getElementById('btnOkWelcome');
+    btn.innerText = "MEMBUKA LOGIN...";
+    btn.disabled = true;
+
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach(name => caches.delete(name));
+      });
+    }
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => reg.update());
+      });
+    }
+
+    const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
+    window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
+  }
+</script>
 </body>
 </html>
