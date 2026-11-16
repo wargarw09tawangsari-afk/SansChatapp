@@ -6,6 +6,16 @@
 <title>Sc-SansChat - Login</title>
 <meta name="theme-color" content="#0b141a">
 <style>
+  :root {
+    --wa-bg: #0b141a;
+    --wa-panel: #111b21;
+    --wa-card: #182229;
+    --wa-border: #2a3942;
+    --wa-green: #00a884;
+    --wa-green-light: #25d366;
+    --wa-text: #e9edef;
+    --wa-text-secondary: #8696a0;
+  }
   * {
     box-sizing: border-box;
     margin: 0;
@@ -16,8 +26,8 @@
   html, body {
     width: 100%;
     height: 100dvh;
-    background-color: #0b141a;
-    color: #e9edef;
+    background-color: var(--wa-bg);
+    color: var(--wa-text);
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -25,44 +35,44 @@
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   }
   .login-container {
-    background: #111b21;
+    background: var(--wa-panel);
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 24px 20px;
+    padding: clamp(16px, 4vw, 32px) clamp(16px, 4vw, 24px);
     position: relative;
     overflow-y: auto;
   }
   .logo-sc-3d-large {
-    width: 76px;
-    height: 76px;
-    margin: 0 auto 14px auto;
-    background: linear-gradient(135deg, #00a884 0%, #005c4b 100%);
-    border-radius: 18px;
+    width: clamp(84px, 20vw, 115px);
+    height: clamp(84px, 20vw, 115px);
+    margin: 0 auto clamp(12px, 2.5vh, 20px) auto;
+    background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
+    border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 34px;
+    font-size: clamp(38px, 10vw, 56px);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35);
-    border: 2px solid #25d366;
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+    border: 3px solid var(--wa-green-light);
   }
   .login-title {
-    font-size: 20px;
+    font-size: clamp(19px, 5vw, 26px);
     font-weight: 800;
-    color: #e9edef;
-    margin-bottom: 4px;
+    color: var(--wa-text);
+    margin-bottom: 6px;
     text-align: center;
     letter-spacing: 1.5px;
   }
   .login-subtitle {
-    font-size: 11.5px;
-    color: #00a884;
+    font-size: clamp(12px, 3.2vw, 15px);
+    color: var(--wa-green);
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: clamp(16px, 3vh, 24px);
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 700;
@@ -70,82 +80,83 @@
   .pwa-warning-box {
     background: rgba(234, 67, 53, 0.12);
     border: 1px solid #ea4335;
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 16px;
+    border-radius: 12px;
+    padding: clamp(12px, 2.5vh, 18px);
+    margin-bottom: clamp(14px, 2.5vh, 20px);
     color: #fca5a5;
-    font-size: 12px;
-    line-height: 1.45;
+    font-size: clamp(12.5px, 3.3vw, 15px);
+    line-height: 1.5;
   }
   .pwa-warning-title {
     font-weight: 800;
     color: #f87171;
-    margin-bottom: 4px;
-    font-size: 12.5px;
+    margin-bottom: 6px;
+    font-size: clamp(13px, 3.5vw, 16px);
     text-transform: uppercase;
   }
   .pwa-warning-box ol {
-    padding-left: 16px;
-    margin-top: 5px;
+    padding-left: 18px;
+    margin-top: 6px;
   }
   .pwa-warning-box li {
-    margin-bottom: 4px;
-    color: #e9edef;
+    margin-bottom: 5px;
+    color: var(--wa-text);
   }
   .field-group {
-    margin-bottom: 16px;
+    margin-bottom: clamp(14px, 2.5vh, 20px);
     position: relative;
   }
   .field-group label {
     display: block;
-    font-size: 12px;
-    color: #00a884;
+    font-size: clamp(12px, 3.2vw, 14.5px);
+    color: var(--wa-green);
     margin-bottom: 6px;
     font-weight: 700;
     letter-spacing: 0.5px;
   }
   .field-group input {
     width: 100%;
-    padding: 13px 44px 13px 14px;
-    background: #182229;
-    border: 1.5px solid #2a3942;
-    border-radius: 10px;
-    color: #e9edef;
-    font-size: 15px;
+    padding: clamp(13px, 2.5vh, 17px) clamp(44px, 10vw, 52px) clamp(13px, 2.5vh, 17px) clamp(14px, 3.5vw, 18px);
+    background: var(--wa-card);
+    border: 1.5px solid var(--wa-border);
+    border-radius: 12px;
+    color: var(--wa-text);
+    font-size: clamp(15px, 4vw, 18px);
     font-weight: 600;
     outline: none;
     transition: border-color 0.15s;
   }
   .field-group input:focus {
-    border-color: #00a884;
+    border-color: var(--wa-green);
   }
   .password-toggle {
     position: absolute;
-    right: 14px;
-    top: 35px;
+    right: 16px;
+    top: 55%;
+    transform: translateY(-50%);
     cursor: pointer;
-    font-size: 18px;
+    font-size: clamp(20px, 5vw, 24px);
     user-select: none;
-    color: #8696a0;
+    color: var(--wa-text-secondary);
   }
   .btn-3d-robotic {
     width: 100%;
-    background: #00a884;
-    color: #111b21;
+    background: var(--wa-green);
+    color: var(--wa-panel);
     border: none;
-    padding: 14px;
-    border-radius: 24px;
-    font-size: 15px;
+    padding: clamp(14px, 2.8vh, 18px);
+    border-radius: 28px;
+    font-size: clamp(15px, 4vw, 18px);
     font-weight: 800;
     cursor: pointer;
-    margin-top: 8px;
+    margin-top: 10px;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    box-shadow: 0 3px 10px rgba(0, 168, 132, 0.3);
+    box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35);
   }
   .btn-3d-robotic:disabled {
-    background: #2a3942;
-    color: #8696a0;
+    background: var(--wa-border);
+    color: var(--wa-text-secondary);
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.8;
@@ -155,12 +166,12 @@
     top: 16px;
     right: 18px;
     background: #202c33;
-    color: #00a884;
-    border: 1px solid #2a3942;
-    padding: 6px 12px;
-    border-radius: 18px;
+    color: var(--wa-green);
+    border: 1px solid var(--wa-border);
+    padding: clamp(7px, 1.5vh, 10px) clamp(12px, 3vw, 16px);
+    border-radius: 20px;
     text-decoration: none;
-    font-size: 11.5px;
+    font-size: clamp(11.5px, 3vw, 14px);
     font-weight: 700;
     z-index: 3;
   }
@@ -189,10 +200,12 @@
     <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
   </div>
 
-  <div class="field-group">
+  <div class="field-group" style="position:relative;">
     <label>KODE AKSES / PASSWORD</label>
-    <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()">
-    <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+    <div style="position:relative;">
+      <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()" style="padding-right: 50px;">
+      <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+    </div>
   </div>
 
   <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>

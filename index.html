@@ -10,6 +10,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
+  :root {
+    --wa-bg: #0b141a;
+    --wa-panel: #111b21;
+    --wa-card: #182229;
+    --wa-border: #2a3942;
+    --wa-green: #00a884;
+    --wa-green-light: #25d366;
+    --wa-text: #e9edef;
+    --wa-text-secondary: #8696a0;
+  }
   * {
     box-sizing: border-box;
     margin: 0;
@@ -20,8 +30,8 @@
   html, body {
     width: 100%;
     height: 100dvh;
-    background-color: #0b141a;
-    color: #e9edef;
+    background-color: var(--wa-bg);
+    color: var(--wa-text);
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -29,98 +39,98 @@
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   }
   .welcome-container {
-    background: #111b21;
+    background: var(--wa-panel);
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 24px 20px;
+    padding: clamp(16px, 4vw, 32px) clamp(16px, 4vw, 24px);
     text-align: center;
     overflow-y: auto;
   }
   .welcome-title {
-    font-size: 22px;
+    font-size: clamp(20px, 5.5vw, 28px);
     font-weight: 800;
-    color: #e9edef;
-    margin-bottom: 16px;
-    letter-spacing: 1.8px;
+    color: var(--wa-text);
+    margin-bottom: clamp(12px, 3vh, 20px);
+    letter-spacing: 1.5px;
   }
   .logo-sc-3d-large {
-    width: 82px;
-    height: 82px;
-    margin: 0 auto 12px auto;
-    background: linear-gradient(135deg, #00a884 0%, #005c4b 100%);
-    border-radius: 22px;
+    width: clamp(90px, 22vw, 130px);
+    height: clamp(90px, 22vw, 130px);
+    margin: 0 auto clamp(12px, 2.5vh, 20px) auto;
+    background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
+    border-radius: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 900;
-    font-size: 38px;
+    font-size: clamp(42px, 11vw, 64px);
     color: #ffffff;
-    box-shadow: 0 6px 18px rgba(0, 168, 132, 0.35);
-    border: 2px solid #25d366;
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
+    border: 3px solid var(--wa-green-light);
   }
   .brand-sub {
-    font-size: 18px;
+    font-size: clamp(16px, 4.5vw, 22px);
     font-weight: 800;
-    color: #00a884;
-    margin-bottom: 8px;
+    color: var(--wa-green);
+    margin-bottom: clamp(8px, 2vh, 14px);
     letter-spacing: 1px;
   }
   .welcome-email {
-    font-size: 13px;
-    color: #8696a0;
-    margin-bottom: 20px;
-    background: #182229;
-    padding: 8px 18px;
-    border-radius: 20px;
-    border: 1px solid #2a3942;
+    font-size: clamp(13px, 3.5vw, 16px);
+    color: var(--wa-text-secondary);
+    margin-bottom: clamp(16px, 3vh, 24px);
+    background: var(--wa-card);
+    padding: clamp(8px, 1.5vh, 12px) clamp(16px, 4vw, 24px);
+    border-radius: 24px;
+    border: 1px solid var(--wa-border);
     font-weight: 600;
   }
   .pwa-instruction-box {
-    background: #182229;
-    border: 1px solid #2a3942;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 22px;
+    background: var(--wa-card);
+    border: 1px solid var(--wa-border);
+    border-radius: 14px;
+    padding: clamp(14px, 3vh, 20px);
+    margin-bottom: clamp(16px, 3vh, 24px);
     text-align: left;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
   }
   .pwa-instruction-title {
-    font-size: 12.5px;
+    font-size: clamp(12.5px, 3.2vw, 15px);
     font-weight: 800;
-    color: #00a884;
-    margin-bottom: 8px;
+    color: var(--wa-green);
+    margin-bottom: clamp(8px, 1.5vh, 12px);
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 0.5px;
   }
   .pwa-instruction-steps {
-    font-size: 13px;
+    font-size: clamp(13px, 3.5vw, 15.5px);
     color: #d1d7db;
-    line-height: 1.5;
-    padding-left: 18px;
+    line-height: 1.55;
+    padding-left: 20px;
   }
   .pwa-instruction-steps li {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
   }
   .pwa-status-badge {
     display: inline-block;
-    font-size: 12px;
+    font-size: clamp(12px, 3.2vw, 14.5px);
     font-weight: 700;
-    padding: 7px 12px;
-    border-radius: 8px;
-    margin-bottom: 12px;
+    padding: clamp(8px, 1.5vh, 11px) clamp(12px, 3vw, 16px);
+    border-radius: 10px;
+    margin-bottom: clamp(10px, 2vh, 16px);
     width: 100%;
     text-align: center;
   }
   .badge-installed {
     background: rgba(0, 168, 132, 0.18);
-    color: #25d366;
-    border: 1px solid #00a884;
+    color: var(--wa-green-light);
+    border: 1px solid var(--wa-green);
   }
   .badge-browser {
     background: rgba(234, 67, 53, 0.15);
@@ -130,30 +140,30 @@
   .btn-install-native {
     width: 100%;
     margin-top: 12px;
-    padding: 11px;
+    padding: clamp(11px, 2.2vh, 15px);
     border-radius: 24px;
     border: none;
-    background: #00a884;
-    color: #111b21;
+    background: var(--wa-green);
+    color: var(--wa-panel);
     font-weight: 800;
-    font-size: 13px;
+    font-size: clamp(13px, 3.5vw, 15px);
     cursor: pointer;
     text-transform: uppercase;
   }
   .btn-ok-robotic {
     width: 100%;
-    max-width: 360px;
-    background: #00a884;
-    color: #111b21;
+    max-width: 400px;
+    background: var(--wa-green);
+    color: var(--wa-panel);
     border: none;
-    padding: 14px;
-    border-radius: 24px;
-    font-size: 15px;
+    padding: clamp(13px, 2.5vh, 18px);
+    border-radius: 28px;
+    font-size: clamp(15px, 4vw, 18px);
     font-weight: 800;
     cursor: pointer;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    box-shadow: 0 3px 10px rgba(0, 168, 132, 0.3);
+    box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35);
     transition: transform 0.1s, background 0.15s;
   }
   .btn-ok-robotic:active {
@@ -161,9 +171,9 @@
     background: #008f70;
   }
   .footer-tag {
-    margin-top: 24px;
-    font-size: 11.5px;
-    color: #8696a0;
+    margin-top: clamp(20px, 3vh, 30px);
+    font-size: clamp(11.5px, 3vw, 14px);
+    color: var(--wa-text-secondary);
     letter-spacing: 1.5px;
     font-weight: 600;
   }
@@ -178,7 +188,6 @@
   <div class="brand-sub">Sc-SansChat</div>
   <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
-  <!-- PANDUAN & STATUS INSTALASI PWA ANDROID -->
   <div class="pwa-instruction-box">
     <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
     <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
@@ -217,7 +226,6 @@
 
   window.onload = function() {
     updatePwaBadgeStatus();
-
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const savedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
     if (isStandalone && savedSession && savedSession.username) {
