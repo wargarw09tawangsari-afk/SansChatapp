@@ -50,268 +50,278 @@
     border-right: 1px solid var(--wa-border);
   }
 
-  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 12px margin from screen edges, huge fonts & images */
+  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 14px margin from screen edges, 350px image size, all bottom buttons and message input area fully visible in 1 screen */
   @media all and (display-mode: standalone), (max-width: 600px) {
     html, body {
-      padding: 12px !important;
+      padding: 14px !important;
       background-color: var(--wa-bg) !important;
+      height: 100dvh !important;
       overflow: hidden !important;
     }
     .app-container {
       border: 3px solid var(--wa-green) !important;
-      width: calc(100% - 24px) !important;
-      height: calc(100dvh - 24px) !important;
-      max-width: calc(100% - 24px) !important;
-      max-height: calc(100dvh - 24px) !important;
-      margin: 12px auto !important;
-      border-radius: 24px !important;
+      width: calc(100% - 28px) !important;
+      height: calc(100dvh - 28px) !important;
+      max-width: calc(100% - 28px) !important;
+      max-height: calc(100dvh - 28px) !important;
+      margin: 0 auto !important;
+      border-radius: 22px !important;
       box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
     }
     .main-header {
-      padding: 18px !important;
-      gap: 18px !important;
+      padding: 10px 12px !important;
+      gap: 8px !important;
     }
     .user-info-name {
-      font-size: 38px !important;
-      line-height: 1.35 !important;
+      font-size: 18px !important;
+      line-height: 1.2 !important;
     }
     .user-info-address {
-      font-size: 24px !important;
-      margin-top: 8px !important;
+      font-size: 13px !important;
+      margin-top: 2px !important;
     }
     .profile-avatar-clickable, .avatar {
-      width: 105px !important;
-      height: 105px !important;
-      font-size: 50px !important;
-      border-width: 3.5px !important;
+      width: 350px !important;
+      height: 350px !important;
+      max-width: 54px !important;
+      max-height: 54px !important;
+      font-size: 24px !important;
+      border-width: 2.5px !important;
+    }
+    .room-header .profile-avatar-clickable {
+      max-width: 44px !important;
+      max-height: 44px !important;
     }
     .brand-frame-3d {
-      padding: 14px 20px !important;
-      border-radius: 18px !important;
+      padding: 6px 10px !important;
+      border-radius: 12px !important;
     }
     .brand-line-top {
-      font-size: 22px !important;
+      font-size: 14px !important;
     }
     .brand-line-bottom {
-      font-size: 16px !important;
+      font-size: 11px !important;
     }
     .btn-webaps, .btn-logout, .btn-grup-plus {
-      font-size: 20px !important;
-      padding: 16px 22px !important;
-      border-radius: 18px !important;
+      font-size: 12px !important;
+      padding: 8px 10px !important;
+      border-radius: 12px !important;
     }
     .btn-chat-privat {
-      padding: 14px 18px !important;
-      border-radius: 18px !important;
+      padding: 6px 10px !important;
+      border-radius: 12px !important;
     }
     .btn-chat-privat .lbl-top, .btn-chat-privat .lbl-bot {
-      font-size: 18px !important;
+      font-size: 11px !important;
     }
     .announcement-perspective {
-      margin: 18px !important;
+      margin: 8px 12px 6px 12px !important;
     }
     .announcement-bar {
-      padding: 24px 28px !important;
-      border-radius: 22px !important;
-      font-size: 25px !important;
-      min-height: 78px !important;
+      padding: 10px 14px !important;
+      border-radius: 14px !important;
+      font-size: 13px !important;
+      min-height: 40px !important;
     }
     .announcement-icon {
-      font-size: 32px !important;
+      font-size: 16px !important;
     }
     .chat-item {
-      padding: 25px 22px !important;
+      padding: 12px 14px !important;
     }
     .chat-item::after {
-      left: 125px !important;
-      right: 22px !important;
+      left: 76px !important;
+      right: 14px !important;
     }
     .chat-name {
-      font-size: 32px !important;
+      font-size: 16px !important;
     }
     .chat-time {
-      font-size: 20px !important;
+      font-size: 12px !important;
     }
     .chat-last-msg {
-      font-size: 25px !important;
-      margin-top: 6px !important;
+      font-size: 13px !important;
+      margin-top: 3px !important;
     }
     .robotic-footer {
-      font-size: 18px !important;
-      padding: 16px !important;
+      font-size: 11px !important;
+      padding: 8px !important;
     }
     .room-header {
-      height: 102px !important;
-      padding: 16px 20px !important;
-      gap: 18px !important;
+      height: 60px !important;
+      padding: 8px 12px !important;
+      gap: 10px !important;
     }
     .back-btn {
-      font-size: 42px !important;
-      padding: 8px 16px !important;
+      font-size: 24px !important;
+      padding: 4px 8px !important;
     }
     .room-title {
-      font-size: 32px !important;
+      font-size: 16px !important;
     }
     .room-subtitle {
-      font-size: 20px !important;
-      margin-top: 5px !important;
+      font-size: 12px !important;
+      margin-top: 2px !important;
     }
     .btn-combo-call {
-      padding: 16px 20px !important;
-      font-size: 28px !important;
-      border-radius: 20px !important;
+      padding: 8px 10px !important;
+      font-size: 15px !important;
+      border-radius: 12px !important;
     }
     .combo-dropdown-menu {
-      top: 84px !important;
-      min-width: 310px !important;
-      padding: 18px !important;
-      border-radius: 22px !important;
+      top: 50px !important;
+      min-width: 200px !important;
+      padding: 10px !important;
+      border-radius: 14px !important;
     }
     .combo-menu-item {
-      font-size: 23px !important;
-      padding: 20px 22px !important;
-      border-radius: 18px !important;
+      font-size: 13px !important;
+      padding: 10px 12px !important;
+      border-radius: 10px !important;
     }
     .chat-body {
-      padding: 20px !important;
-      gap: 18px !important;
+      padding: 10px 12px !important;
+      gap: 8px !important;
     }
     .msg-bubble {
-      font-size: 27px !important;
-      padding: 20px 24px 18px 24px !important;
-      border-radius: 24px !important;
-      max-width: 94% !important;
+      font-size: 14px !important;
+      padding: 10px 12px 8px 12px !important;
+      border-radius: 14px !important;
+      max-width: 90% !important;
     }
     .msg-sender-name {
-      font-size: 23px !important;
+      font-size: 12px !important;
     }
     .btn-reply-msg {
-      font-size: 23px !important;
-      padding: 6px 16px !important;
+      font-size: 12px !important;
+      padding: 2px 8px !important;
     }
     .quoted-reply-box {
-      font-size: 23px !important;
-      padding: 16px 18px !important;
-      border-radius: 16px !important;
-      margin-bottom: 16px !important;
+      font-size: 12px !important;
+      padding: 8px 10px !important;
+      border-radius: 10px !important;
+      margin-bottom: 8px !important;
     }
     .msg-meta {
-      font-size: 18px !important;
-      margin-top: 12px !important;
-      gap: 12px !important;
+      font-size: 11px !important;
+      margin-top: 6px !important;
+      gap: 6px !important;
     }
     .tick-blue, .tick-gray {
-      font-size: 20px !important;
+      font-size: 12px !important;
     }
     .wa-card {
-      padding: 24px !important;
-      border-radius: 20px !important;
-      font-size: 25px !important;
+      padding: 12px !important;
+      border-radius: 12px !important;
+      font-size: 13px !important;
     }
     .wa-card-header {
-      font-size: 27px !important;
-      margin-bottom: 16px !important;
+      font-size: 14px !important;
+      margin-bottom: 8px !important;
     }
     .poll-option-btn {
-      padding: 20px 24px !important;
-      font-size: 25px !important;
-      border-radius: 18px !important;
-      margin-top: 16px !important;
+      padding: 10px 12px !important;
+      font-size: 13px !important;
+      border-radius: 10px !important;
+      margin-top: 8px !important;
     }
     .reply-preview-banner {
-      padding: 16px 20px !important;
-      font-size: 23px !important;
+      padding: 8px 12px !important;
+      font-size: 13px !important;
     }
     .reply-preview-inner {
-      padding: 16px 20px !important;
-      border-radius: 16px !important;
+      padding: 8px 10px !important;
+      border-radius: 10px !important;
     }
     .chat-input-wrapper {
-      padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0px)) 20px !important;
-      gap: 16px !important;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px !important;
+      gap: 8px !important;
     }
     .chat-input-pill {
-      min-height: 80px !important;
-      border-radius: 40px !important;
-      padding: 6px 26px !important;
-      gap: 16px !important;
+      min-height: 44px !important;
+      border-radius: 22px !important;
+      padding: 2px 12px !important;
+      gap: 8px !important;
     }
     .chat-input-pill input {
-      font-size: 27px !important;
-      padding: 16px 0 !important;
+      font-size: 15px !important;
+      padding: 8px 0 !important;
     }
     .pill-icon {
-      font-size: 38px !important;
+      font-size: 20px !important;
     }
     .send-btn-circle {
-      width: 80px !important;
-      height: 80px !important;
-      font-size: 32px !important;
-    }
-    .emoji-picker-container {
-      bottom: 106px !important;
-      left: 18px !important;
-      right: 18px !important;
-      padding: 24px !important;
-      gap: 16px !important;
-      max-height: 380px !important;
-      border-radius: 28px !important;
-    }
-    .emoji-item {
-      font-size: 42px !important;
-      padding: 14px !important;
-    }
-    .wa-attach-menu {
-      bottom: 106px !important;
-      left: 18px !important;
-      right: 18px !important;
-      padding: 30px 22px !important;
-      gap: 28px 20px !important;
-      border-radius: 32px !important;
-    }
-    .wa-attach-circle {
-      width: 84px !important;
-      height: 84px !important;
-      font-size: 38px !important;
-    }
-    .wa-attach-label {
+      width: 44px !important;
+      height: 44px !important;
       font-size: 18px !important;
     }
-    .modal-card {
-      max-width: 96% !important;
-      padding: 32px !important;
-      border-radius: 28px !important;
-      gap: 22px !important;
-    }
-    .modal-title {
-      font-size: 27px !important;
-    }
-    .modal-input {
-      padding: 22px 26px !important;
-      font-size: 25px !important;
-      border-radius: 20px !important;
-    }
-    .member-row {
-      padding: 20px 24px !important;
-      font-size: 23px !important;
+    .emoji-picker-container {
+      bottom: 60px !important;
+      left: 10px !important;
+      right: 10px !important;
+      padding: 12px !important;
+      gap: 8px !important;
+      max-height: 200px !important;
       border-radius: 18px !important;
     }
+    .emoji-item {
+      font-size: 24px !important;
+      padding: 6px !important;
+    }
+    .wa-attach-menu {
+      bottom: 60px !important;
+      left: 10px !important;
+      right: 10px !important;
+      padding: 14px 10px !important;
+      gap: 12px 10px !important;
+      border-radius: 18px !important;
+    }
+    .wa-attach-circle {
+      width: 44px !important;
+      height: 44px !important;
+      font-size: 20px !important;
+    }
+    .wa-attach-label {
+      font-size: 11px !important;
+    }
+    .modal-card {
+      max-width: 94% !important;
+      padding: 16px !important;
+      border-radius: 18px !important;
+      gap: 12px !important;
+    }
+    .modal-title {
+      font-size: 15px !important;
+    }
+    .modal-input {
+      padding: 12px 14px !important;
+      font-size: 14px !important;
+      border-radius: 12px !important;
+    }
+    .member-row {
+      padding: 10px 12px !important;
+      font-size: 13px !important;
+      border-radius: 10px !important;
+    }
     .call-overlay {
-      padding: 60px 28px !important;
+      padding: 30px 16px !important;
     }
     .call-user-avatar {
-      width: 180px !important;
-      height: 180px !important;
-      font-size: 76px !important;
+      width: 100px !important;
+      height: 100px !important;
+      font-size: 42px !important;
     }
     .call-status {
-      font-size: 27px !important;
-      margin-top: 24px !important;
+      font-size: 15px !important;
+      margin-top: 12px !important;
     }
     .btn-call-action {
-      width: 94px !important;
-      height: 94px !important;
-      font-size: 40px !important;
+      width: 56px !important;
+      height: 56px !important;
+      font-size: 22px !important;
     }
   }
 
@@ -889,7 +899,7 @@
     font-weight: 600;
   }
 
-  /* Area ketik pesan & tombol fitur di bawah */
+  /* Area ketik pesan & tombol fitur di bagian bawah */
   .chat-input-wrapper {
     position: relative;
     padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)) 14px;
@@ -1750,9 +1760,9 @@
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
-        canvas.width = 300; canvas.height = 300;
+        canvas.width = 350; canvas.height = 350;
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, 300, 300);
+        ctx.drawImage(img, 0, 0, 350, 350);
         const resized = canvas.toDataURL('image/jpeg', 0.85);
 
         if (uploadTargetType === 'user') {
@@ -2672,7 +2682,7 @@
       if (!members || members.length === 0) {
         list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:16px; font-weight:700;">Tidak ada anggota terdaftar.</div>';
       } else {
-        members.persons?.forEach ? null : members.forEach(m => {
+        members.forEach(m => {
           const row = document.createElement('div');
           row.className = 'member-row';
           row.innerText = `${m.nama} (${m.username})`;

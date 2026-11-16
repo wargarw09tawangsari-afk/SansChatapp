@@ -51,86 +51,92 @@
     border-right: 1px solid var(--wa-border);
   }
 
-  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 12px margin from screen edges, huge fonts & images */
+  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 14px margin from screen edges, 350px image size, all bottom buttons visible in 1 screen */
   @media all and (display-mode: standalone), (max-width: 600px) {
     html, body {
-      padding: 12px !important;
+      padding: 14px !important;
       background-color: var(--wa-bg) !important;
+      height: 100dvh !important;
+      overflow: hidden !important;
     }
     .login-container {
       border: 3px solid var(--wa-green) !important;
-      width: calc(100% - 24px) !important;
-      max-width: calc(100% - 24px) !important;
-      margin: 12px auto !important;
-      border-radius: 28px !important;
-      padding: 38px 28px !important;
-      min-height: calc(100dvh - 24px) !important;
+      width: calc(100% - 28px) !important;
+      max-width: calc(100% - 28px) !important;
+      margin: 0 auto !important;
+      border-radius: 24px !important;
+      padding: 16px 18px !important;
+      height: calc(100dvh - 28px) !important;
+      min-height: calc(100dvh - 28px) !important;
       box-sizing: border-box !important;
+      overflow-y: auto !important;
     }
     .login-title {
-      font-size: 52px !important;
-      margin-bottom: 16px !important;
+      font-size: 26px !important;
+      margin-bottom: 6px !important;
     }
     .login-subtitle {
-      font-size: 28px !important;
-      margin-bottom: 28px !important;
-    }
-    .logo-sc-3d-large {
-      width: 230px !important;
-      height: 230px !important;
-      font-size: 120px !important;
-      border-radius: 50px !important;
-      border: 6px solid var(--wa-green-light) !important;
-      margin: 20px auto 28px auto !important;
-    }
-    .field-group {
-      margin-bottom: 30px !important;
-    }
-    .field-group label {
-      font-size: 25px !important;
-      margin-bottom: 14px !important;
-    }
-    .field-group input {
-      font-size: 28px !important;
-      padding: 28px 80px 28px 28px !important;
-      min-height: 90px !important;
-      border-radius: 24px !important;
-    }
-    .password-toggle {
-      font-size: 38px !important;
-      right: 26px !important;
-    }
-    .btn-3d-robotic {
-      font-size: 36px !important;
-      padding: 30px !important;
-      min-height: 94px !important;
-      border-radius: 26px !important;
-      margin-top: 20px !important;
-      letter-spacing: 2px !important;
-    }
-    .pwa-warning-box {
-      font-size: 24px !important;
-      padding: 28px !important;
-      border-radius: 24px !important;
-      margin-bottom: 28px !important;
-    }
-    .pwa-warning-title {
-      font-size: 27px !important;
-      margin-bottom: 14px !important;
-    }
-    .pwa-warning-box ol {
-      padding-left: 32px !important;
-      margin-top: 14px !important;
-    }
-    .pwa-warning-box li {
+      font-size: 15px !important;
       margin-bottom: 12px !important;
     }
-    .help-btn-3d {
+    .logo-sc-3d-large {
+      width: 350px !important;
+      height: 350px !important;
+      max-width: 70vw !important;
+      max-height: 70vw !important;
+      font-size: 150px !important;
+      border-radius: 40px !important;
+      border: 6px solid var(--wa-green-light) !important;
+      margin: 10px auto 14px auto !important;
+    }
+    .field-group {
+      margin-bottom: 12px !important;
+    }
+    .field-group label {
+      font-size: 13px !important;
+      margin-bottom: 6px !important;
+    }
+    .field-group input {
+      font-size: 16px !important;
+      padding: 12px 45px 12px 14px !important;
+      min-height: 48px !important;
+      border-radius: 14px !important;
+    }
+    .password-toggle {
       font-size: 22px !important;
-      padding: 18px 26px !important;
-      border-radius: 20px !important;
-      top: 24px !important;
-      right: 24px !important;
+      right: 14px !important;
+    }
+    .btn-3d-robotic {
+      font-size: 18px !important;
+      padding: 16px !important;
+      min-height: 54px !important;
+      border-radius: 16px !important;
+      margin-top: 10px !important;
+      letter-spacing: 1px !important;
+    }
+    .pwa-warning-box {
+      font-size: 13px !important;
+      padding: 12px !important;
+      border-radius: 14px !important;
+      margin-bottom: 12px !important;
+    }
+    .pwa-warning-title {
+      font-size: 14px !important;
+      margin-bottom: 6px !important;
+    }
+    .pwa-warning-box ol {
+      padding-left: 18px !important;
+      margin-top: 6px !important;
+    }
+    .pwa-warning-box li {
+      margin-bottom: 4px !important;
+    }
+    .help-btn-3d {
+      font-size: 12px !important;
+      padding: 8px 12px !important;
+      border-radius: 10px !important;
+      top: 14px !important;
+      right: 14px !important;
     }
   }
 
