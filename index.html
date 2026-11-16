@@ -20,34 +20,231 @@
     --wa-text: #e9edef;
     --wa-text-secondary: #8696a0;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-  html, body { width: 100vw; height: 100vh; height: 100dvh; background-color: var(--wa-bg); color: var(--wa-text); overflow: hidden; display: flex; justify-content: center; align-items: center; }
-  .welcome-container { background: var(--wa-panel); width: 100%; max-width: 480px; height: 100%; height: 100dvh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)) 16px; text-align: center; margin: 0 auto; box-shadow: 0 0 40px rgba(0,0,0,0.85); border-left: 1px solid var(--wa-border); border-right: 1px solid var(--wa-border); overflow-y: auto; }
-  .welcome-header-group { display: flex; flex-direction: column; align-items: center; width: 100%; margin: auto 0; }
-  .welcome-title { font-size: 26px; font-weight: 900; color: var(--wa-text); margin-bottom: 14px; letter-spacing: 0.8px; text-transform: uppercase; }
-  .logo-sc-3d-large { width: 100px; height: 100px; margin: 0 auto 12px auto; background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 48px; color: #ffffff; box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4); border: 3px solid var(--wa-green-light); }
-  .brand-sub { font-size: 20px; font-weight: 900; color: var(--wa-green); margin-bottom: 12px; }
-  .welcome-email { font-size: 14px; color: var(--wa-text-secondary); margin-bottom: 14px; background: var(--wa-card); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--wa-border); font-weight: 700; word-break: break-all; width: 100%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
-  .pwa-instruction-box { background: var(--wa-card); border: 1px solid var(--wa-border); border-radius: 16px; padding: 14px; margin-bottom: 14px; text-align: left; width: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
-  .pwa-instruction-title { font-size: 13px; font-weight: 900; color: var(--wa-green); margin-bottom: 8px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; }
-  .pwa-instruction-steps { font-size: 13px; color: #d1d7db; line-height: 1.5; padding-left: 18px; font-weight: 600; }
-  .pwa-instruction-steps li { margin-bottom: 6px; }
-  .pwa-status-badge { display: block; font-size: 13px; font-weight: 800; padding: 10px 14px; border-radius: 12px; margin-bottom: 12px; width: 100%; text-align: center; }
-  .badge-installed { background: rgba(0, 168, 132, 0.2); color: var(--wa-green-light); border: 1px solid var(--wa-green); }
-  .badge-browser { background: rgba(234, 67, 53, 0.18); color: #fca5a5; border: 1px solid #ea4335; }
-  .btn-install-native { width: 100%; margin-top: 10px; padding: 14px; border-radius: 12px; border: none; background: var(--wa-green); color: var(--wa-panel); font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 12px rgba(0,168,132,0.4); }
-  .btn-ok-robotic { width: 100%; background: var(--wa-green); color: var(--wa-panel); border: none; padding: 16px; border-radius: 16px; font-size: 18px; font-weight: 900; cursor: pointer; letter-spacing: 1.2px; text-transform: uppercase; box-shadow: 0 6px 20px rgba(0, 168, 132, 0.45); min-height: 52px; }
-  .footer-tag { margin-top: 12px; font-size: 11px; color: var(--wa-text-secondary); letter-spacing: 1px; font-weight: 700; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    background-color: var(--wa-bg);
+    color: var(--wa-text);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .welcome-container {
+    background: var(--wa-panel);
+    width: 100%;
+    max-width: 480px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 16px;
+    text-align: center;
+    margin: 0 auto;
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    border-left: 1px solid var(--wa-border);
+    border-right: 1px solid var(--wa-border);
+  }
+
+  /* SPECIAL ANDROID INSTALLED (STANDALONE) STYLING: 2px border, larger font & images */
+  @media all and (display-mode: standalone), (max-width: 500px) {
+    .welcome-container {
+      border: 2px solid var(--wa-green) !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      min-height: 100dvh !important;
+    }
+    .welcome-title {
+      font-size: 34px !important;
+      letter-spacing: 1.5px !important;
+    }
+    .logo-sc-3d-large {
+      width: 140px !important;
+      height: 140px !important;
+      font-size: 68px !important;
+      border-radius: 32px !important;
+    }
+    .brand-sub {
+      font-size: 26px !important;
+    }
+    .welcome-email {
+      font-size: 17px !important;
+      padding: 16px 20px !important;
+    }
+    .pwa-instruction-box {
+      padding: 20px !important;
+    }
+    .pwa-instruction-title {
+      font-size: 16px !important;
+    }
+    .pwa-instruction-steps {
+      font-size: 15px !important;
+    }
+    .pwa-status-badge {
+      font-size: 16px !important;
+      padding: 14px !important;
+    }
+    .btn-ok-robotic {
+      font-size: 22px !important;
+      padding: 20px !important;
+      min-height: 64px !important;
+    }
+  }
+
+  .welcome-header-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: auto 0;
+  }
+  .welcome-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--wa-text);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .logo-sc-3d-large {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 14px auto;
+    background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
+    border-radius: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 52px;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
+    border: 3px solid var(--wa-green-light);
+  }
+  .brand-sub {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--wa-green);
+    margin-bottom: 12px;
+  }
+  .welcome-email {
+    font-size: 14px;
+    color: var(--wa-text-secondary);
+    margin-bottom: 16px;
+    background: var(--wa-card);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--wa-border);
+    font-weight: 700;
+    word-break: break-all;
+    width: 100%;
+  }
+  .pwa-instruction-box {
+    background: var(--wa-card);
+    border: 1px solid var(--wa-border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: left;
+    width: 100%;
+  }
+  .pwa-instruction-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--wa-green);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .pwa-instruction-steps {
+    font-size: 13px;
+    color: #d1d7db;
+    line-height: 1.5;
+    padding-left: 18px;
+    font-weight: 600;
+  }
+  .pwa-instruction-steps li {
+    margin-bottom: 6px;
+  }
+  .pwa-status-badge {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    text-align: center;
+  }
+  .badge-installed {
+    background: rgba(0, 168, 132, 0.18);
+    color: var(--wa-green-light);
+    border: 1px solid var(--wa-green);
+  }
+  .badge-browser {
+    background: rgba(234, 67, 53, 0.15);
+    color: #fca5a5;
+    border: 1px solid #ea4335;
+  }
+  .btn-install-native {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: var(--wa-green);
+    color: var(--wa-panel);
+    font-weight: 900;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .btn-ok-robotic {
+    width: 100%;
+    background: var(--wa-green);
+    color: var(--wa-panel);
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+    min-height: 52px;
+  }
+  .footer-tag {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--wa-text-secondary);
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
+
 <div class="welcome-container">
   <div class="welcome-header-group">
     <div class="welcome-title">SELAMAT DATANG</div>
     <div class="logo-sc-3d-large">Sc</div>
     <div class="brand-sub">Sc-SansChat</div>
     <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
+
     <div class="pwa-instruction-box">
       <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
       <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
@@ -56,19 +253,39 @@
         <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
         <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
       </ol>
-      <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">📲 INSTAL APLIKASI SEKARANG</button>
+      <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
+        📲 INSTAL APLIKASI SEKARANG
+      </button>
     </div>
   </div>
-  <div style="width:100%; margin-bottom: 4px;">
+
+  <div style="width:100%; margin-bottom: 10px;">
     <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
     <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
   </div>
 </div>
+
 <script>
   let deferredInstallPrompt = null;
-  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./service-worker.js').catch(() => {}); }
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstallPrompt = e; document.getElementById('btnInstallPwaDirect').classList.remove('hidden'); });
-  window.addEventListener('appinstalled', () => { deferredInstallPrompt = null; document.getElementById('btnInstallPwaDirect').classList.add('hidden'); updatePwaBadgeStatus(); });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').then((reg) => {
+      reg.update();
+    }).catch(() => {});
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    document.getElementById('btnInstallPwaDirect').classList.remove('hidden');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+    updatePwaBadgeStatus();
+  });
+
   window.onload = function() {
     updatePwaBadgeStatus();
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -78,23 +295,45 @@
       window.location.href = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(savedSession.username);
     }
   };
+
   function updatePwaBadgeStatus() {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const badge = document.getElementById('pwaStatusBadge');
-    if (isStandalone) { badge.className = "pwa-status-badge badge-installed"; badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda"; }
-    else { badge.className = "pwa-status-badge badge-browser"; badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama"; }
+    if (isStandalone) {
+      badge.className = "pwa-status-badge badge-installed";
+      badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda";
+    } else {
+      badge.className = "pwa-status-badge badge-browser";
+      badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama";
+    }
   }
+
   function triggerNativePwaInstall() {
     if (!deferredInstallPrompt) return;
     deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; document.getElementById('btnInstallPwaDirect').classList.add('hidden'); });
+    deferredInstallPrompt.userChoice.then(() => {
+      deferredInstallPrompt = null;
+      document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+    });
   }
+
   function proceedToLogin() {
     const btn = document.getElementById('btnOkWelcome');
     btn.innerText = "MEMBUKA LOGIN...";
     btn.disabled = true;
-    if ('caches' in window) { caches.keys().then((names) => { names.forEach(name => caches.delete(name)); }); }
-    if (navigator.serviceWorker) { navigator.serviceWorker.getRegistrations().then(regs => { regs.forEach(reg => reg.update()); }); }
+
+    // Flush cache & update permissions on OK click
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach(name => caches.delete(name));
+      });
+    }
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => reg.update());
+      });
+    }
+
     const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
     window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
   }
