@@ -19,11 +19,11 @@
  --wa-text: #e9edef;
  --wa-text-secondary: #8696a0;
  --wa-chat-bg: #efeae2;
- /* Skala pembesaran maksimal proporsional layar HP Android */
- --font-xl: clamp(30px, 8.4vw, 44px);
- --font-lg: clamp(26px, 7.2vw, 38px);
- --font-md: clamp(22px, 6vw, 30px);
- --btn-touch: 84px;
+ /* Skala Pembesaran Sesuai Permintaan Spesifik */
+ --font-xl: clamp(34px, 9.5vw, 50px);
+ --font-lg: clamp(28px, 8vw, 42px);
+ --font-md: clamp(24px, 6.8vw, 34px);
+ --btn-touch: 96px;
  }
  * {
  box-sizing: border-box;
@@ -72,15 +72,15 @@
  }
 
  /* ============================================================
-    1. HALAMAN UTAMA (#mainView) — PROFIL & TOMBOL BESAR MAKSIMAL
+    1. HALAMAN UTAMA (#mainView) — DIPERBESAR 200 KALI (Foto Profil, Logo, WebAps, Chat Privat, Logout)
     ============================================================ */
  .main-header {
  background: var(--wa-panel);
- padding: 10px 8px;
+ padding: 12px 10px;
  display: flex;
  flex-direction: column;
- border-bottom: 2px solid #1f2c34;
- gap: 8px;
+ border-bottom: 2.5px solid #1f2c34;
+ gap: 10px;
  flex-shrink: 0;
  }
  .header-top-row {
@@ -88,38 +88,38 @@
  justify-content: space-between;
  align-items: center;
  width: 100%;
- gap: 5px;
+ gap: 8px;
  flex-wrap: wrap;
  }
  .header-left-group {
  display: flex;
  align-items: center;
- gap: 8px;
+ gap: 12px;
  flex-shrink: 0;
  }
  .header-right-group {
  display: flex;
  align-items: center;
- gap: 5px;
+ gap: 8px;
  flex: 1;
  justify-content: flex-end;
  }
 
- /* Profil Avatar Diperbesar */
+ /* 1. Foto Profil Diperbesar 200x */
  .profile-avatar-clickable {
- width: 88px;
- height: 88px;
+ width: 120px;
+ height: 120px;
  border-radius: 50%;
  background: #2a3942;
- border: 3.5px solid var(--wa-green);
+ border: 4px solid var(--wa-green);
  cursor: pointer;
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 44px;
+ font-size: 60px;
  overflow: hidden;
  flex-shrink: 0;
- box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+ box-shadow: 0 6px 18px rgba(0,0,0,0.6);
  }
  .profile-avatar-clickable img {
  width: 100%;
@@ -127,63 +127,65 @@
  object-fit: cover;
  }
 
+ /* 1. Logo Diperbesar 200x */
  .brand-frame-3d {
  background: linear-gradient(145deg, #00b890 0%, #005c4b 70%, #042f26 100%);
- border: 2px solid var(--wa-green-light);
- border-radius: 16px;
- padding: 7px 10px;
+ border: 2.5px solid var(--wa-green-light);
+ border-radius: 20px;
+ padding: 10px 14px;
  display: flex;
  flex-direction: column;
  align-items: center;
  justify-content: center;
- box-shadow: 0 4px 12px rgba(0,0,0,0.45), inset 0 1px 2px rgba(255,255,255,0.35);
+ box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.4);
  }
  .brand-line-top {
- font-size: 32px;
+ font-size: 42px;
  font-weight: 900;
- line-height: 0.86;
+ line-height: 0.84;
  color: #ffffff;
- text-shadow: 0 1.5px 0 #004235, 0 3px 5px rgba(0,0,0,0.85);
+ text-shadow: 0 2px 0 #004235, 0 4px 6px rgba(0,0,0,0.85);
  }
  .brand-line-sub {
- font-size: 11px;
+ font-size: 13px;
  font-weight: 800;
  line-height: 1.1;
  color: #ecfdf5;
  background: rgba(4, 35, 29, 0.92);
- border: 1px solid #34d399;
+ border: 1.5px solid #34d399;
  border-radius: 99px;
- padding: 2px 6px;
- margin-top: -1px;
- margin-bottom: 1px;
+ padding: 3px 8px;
+ margin-top: 1px;
+ margin-bottom: 2px;
  }
  .brand-line-bottom {
- font-size: 14px;
+ font-size: 17px;
  font-weight: 800;
  line-height: 1.1;
  color: #d1fae5;
  }
 
- /* Tombol Header Utama Diperbesar */
+ /* 1. Tombol WebAps Diperbesar 200x */
  .btn-webaps {
  background: #202c33;
  color: var(--wa-green);
- border: 2.5px solid var(--wa-green);
- padding: 14px 10px;
- min-height: var(--btn-touch);
- border-radius: 16px;
+ border: 3px solid var(--wa-green);
+ padding: 16px 16px;
+ min-height: 98px;
+ border-radius: 20px;
  font-weight: 900;
- font-size: clamp(17px, 4.5vw, 24px);
+ font-size: clamp(20px, 5.2vw, 28px);
  cursor: pointer;
  white-space: nowrap;
- box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+ box-shadow: 0 6px 14px rgba(0,0,0,0.4);
  }
 
+ /* 1. Tombol Chat Privat Diperbesar 200x */
  .btn-chat-privat {
  border: none;
- padding: 10px 12px;
- min-height: var(--btn-touch);
- border-radius: 16px;
+ padding: 12px 16px;
+ min-height: 98px;
+ border-radius: 20px;
  font-weight: 900;
  cursor: pointer;
  color: #ffffff;
@@ -192,48 +194,48 @@
  align-items: center;
  justify-content: center;
  line-height: 1.1;
- box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+ box-shadow: 0 6px 14px rgba(0,0,0,0.4);
  }
- .btn-chat-privat .lbl-top { font-size: clamp(16px, 4.2vw, 22px); display: block; }
- .btn-chat-privat .lbl-bot { font-size: clamp(16px, 4.2vw, 22px); display: block; }
+ .btn-chat-privat .lbl-top { font-size: clamp(19px, 4.8vw, 25px); display: block; }
+ .btn-chat-privat .lbl-bot { font-size: clamp(19px, 4.8vw, 25px); display: block; }
  .btn-privat-green { background: var(--wa-green); color: var(--wa-panel); }
  .btn-privat-red { background: #ea4335; color: #ffffff; animation: pulseRed 1.2s infinite; }
  @keyframes pulseRed { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
 
+ /* 1. Tombol Logout Diperbesar 200x */
  .btn-logout {
  background: #202c33;
  color: #f87171;
- border: 2.5px solid #4b5563;
- padding: 14px 10px;
- min-height: var(--btn-touch);
- border-radius: 16px;
+ border: 3px solid #4b5563;
+ padding: 16px 16px;
+ min-height: 98px;
+ border-radius: 20px;
  font-weight: 900;
- font-size: clamp(17px, 4.5vw, 24px);
+ font-size: clamp(20px, 5.2vw, 28px);
  cursor: pointer;
  white-space: nowrap;
- box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+ box-shadow: 0 6px 14px rgba(0,0,0,0.4);
  }
 
- /* Tombol Grup & Fitur Diperbesar */
  .btn-grup-plus {
  background: var(--wa-green);
  color: var(--wa-panel);
  border: none;
- padding: 16px 18px;
+ padding: 18px 22px;
  min-height: var(--btn-touch);
- border-radius: 18px;
+ border-radius: 20px;
  font-weight: 900;
- font-size: clamp(20px, 5.4vw, 28px);
+ font-size: clamp(22px, 5.8vw, 30px);
  cursor: pointer;
  white-space: nowrap;
- box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+ box-shadow: 0 6px 16px rgba(0,0,0,0.45);
  }
 
  .user-info-section {
  display: flex;
  flex-direction: column;
  width: 100%;
- padding: 2px 2px 0 2px;
+ padding: 4px 2px 0 2px;
  }
  .user-info-name {
  font-size: var(--font-xl);
@@ -250,22 +252,22 @@
  white-space: nowrap;
  overflow: hidden;
  text-overflow: ellipsis;
- margin-top: 2px;
+ margin-top: 3px;
  font-weight: 800;
  line-height: 1.25;
  }
 
  .incoming-chat-banner {
  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
- border: 2.5px solid var(--wa-green-light);
- margin: 6px 8px;
- padding: 14px;
- border-radius: 18px;
+ border: 3px solid var(--wa-green-light);
+ margin: 8px 10px;
+ padding: 16px;
+ border-radius: 20px;
  display: flex;
  justify-content: space-between;
  align-items: center;
- gap: 10px;
- box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
+ gap: 12px;
+ box-shadow: 0 10px 28px rgba(0, 168, 132, 0.5);
  flex-shrink: 0;
  animation: pulseRed 1.5s infinite;
  }
@@ -281,41 +283,41 @@
  background: #25d366;
  color: #0b141a;
  border: none;
- padding: 16px 18px;
+ padding: 18px 20px;
  min-height: var(--btn-touch);
- border-radius: 16px;
+ border-radius: 18px;
  font-size: var(--font-lg);
  font-weight: 900;
  cursor: pointer;
  flex-shrink: 0;
- box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+ box-shadow: 0 6px 14px rgba(0,0,0,0.45);
  }
 
  .announcement-perspective {
  perspective: 1000px;
- margin: 6px 8px;
+ margin: 8px 10px;
  flex-shrink: 0;
  }
  .announcement-bar {
  background: var(--wa-card);
- border: 2px solid var(--wa-border);
- padding: 14px 16px;
- border-radius: 16px;
+ border: 2.5px solid var(--wa-border);
+ padding: 16px 18px;
+ border-radius: 18px;
  font-size: var(--font-lg);
  color: var(--wa-text);
  display: flex;
  align-items: flex-start;
- gap: 10px;
- min-height: 68px;
+ gap: 12px;
+ min-height: 74px;
  transform-origin: top center;
  backface-visibility: hidden;
- box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+ box-shadow: 0 8px 20px rgba(0,0,0,0.45);
  }
  .fold-up-out { animation: foldUpOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
  .fold-up-in { animation: foldUpIn 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
  @keyframes foldUpOut { 0% { transform: rotateX(0deg); opacity: 1; } 100% { transform: rotateX(90deg); opacity: 0; } }
  @keyframes foldUpIn { 0% { transform: rotateX(-90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
- .announcement-icon { font-size: 34px; flex-shrink: 0; margin-top: 2px; }
+ .announcement-icon { font-size: 38px; flex-shrink: 0; margin-top: 2px; }
  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 700; line-height: 1.35; }
 
  .chat-list-wrapper {
@@ -334,12 +336,12 @@
  display: flex;
  flex-direction: column;
  overscroll-behavior-y: contain;
- padding: 4px 0 28px 0;
+ padding: 4px 0 32px 0;
  scroll-behavior: smooth;
  }
  .chat-item {
  display: flex;
- padding: 18px 10px;
+ padding: 20px 12px;
  align-items: center;
  cursor: pointer;
  transition: background 0.15s;
@@ -353,26 +355,25 @@
  content: "";
  position: absolute;
  bottom: 0;
- left: 108px;
- right: 10px;
- height: 1px;
+ left: 116px;
+ right: 12px;
+ height: 1.5px;
  background: #1f2c34;
  }
 
- /* Avatar Grup Diperbesar */
  .avatar {
- width: 86px;
- height: 86px;
+ width: 94px;
+ height: 94px;
  border-radius: 50%;
  background: #2a3942;
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 42px;
- margin-right: 12px;
+ font-size: 46px;
+ margin-right: 14px;
  overflow: hidden;
  flex-shrink: 0;
- box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+ box-shadow: 0 4px 12px rgba(0,0,0,0.45);
  }
  .avatar img {
  width: 100%;
@@ -390,7 +391,7 @@
  display: flex;
  justify-content: space-between;
  align-items: baseline;
- margin-bottom: 4px;
+ margin-bottom: 5px;
  }
  .chat-name {
  font-size: var(--font-xl);
@@ -406,7 +407,7 @@
  color: var(--wa-text-secondary);
  font-weight: 700;
  flex-shrink: 0;
- margin-left: 8px;
+ margin-left: 10px;
  }
  .chat-last-msg {
  font-size: var(--font-lg);
@@ -420,44 +421,43 @@
 
  .robotic-footer {
  background: var(--wa-panel);
- border-top: 2px solid #1f2c34;
- padding: 12px;
+ border-top: 2.5px solid #1f2c34;
+ padding: 14px;
  text-align: center;
  color: var(--wa-text-secondary);
  font-size: var(--font-md);
  font-weight: 800;
- letter-spacing: 1px;
+ letter-spacing: 1.2px;
  text-transform: uppercase;
  flex-shrink: 0;
  }
 
- /* Tombol Scroll Diperbesar (+350%) */
  .scroll-controls-floating {
  position: absolute;
- right: 10px;
- bottom: 14px;
+ right: 12px;
+ bottom: 16px;
  display: flex;
  flex-direction: column;
- gap: 12px;
+ gap: 14px;
  z-index: 40;
  }
  .chat-body-wrapper .scroll-controls-floating {
- bottom: 138px;
+ bottom: 156px;
  }
  .btn-scroll-fab {
- width: 84px;
- height: 84px;
+ width: 92px;
+ height: 92px;
  border-radius: 50%;
  background: rgba(17, 27, 33, 0.96);
  color: var(--wa-green-light);
- border: 3.5px solid var(--wa-green);
- font-size: 40px;
+ border: 4px solid var(--wa-green);
+ font-size: 44px;
  font-weight: 900;
  cursor: pointer;
  display: flex;
  align-items: center;
  justify-content: center;
- box-shadow: 0 6px 18px rgba(0,0,0,0.75);
+ box-shadow: 0 8px 22px rgba(0,0,0,0.8);
  }
  .btn-scroll-fab:active {
  background: var(--wa-green);
@@ -467,33 +467,35 @@
 
  /* ============================================================
     2. HALAMAN KEDUA / RUANG CHAT (#roomView)
-    - Tombol Kembali dari Halaman Kedua ke Halaman Utama Diperbesar 500x!
-    - Semua fitur Telpon/Video Call, Grup, Emoji, Tautan, Kamera & Ketik Pesan Diperbesar!
+    - Tombol Kembali dari Halaman Kedua ke Halaman Utama: BESARKAN 500 KALI!
+    - Tombol Telpon / Video Call & Grup: BESARKAN 200 KALI!
+    - Field Ketik Pesan sekaligus Emoji, Tautan, Kamera, & Tombol Sent: LEBARKAN & PERBESAR MAKSIMAL!
     ============================================================ */
  .room-header {
  background: #202c33;
- padding: 10px 8px;
+ padding: 12px 10px;
  display: flex;
  align-items: center;
- gap: 8px;
+ gap: 10px;
  position: relative;
  z-index: 30;
  flex-shrink: 0;
- border-bottom: 2px solid var(--wa-border);
- box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+ border-bottom: 2.5px solid var(--wa-border);
+ box-shadow: 0 4px 14px rgba(0,0,0,0.5);
  }
- /* TOMBOL KEMBALI DARI HALAMAN KEDUA KE HALAMAN UTAMA (PEMBESARAN 500x) */
+
+ /* 2. TOMBOL TANDA PANAH KEMBALI — DIPERBESAR 500 KALI! */
  .back-btn {
- width: 96px;
- height: 96px;
- min-width: 96px;
- min-height: 96px;
- font-size: 64px;
+ width: 140px;
+ height: 140px;
+ min-width: 140px;
+ min-height: 140px;
+ font-size: 96px;
  line-height: 1;
  color: #0b141a;
  background: var(--wa-green);
- border: 3px solid var(--wa-green-light);
- border-radius: 22px;
+ border: 4px solid var(--wa-green-light);
+ border-radius: 30px;
  cursor: pointer;
  padding: 0;
  flex-shrink: 0;
@@ -501,20 +503,21 @@
  align-items: center;
  justify-content: center;
  font-weight: 900;
- box-shadow: 0 6px 18px rgba(0, 168, 132, 0.55);
+ box-shadow: 0 8px 24px rgba(0, 168, 132, 0.65);
  }
  .back-btn:active {
  transform: scale(0.94);
  background: var(--wa-green-light);
  }
+
  .room-header .profile-avatar-clickable {
- width: 74px;
- height: 74px;
- font-size: 36px;
+ width: 88px;
+ height: 88px;
+ font-size: 42px;
  }
  .room-user-info {
  flex: 1;
- margin-left: 2px;
+ margin-left: 4px;
  min-width: 0;
  cursor: pointer;
  }
@@ -533,53 +536,70 @@
  white-space: nowrap;
  overflow: hidden;
  text-overflow: ellipsis;
- margin-top: 2px;
+ margin-top: 3px;
  font-weight: 800;
  }
 
  .room-header-right {
  display: flex;
  align-items: center;
- gap: 6px;
+ gap: 8px;
  flex-shrink: 0;
  position: relative;
  }
- /* Tombol Telpon / Video Call Header Diperbesar */
+
+ /* 2. Tombol Telpon / Video Call Diperbesar 200x */
  .btn-combo-call {
  background: #182229;
- border: 2.5px solid var(--wa-green);
+ border: 3px solid var(--wa-green);
  color: var(--wa-text);
- padding: 14px 16px;
- min-height: var(--btn-touch);
- border-radius: 18px;
- font-size: 36px;
+ padding: 16px 20px;
+ min-height: 98px;
+ border-radius: 20px;
+ font-size: 44px;
  cursor: pointer;
  display: flex;
  align-items: center;
- gap: 4px;
- box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+ gap: 6px;
+ box-shadow: 0 6px 16px rgba(0,0,0,0.45);
  }
+
+ /* 2. Tombol Grup Diperbesar 200x */
+ .btn-grup-plus {
+ background: var(--wa-green);
+ color: var(--wa-panel);
+ border: none;
+ padding: 18px 22px;
+ min-height: 98px;
+ border-radius: 20px;
+ font-weight: 900;
+ font-size: clamp(22px, 5.8vw, 30px);
+ cursor: pointer;
+ white-space: nowrap;
+ box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+ }
+
  .combo-dropdown-menu {
  position: absolute;
- top: 92px;
+ top: 106px;
  right: 0;
  background: #233138;
- border: 3px solid var(--wa-green);
- border-radius: 20px;
- padding: 14px;
+ border: 3.5px solid var(--wa-green);
+ border-radius: 24px;
+ padding: 16px;
  display: flex;
  flex-direction: column;
- gap: 12px;
- width: min(94vw, 380px);
- box-shadow: 0 18px 50px rgba(0,0,0,0.92);
+ gap: 14px;
+ width: min(94vw, 400px);
+ box-shadow: 0 20px 60px rgba(0,0,0,0.95);
  z-index: 80;
  }
  .dropdown-search-input {
  width: 100%;
- padding: 16px;
- min-height: 68px;
- border-radius: 16px;
- border: 2px solid var(--wa-green);
+ padding: 18px;
+ min-height: 76px;
+ border-radius: 18px;
+ border: 2.5px solid var(--wa-green);
  background: #111b21;
  color: var(--wa-text);
  font-size: var(--font-lg);
@@ -589,15 +609,15 @@
  .combo-menu-item {
  display: flex;
  align-items: center;
- gap: 14px;
- padding: 18px;
- min-height: var(--btn-touch);
+ gap: 16px;
+ padding: 20px;
+ min-height: 98px;
  background: #182229;
- border: 1.5px solid var(--wa-border);
+ border: 2px solid var(--wa-border);
  color: var(--wa-text);
  font-size: var(--font-lg);
  font-weight: 900;
- border-radius: 16px;
+ border-radius: 18px;
  cursor: pointer;
  text-align: left;
  width: 100%;
@@ -623,10 +643,10 @@
  min-height: 0;
  overflow-y: auto;
  -webkit-overflow-scrolling: touch;
- padding: 12px 10px 150px 10px;
+ padding: 14px 12px 170px 12px;
  display: flex;
  flex-direction: column;
- gap: 16px;
+ gap: 18px;
  position: relative;
  overscroll-behavior-y: contain;
  scroll-behavior: smooth;
@@ -634,14 +654,14 @@
 
  .msg-bubble {
  max-width: 92%;
- min-width: 170px;
- padding: 16px 18px 12px 18px;
- border-radius: 20px;
+ min-width: 180px;
+ padding: 18px 20px 14px 20px;
+ border-radius: 22px;
  font-size: var(--font-xl);
  line-height: 1.38;
  word-wrap: break-word;
  overflow-wrap: break-word;
- box-shadow: 0 2px 6px rgba(11, 20, 26, 0.22);
+ box-shadow: 0 3px 8px rgba(11, 20, 26, 0.24);
  position: relative;
  flex-shrink: 0;
  }
@@ -662,7 +682,7 @@
  display: flex;
  justify-content: space-between;
  align-items: center;
- gap: 12px;
+ gap: 14px;
  margin-bottom: 6px;
  }
  .msg-sender-name {
@@ -672,28 +692,28 @@
  line-height: 1.25;
  cursor: pointer;
  text-decoration: underline dotted;
- padding: 2px 4px;
+ padding: 2px 6px;
  border-radius: 6px;
  }
  .msg-sender-name:active {
  background: rgba(0, 168, 132, 0.18);
  }
  .btn-reply-msg {
- font-size: 34px;
+ font-size: 38px;
  color: #667781;
  background: none;
  border: none;
  cursor: pointer;
- padding: 4px 10px;
+ padding: 4px 12px;
  font-weight: 700;
  }
 
  .quoted-reply-box {
  background: rgba(11, 20, 26, 0.08);
- border-left: 5px solid var(--wa-green);
- padding: 10px 12px;
- border-radius: 10px;
- margin-bottom: 8px;
+ border-left: 6px solid var(--wa-green);
+ padding: 12px 14px;
+ border-radius: 12px;
+ margin-bottom: 10px;
  font-size: var(--font-md);
  color: #54656f;
  line-height: 1.3;
@@ -711,51 +731,51 @@
  font-size: var(--font-md);
  color: #667781;
  text-align: right;
- margin-top: 6px;
+ margin-top: 8px;
  display: flex;
  justify-content: flex-end;
  align-items: center;
- gap: 6px;
+ gap: 8px;
  line-height: 1;
  font-weight: 700;
  }
- .tick-blue { color: #53bdeb; font-weight: 900; font-size: 24px; }
- .tick-gray { color: #667781; font-weight: 800; font-size: 24px; }
+ .tick-blue { color: #53bdeb; font-weight: 900; font-size: 26px; }
+ .tick-gray { color: #667781; font-weight: 800; font-size: 26px; }
 
  .msg-media-wrapper {
  width: 100%;
- margin-top: 10px;
- margin-bottom: 8px;
- border-radius: 14px;
+ margin-top: 12px;
+ margin-bottom: 10px;
+ border-radius: 16px;
  overflow: hidden;
  background: #e2e8f0;
  }
  .msg-image {
  width: 100%;
  max-width: 100%;
- max-height: 380px;
+ max-height: 400px;
  object-fit: cover;
- border-radius: 14px;
+ border-radius: 16px;
  cursor: pointer;
  display: block;
  }
  .msg-video {
  width: 100%;
  max-width: 100%;
- max-height: 380px;
- border-radius: 14px;
+ max-height: 400px;
+ border-radius: 16px;
  background: #000000;
  display: block;
  }
  .inapp-link-card {
  display: flex;
  align-items: center;
- gap: 10px;
- margin-top: 10px;
- padding: 16px;
+ gap: 12px;
+ margin-top: 12px;
+ padding: 18px;
  background: rgba(0, 168, 132, 0.16);
- border-left: 5px solid var(--wa-green);
- border-radius: 14px;
+ border-left: 6px solid var(--wa-green);
+ border-radius: 16px;
  color: #008069;
  font-size: var(--font-lg);
  font-weight: 800;
@@ -764,31 +784,31 @@
  }
 
  .wa-card {
- margin-top: 10px;
- padding: 14px 16px;
- border-radius: 16px;
+ margin-top: 12px;
+ padding: 16px 18px;
+ border-radius: 18px;
  background: rgba(255, 255, 255, 0.96);
- border: 2px solid rgba(0,0,0,0.14);
+ border: 2.5px solid rgba(0,0,0,0.14);
  color: #111b21;
  font-size: var(--font-lg);
  }
  .wa-card-header {
  font-weight: 900;
  color: #008069;
- margin-bottom: 10px;
+ margin-bottom: 12px;
  display: flex;
  align-items: center;
- gap: 8px;
+ gap: 10px;
  font-size: var(--font-xl);
  }
  .poll-option-btn {
  width: 100%;
  text-align: left;
- padding: 18px;
- min-height: var(--btn-touch);
- margin-top: 10px;
- border-radius: 16px;
- border: 2px solid var(--wa-green);
+ padding: 20px;
+ min-height: 96px;
+ margin-top: 12px;
+ border-radius: 18px;
+ border: 2.5px solid var(--wa-green);
  background: #ffffff;
  color: #111b21;
  font-size: var(--font-lg);
@@ -804,75 +824,77 @@
 
  .reply-preview-banner {
  position: fixed;
- bottom: 130px;
- left: 8px;
- right: 8px;
+ bottom: 154px;
+ left: 10px;
+ right: 10px;
  background: #f0f2f5;
- border: 2.5px solid var(--wa-green);
- border-radius: 16px;
- padding: 12px 14px;
+ border: 3px solid var(--wa-green);
+ border-radius: 18px;
+ padding: 14px 16px;
  display: flex;
  justify-content: space-between;
  align-items: center;
  font-size: var(--font-lg);
  color: #111b21;
  z-index: 60;
- box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+ box-shadow: 0 8px 24px rgba(0,0,0,0.5);
  }
  .reply-preview-inner {
  flex: 1;
  background: #ffffff;
- border-left: 5px solid var(--wa-green);
- border-radius: 10px;
- padding: 8px 12px;
+ border-left: 6px solid var(--wa-green);
+ border-radius: 12px;
+ padding: 10px 14px;
  overflow: hidden;
  text-overflow: ellipsis;
  white-space: nowrap;
- margin-right: 10px;
+ margin-right: 12px;
  font-weight: 700;
  }
 
- /* INPUT PESAN, EMOJI, TAUTAN, KAMERA & TOMBOL KIRIM DIPERBESAR MAKSIMAL (+350%) */
+ /* ============================================================
+    2. LEBARKAN FIELD KETIK PESAN SEKALIGUS EMOJI, TOMBOL TAUTAN, KAMERA, & TOMBOL SENT
+    ============================================================ */
  .chat-input-wrapper {
  position: fixed;
- bottom: 24px;
- left: 8px;
- right: 8px;
- padding: 8px;
+ bottom: 20px;
+ left: 10px;
+ right: 10px;
+ padding: 10px;
  background: rgba(17, 27, 33, 0.98);
  backdrop-filter: blur(8px);
  display: flex;
  align-items: center;
- gap: 8px;
+ gap: 10px;
  z-index: 65;
- border: 3px solid var(--wa-green);
- border-radius: 48px;
- box-shadow: 0 10px 32px rgba(0,0,0,0.8);
+ border: 3.5px solid var(--wa-green);
+ border-radius: 56px;
+ box-shadow: 0 12px 36px rgba(0,0,0,0.85);
  }
 
  .emoji-picker-container {
  position: absolute;
- bottom: 108px;
+ bottom: 126px;
  left: 0;
  right: 0;
  background: #ffffff;
- border: 2.5px solid #d1d7db;
- border-radius: 22px;
- padding: 14px;
+ border: 3px solid #d1d7db;
+ border-radius: 26px;
+ padding: 18px;
  display: grid;
  grid-template-columns: repeat(4, 1fr);
- gap: 10px;
- max-height: 340px;
+ gap: 12px;
+ max-height: 380px;
  overflow-y: auto;
- box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+ box-shadow: 0 16px 45px rgba(0,0,0,0.55);
  z-index: 70;
  }
  .emoji-item {
- font-size: 56px;
+ font-size: 64px;
  text-align: center;
  cursor: pointer;
- padding: 8px;
- border-radius: 14px;
+ padding: 10px;
+ border-radius: 16px;
  user-select: none;
  }
  .emoji-item:active {
@@ -881,57 +903,58 @@
 
  .wa-attach-menu {
  position: absolute;
- bottom: 108px;
+ bottom: 126px;
  left: 0;
  right: 0;
  background: #ffffff;
- border-radius: 24px;
- padding: 20px 8px;
+ border-radius: 28px;
+ padding: 24px 10px;
  display: grid;
  grid-template-columns: repeat(4, 1fr);
- gap: 18px 6px;
- box-shadow: 0 14px 40px rgba(0,0,0,0.5);
- border: 3px solid var(--wa-green);
+ gap: 20px 8px;
+ box-shadow: 0 16px 45px rgba(0,0,0,0.55);
+ border: 3.5px solid var(--wa-green);
  z-index: 75;
  }
  .wa-attach-item {
  display: flex;
  flex-direction: column;
  align-items: center;
- gap: 8px;
+ gap: 10px;
  cursor: pointer;
  user-select: none;
  }
  .wa-attach-circle {
- width: 88px;
- height: 88px;
+ width: 98px;
+ height: 98px;
  border-radius: 50%;
  background: #f8fafc;
- border: 2px solid #cbd5e1;
- box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+ border: 2.5px solid #cbd5e1;
+ box-shadow: 0 6px 16px rgba(0,0,0,0.2);
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 46px;
+ font-size: 52px;
  }
  .wa-attach-label {
- font-size: 19px;
+ font-size: 21px;
  font-weight: 900;
  color: #3b4a54;
  text-align: center;
  }
 
+ /* 2. Lebarkan Field Ketik Pesan Sekaligus Emoji & Tombol Tautan (Lampiran/Kamera) */
  .chat-input-pill {
  flex: 1;
  min-width: 0;
- min-height: 82px;
+ min-height: 98px;
  background: #2a3942;
- border-radius: 41px;
+ border-radius: 49px;
  display: flex;
  align-items: center;
- padding: 4px 14px;
- gap: 8px;
- border: 2px solid #374151;
+ padding: 6px 18px;
+ gap: 10px;
+ border: 3px solid #374151;
  }
  .chat-input-pill input {
  flex: 1;
@@ -942,13 +965,13 @@
  font-size: var(--font-xl);
  font-weight: 800;
  outline: none;
- padding: 8px 0;
+ padding: 10px 0;
  }
  .chat-input-pill input::placeholder {
  color: var(--wa-text-secondary);
  }
  .pill-icon {
- font-size: 44px;
+ font-size: 52px;
  color: var(--wa-text-secondary);
  cursor: pointer;
  user-select: none;
@@ -956,12 +979,14 @@
  align-items: center;
  justify-content: center;
  flex-shrink: 0;
- padding: 4px;
+ padding: 6px;
  }
  .pill-icon:hover, .pill-icon:active { color: var(--wa-green); }
+
+ /* 2. Tombol Sent (Kirim) Diperbesar & Dilebarkan */
  .send-btn-circle {
- width: 82px;
- height: 82px;
+ width: 98px;
+ height: 98px;
  border-radius: 50%;
  background: var(--wa-green);
  color: #ffffff;
@@ -969,19 +994,16 @@
  align-items: center;
  justify-content: center;
  border: none;
- font-size: 42px;
+ font-size: 50px;
  cursor: pointer;
  flex-shrink: 0;
- box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+ box-shadow: 0 6px 18px rgba(0,0,0,0.5);
  }
  .send-btn-circle:active {
  background: #008f70;
  transform: scale(0.95);
  }
 
- /* ============================================================
-    MODALS MENGAMBANG RESPONSIF PENUH LAYAR HP ANDROID
-    ============================================================ */
  .modal-overlay {
  position: fixed;
  top: 0; left: 0; right: 0; bottom: 0;
@@ -990,20 +1012,20 @@
  display: flex;
  justify-content: center;
  align-items: center;
- padding: 8px;
+ padding: 10px;
  }
  .modal-card {
  background: var(--wa-panel);
- border: 3px solid var(--wa-green);
- border-radius: 22px;
+ border: 3.5px solid var(--wa-green);
+ border-radius: 26px;
  width: 96vw;
  max-width: 96vw;
  max-height: 92dvh;
- padding: 18px 14px;
+ padding: 22px 16px;
  display: flex;
  flex-direction: column;
- gap: 12px;
- box-shadow: 0 18px 50px rgba(0,0,0,0.9);
+ gap: 14px;
+ box-shadow: 0 20px 60px rgba(0,0,0,0.95);
  overflow-y: auto;
  }
  .modal-title {
@@ -1016,10 +1038,10 @@
  }
  .modal-input {
  width: 100%;
- padding: 16px;
- min-height: 74px;
- border-radius: 16px;
- border: 2px solid var(--wa-border);
+ padding: 18px;
+ min-height: 82px;
+ border-radius: 18px;
+ border: 2.5px solid var(--wa-border);
  background: var(--wa-card);
  color: var(--wa-text);
  font-size: var(--font-lg);
@@ -1031,44 +1053,41 @@
  }
  .btn-group-call-role {
  width: 100%;
- padding: 18px;
- min-height: var(--btn-touch);
- border-radius: 16px;
+ padding: 20px;
+ min-height: 98px;
+ border-radius: 18px;
  border: none;
  background: var(--wa-green);
  color: var(--wa-panel);
  font-weight: 900;
  font-size: var(--font-lg);
  cursor: pointer;
- box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+ box-shadow: 0 6px 16px rgba(0,0,0,0.35);
  }
  .member-list-container {
  flex: 1;
- min-height: 120px;
+ min-height: 140px;
  overflow-y: auto;
  -webkit-overflow-scrolling: touch;
  display: flex;
  flex-direction: column;
- gap: 12px;
- padding-right: 2px;
+ gap: 14px;
+ padding-right: 4px;
  }
  .member-row {
- padding: 16px;
+ padding: 18px;
  background: var(--wa-card);
- border: 1.5px solid #222d34;
- border-radius: 16px;
+ border: 2px solid #222d34;
+ border-radius: 18px;
  color: var(--wa-text);
  font-size: var(--font-lg);
  display: flex;
  justify-content: space-between;
  align-items: center;
- gap: 10px;
+ gap: 12px;
  font-weight: 800;
  }
 
- /* ============================================================
-    LAYAR PANGGILAN SUARA & VIDEO CALL (GAYA WHATSAPP CALL)
-    ============================================================ */
  .call-overlay {
  position: fixed;
  top: 0; left: 0; right: 0; bottom: 0;
@@ -1080,7 +1099,7 @@
  flex-direction: column;
  align-items: center;
  justify-content: space-between;
- padding: 28px 14px 28px 14px;
+ padding: 32px 16px 32px 16px;
  }
  .call-header-top {
  width: 100%;
@@ -1099,12 +1118,12 @@
  font-size: var(--font-md);
  color: var(--wa-green-light);
  font-weight: 700;
- margin-top: 4px;
+ margin-top: 6px;
  }
  .call-status {
  font-size: var(--font-lg);
  color: #fbbf24;
- margin-top: 6px;
+ margin-top: 8px;
  font-weight: 800;
  }
  .call-center-stage {
@@ -1115,24 +1134,24 @@
  align-items: center;
  justify-content: center;
  position: relative;
- margin: 12px 0;
+ margin: 14px 0;
  }
  .call-user-avatar {
- width: 210px;
- height: 210px;
+ width: 230px;
+ height: 230px;
  border-radius: 50%;
  background: #202c33;
- border: 5px solid var(--wa-green);
+ border: 6px solid var(--wa-green);
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 96px;
+ font-size: 104px;
  animation: pulseRing 1.5s infinite;
- box-shadow: 0 12px 32px rgba(0,0,0,0.65);
+ box-shadow: 0 14px 38px rgba(0,0,0,0.7);
  }
  @keyframes pulseRing {
  0% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7); }
- 70% { box-shadow: 0 0 0 36px rgba(0, 168, 132, 0); }
+ 70% { box-shadow: 0 0 0 40px rgba(0, 168, 132, 0); }
  100% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0); }
  }
  .video-stage-wrapper {
@@ -1140,9 +1159,9 @@
  height: 100%;
  position: relative;
  background: #000000;
- border-radius: 22px;
+ border-radius: 24px;
  overflow: hidden;
- border: 2.5px solid var(--wa-green);
+ border: 3px solid var(--wa-green);
  }
  #localCameraPreview {
  width: 100%;
@@ -1160,36 +1179,36 @@
  }
  .call-dock-panel {
  width: 100%;
- max-width: 580px;
+ max-width: 620px;
  background: #182229;
- border: 2px solid var(--wa-border);
- border-radius: 30px;
- padding: 18px 14px;
+ border: 2.5px solid var(--wa-border);
+ border-radius: 34px;
+ padding: 20px 16px;
  display: grid;
  grid-template-columns: repeat(3, 1fr);
- gap: 16px 10px;
+ gap: 18px 12px;
  z-index: 10;
- box-shadow: 0 12px 35px rgba(0,0,0,0.8);
+ box-shadow: 0 14px 40px rgba(0,0,0,0.85);
  }
  .call-ctrl-item {
  display: flex;
  flex-direction: column;
  align-items: center;
- gap: 6px;
+ gap: 8px;
  }
  .btn-call-action {
- width: 88px;
- height: 88px;
+ width: 96px;
+ height: 96px;
  border-radius: 50%;
  border: none;
- font-size: 40px;
+ font-size: 44px;
  color: #ffffff;
  background: #2a3942;
  cursor: pointer;
  display: flex;
  align-items: center;
  justify-content: center;
- box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+ box-shadow: 0 8px 20px rgba(0,0,0,0.5);
  }
  .btn-call-action.active-toggle {
  background: #ffffff;
@@ -1198,21 +1217,21 @@
  .btn-accept { background: #25d366; color: #111b21; animation: pulseRed 1.2s infinite; }
  .btn-reject { background: #ea4335; color: #ffffff; }
  .call-ctrl-lbl {
- font-size: 19px;
+ font-size: 21px;
  font-weight: 900;
  color: var(--wa-text);
  }
 
  .inapp-viewer-box {
  width: 100%;
- height: 55vh;
+ height: 58vh;
  background: #000000;
- border-radius: 14px;
+ border-radius: 16px;
  overflow: hidden;
  display: flex;
  align-items: center;
  justify-content: center;
- border: 1.5px solid var(--wa-border);
+ border: 2px solid var(--wa-border);
  }
  .inapp-viewer-box img {
  max-width: 100%;
@@ -1238,47 +1257,47 @@
  display: flex;
  justify-content: center;
  align-items: center;
- padding: 10px;
+ padding: 12px;
  }
  .logout-warning-card {
  background: var(--wa-panel);
- border: 2px solid var(--wa-border);
- border-radius: 22px;
+ border: 2.5px solid var(--wa-border);
+ border-radius: 26px;
  width: 95vw;
- max-width: 540px;
- padding: 20px;
+ max-width: 560px;
+ padding: 24px;
  text-align: center;
- box-shadow: 0 18px 50px rgba(0,0,0,0.85);
+ box-shadow: 0 20px 60px rgba(0,0,0,0.9);
  display: flex;
  flex-direction: column;
- gap: 14px;
+ gap: 16px;
  }
  .logout-warning-title { font-size: var(--font-xl); font-weight: 900; color: #f87171; text-transform: uppercase; }
  .logout-warning-text { font-size: var(--font-lg); color: #d1d7db; line-height: 1.35; font-weight: 600; }
  .logout-step-list {
  text-align: left;
  background: var(--wa-card);
- border: 1px solid var(--wa-border);
- border-radius: 14px;
- padding: 12px 14px;
+ border: 1.5px solid var(--wa-border);
+ border-radius: 16px;
+ padding: 14px 16px;
  display: flex;
  flex-direction: column;
- gap: 8px;
+ gap: 10px;
  font-size: var(--font-md);
  font-weight: 700;
  color: #8696a0;
  }
  .logout-step-item.active { color: #fbbf24; }
  .logout-step-item.done { color: var(--wa-green-light); }
- .logout-modal-actions { display: flex; gap: 10px; }
+ .logout-modal-actions { display: flex; gap: 12px; }
  .btn-logout-cancel {
  flex: 1;
  background: #202c33;
  color: var(--wa-text);
  border: none;
- padding: 16px;
- min-height: var(--btn-touch);
- border-radius: 16px;
+ padding: 18px;
+ min-height: 98px;
+ border-radius: 18px;
  font-weight: 800;
  font-size: var(--font-lg);
  cursor: pointer;
@@ -1288,13 +1307,13 @@
  background: #ea4335;
  color: #ffffff;
  border: none;
- padding: 16px;
- min-height: var(--btn-touch);
- border-radius: 16px;
+ padding: 18px;
+ min-height: 98px;
+ border-radius: 18px;
  font-weight: 900;
  font-size: var(--font-lg);
  cursor: pointer;
- box-shadow: 0 4px 12px rgba(234,67,53,0.4);
+ box-shadow: 0 6px 16px rgba(234,67,53,0.45);
  }
 
  .hidden { display: none !important; }
@@ -1399,7 +1418,7 @@
  <div class="reply-preview-inner">
  <strong style="color:#008069;">Membalas:</strong> <span id="replyPreviewText"></span>
  </div>
- <span style="cursor:pointer; font-weight:900; padding:4px 10px; color:#54656f;" onclick="cancelReplyQuote()">✕</span>
+ <span style="cursor:pointer; font-weight:900; padding:4px 12px; color:#54656f;" onclick="cancelReplyQuote()">✕</span>
  </div>
 
  <div class="chat-input-wrapper" id="chatInputWrapper">
@@ -1455,7 +1474,6 @@
  <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
  </div>
 
- <!-- MODAL PILIHAN AKSI SAAT NAMA PENGIRIM DI CHAT DIKLIK -->
  <div id="senderActionModal" class="modal-overlay hidden" onclick="closeWaModal('senderActionModal')">
  <div class="modal-card" onclick="event.stopPropagation()">
  <div class="modal-title" id="senderActionTitle">HUBUNGI WARGA</div>
@@ -1466,7 +1484,6 @@
  </div>
  </div>
 
- <!-- MODAL KAMERA LANGSUNG -->
  <div id="cameraCaptureModal" class="modal-overlay hidden">
  <div class="modal-card">
  <div class="modal-title">📷 KAMERA LANGSUNG</div>
@@ -1474,7 +1491,7 @@
  <video id="liveCameraVideo" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
  <canvas id="liveCameraCanvas" class="hidden"></canvas>
  </div>
- <div style="display:flex; gap:10px;">
+ <div style="display:flex; gap:12px;">
  <button class="btn-grup-plus" style="flex:1;" onclick="snapAndSendLiveCamera()">📸 Jepret & Kirim</button>
  <button class="btn-grup-plus" style="flex:1; background:#202c33; color:#e9edef;" onclick="openNativeCameraFile()">📁 Pilih File</button>
  </div>
@@ -1482,7 +1499,6 @@
  </div>
  </div>
 
- <!-- MODALS LAINNYA -->
  <div id="inAppPreviewModal" class="modal-overlay hidden">
  <div class="modal-card">
  <div class="modal-title" id="inAppPreviewTitle">PRATINJAU KONTEN</div>
@@ -1538,7 +1554,6 @@
  </div>
  </div>
 
- <!-- LAYAR PANGGILAN SUARA & VIDEO CALL INTERAKTIF -->
  <div id="callScreen" class="call-overlay hidden">
  <div class="call-header-top">
  <div class="call-target-title" id="callTargetName">Nama Kontak</div>
@@ -1583,7 +1598,6 @@
  </div>
  </div>
 
- <!-- MODAL DAFTAR ANGGOTA / PILIH TARGET TELPON DENGAN FIELD SEARCH -->
  <div id="groupMembersModal" class="modal-overlay hidden">
  <div class="modal-card">
  <div class="modal-title" id="modalGroupTitle">DAFTAR ANGGOTA</div>
@@ -1613,7 +1627,7 @@
 
  <div id="logoutWarningModal" class="logout-modal-overlay hidden">
  <div class="logout-warning-card">
- <div style="font-size:44px;">⚠️</div>
+ <div style="font-size:48px;">⚠️</div>
  <div class="logout-warning-title">RESET TOTAL & INSTALL ULANG</div>
  <div class="logout-warning-text">Proses keluar akan menjalankan urutan otomatis berikut:</div>
  <div class="logout-step-list" id="logoutStepList">
@@ -1769,16 +1783,10 @@
  });
  };
 
- 
- /* ============================================================================
-    MESIN DERING & WATCHER LATAR BELAKANG (WEB WORKER + SILENT AUDIO KEEP-ALIVE)
-    Memastikan HP username tujuan TETAP BERDERING meskipun aplikasi di background!
-    ============================================================================ */
  let bgWorker = null;
  let silentKeepAliveAudio = null;
 
  function createSilentWavDataUrl() {
- // File WAV 1 detik hening untuk menjaga sesi audio tetap aktif di Android background
  const sampleRate = 8000;
  const numSamples = sampleRate;
  const buffer = new ArrayBuffer(44 + numSamples);
@@ -2521,24 +2529,24 @@
  }
 
  let formattedText = rawText.replace(urlRegex, (url) => {
- const safeUrl = url.replace(/'/g, "\'");
+ const safeUrl = url.replace(/'/g, "'");
  return `<a href="javascript:void(0)" onclick="openInAppPreview('${safeUrl}')" style="color:#027eb5; text-decoration:underline; font-weight:800;">${url}</a>`;
  });
 
  htmlOutput += `<div class="msg-text-content">${formattedText}</div>`;
 
  if (mediaUrl && (mediaUrl.startsWith("data:image") || tipe === "image")) {
- const safeMedia = mediaUrl.replace(/'/g, "\'");
+ const safeMedia = mediaUrl.replace(/'/g, "'");
  htmlOutput += `<div class="msg-media-wrapper"><img src="${mediaUrl}" class="msg-image" loading="lazy" onclick="openInAppPreview('${safeMedia}')" /></div>`;
  } else if (mediaUrl && (mediaUrl.startsWith("data:video") || tipe === "video" || isVideoUrl(mediaUrl))) {
  htmlOutput += `<div class="msg-media-wrapper"><video src="${mediaUrl}" class="msg-video" controls playsinline preload="metadata"></video></div>`;
  } else if (mediaUrl && !mediaUrl.startsWith("http") && mediaUrl.startsWith("data:")) {
- const safeDoc = mediaUrl.replace(/'/g, "\'");
+ const safeDoc = mediaUrl.replace(/'/g, "'");
  htmlOutput += `<a href="javascript:void(0)" onclick="openInAppPreview('${safeDoc}')" class="inapp-link-card">📄 Buka Lampiran Dokumen di Layar</a>`;
  }
 
  foundUrls.forEach(u => {
- const safeU = u.replace(/'/g, "\'");
+ const safeU = u.replace(/'/g, "'");
  if (isImageUrl(u) && tipe !== "image") {
  htmlOutput += `<div class="msg-media-wrapper"><img src="${u}" class="msg-image" alt="Lampiran Gambar" loading="lazy" onclick="openInAppPreview('${safeU}')" /></div>`;
  } else if (isVideoUrl(u) && tipe !== "video") {
@@ -2621,9 +2629,9 @@
  const isRead = m.statusPesan && m.statusPesan.toUpperCase() === "SUDAH";
  const tickHtml = isRead ? `<span class="tick-blue">✓✓</span>` : `<span class="tick-gray">✓</span>`;
  const quoteHtml = m.replyTo ? `<div class="quoted-reply-box">${m.replyTo}</div>` : '';
- const safeSenderUser = (m.pengirimUsername || "").replace(/'/g, "\'");
- const safeReplySender = (m.nama || m.pengirimUsername || "").replace(/'/g, "\'");
- const safeReplyMsg = pesanColD.replace(/'/g, "\'").replace(/"/g, '&quot;');
+ const safeSenderUser = (m.pengirimUsername || "").replace(/'/g, "'");
+ const safeReplySender = (m.nama || m.pengirimUsername || "").replace(/'/g, "'");
+ const safeReplyMsg = pesanColD.replace(/'/g, "'").replace(/"/g, '&quot;');
 
  div.innerHTML = `
  <div class="msg-header-row">
@@ -2672,9 +2680,9 @@
  ? `<span class="tick-blue">✓✓</span>`
  : `<span class="tick-gray">✓</span>`;
  const dynamicColor = chatTextColors[index % chatTextColors.length];
- const safeSenderUser = (m.senderUsername || "").replace(/'/g, "\'");
- const safeReplySender = (m.senderNama || m.senderUsername || "").replace(/'/g, "\'");
- const safeReplyMsg = (m.pesan || "").replace(/'/g, "\'").replace(/"/g, '&quot;');
+ const safeSenderUser = (m.senderUsername || "").replace(/'/g, "'");
+ const safeReplySender = (m.senderNama || m.senderUsername || "").replace(/'/g, "'");
+ const safeReplyMsg = (m.pesan || "").replace(/'/g, "'").replace(/"/g, '&quot;');
 
  div.innerHTML = `
  <div class="msg-header-row">
@@ -2935,7 +2943,7 @@
  <div style="font-weight:900; word-break:break-word;">${c.nama}</div>
  <div style="font-size:var(--font-md); color:#8696a0; font-weight:700;">${c.username} • ${c.alamat || '-'}</div>
  </div>
- <button class="btn-grup-plus" style="flex-shrink:0;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "\'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "\'")}')">${btnLabel}</button>
+ <button class="btn-grup-plus" style="flex-shrink:0;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "'')}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "'')}')">${btnLabel}</button>
  `;
  list.appendChild(row);
  });
@@ -3145,9 +3153,6 @@
  }
  }
 
- /* ============================================================================
-    SISTEM TELPON SUARA & VIDEO CALL AKTIF
-    ============================================================================ */
  function openCallDialog(type) {
  document.getElementById('comboCallDropdown').classList.add('hidden');
  currentCallType = type;
@@ -3188,7 +3193,7 @@
  <div style="font-weight:900; word-break:break-word;">${m.nama}</div>
  <div style="font-size:var(--font-md); color:#8696a0;">(${m.username})</div>
  </div>
- <button class="btn-grup-plus" style="flex-shrink:0;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', '${type}')">Panggil</button>
+ <button class="btn-grup-plus" style="flex-shrink:0;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'')}', '${type}')">Panggil</button>
  `;
  list.appendChild(row);
  });
@@ -3443,7 +3448,7 @@
  }
 
  function saveRingtoneSetting() {
- const val = document.getElementById('ringtoneSelect').value;
+ const val = document.getElementById('ringtoneSelect'].value;
  localStorage.setItem('sanschat_ringtone', val);
  closeRingtoneModal();
  }
@@ -3472,8 +3477,8 @@
  <div style="font-size:var(--font-md); color:#8696a0;">(${m.username})</div>
  </div>
  <div style="display:flex; gap:6px; flex-shrink:0;">
- <button class="btn-grup-plus" style="padding:10px 12px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', 'voice')" title="Telpon">📞</button>
- <button class="btn-grup-plus" style="padding:10px 12px; background:#0284c7; color:#fff;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', 'video')" title="Video Call">📹</button>
+ <button class="btn-grup-plus" style="padding:10px 12px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'')}', 'voice')" title="Telpon">📞</button>
+ <button class="btn-grup-plus" style="padding:10px 12px; background:#0284c7; color:#fff;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'')}', 'video')" title="Video Call">📹</button>
  </div>
  `;
  list.appendChild(row);

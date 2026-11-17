@@ -99,7 +99,6 @@ self.addEventListener('sync', (event) => {
 async function checkBackgroundAlertsForUser(username) {
  if (!username) return;
  try {
- // 1. Cek Panggilan Suara / Video Call Masuk untuk username tujuan
  const callResp = await fetch(S3_API_BASE, {
  method: 'POST',
  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -139,7 +138,6 @@ async function checkBackgroundAlertsForUser(username) {
  }
  }
 
- // 2. Cek Chat Privat Masuk untuk username tujuan
  const chatResp = await fetch(S3_API_BASE, {
  method: 'POST',
  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
