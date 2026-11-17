@@ -32,132 +32,45 @@
  html, body {
  width: 100%;
  height: 100%;
- min-height: 100dvh;
+ height: 100dvh;
+ max-height: 100dvh;
  background-color: var(--wa-bg);
  color: var(--wa-text);
- overflow-x: hidden;
- overflow-y: auto;
+ overflow: hidden;
  display: flex;
  justify-content: center;
  align-items: center;
+ padding: 6px;
  }
  .welcome-container {
  background: var(--wa-panel);
  width: 100%;
- max-width: 480px;
- min-height: 100dvh;
+ max-width: 560px;
+ height: 100%;
+ max-height: 100%;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
  align-items: center;
- padding: 20px 16px;
+ padding: 18px 18px;
  text-align: center;
  margin: 0 auto;
- box-shadow: 0 0 50px rgba(0,0,0,0.9);
- border-left: 1px solid var(--wa-border);
- border-right: 1px solid var(--wa-border);
+ border: 2px solid var(--wa-green);
+ border-radius: 20px;
+ box-shadow: 0 0 40px rgba(0,0,0,0.9);
+ overflow-y: auto;
  }
 
- @media all and (display-mode: standalone), (max-width: 600px) {
+ @media all and (display-mode: standalone), (max-width: 768px) {
  html, body {
- padding: 8px !important;
- background-color: var(--wa-bg) !important;
- height: 100dvh !important;
- overflow: hidden !important;
+ padding: 6px !important;
  }
  .welcome-container {
- border: 2px solid var(--wa-green) !important;
- width: calc(100% - 16px) !important;
- max-width: calc(100% - 16px) !important;
- margin: 0 auto !important;
- border-radius: 18px !important;
- padding: 14px 16px !important;
- height: calc(100dvh - 16px) !important;
- min-height: calc(100dvh - 16px) !important;
- box-sizing: border-box !important;
- overflow-y: auto !important;
- justify-content: space-between !important;
- }
- .welcome-header-group {
- margin: 0 !important;
- flex: 1;
- justify-content: center;
- }
- .welcome-title {
- font-size: 22px !important;
- letter-spacing: 1px !important;
- margin-bottom: 10px !important;
- }
- .logo-sc-3d-large {
- width: 104px !important;
- height: 104px !important;
- border-radius: 22px !important;
- border: 3px solid var(--wa-green-light) !important;
- margin: 4px auto 10px auto !important;
- }
- .logo-sc-main-txt {
- font-size: 44px !important;
- }
- .logo-sc-sub-badge {
- font-size: 9.5px !important;
- padding: 1.5px 7px !important;
- margin-top: -2px !important;
- }
- .brand-sub {
- font-size: 18px !important;
- margin-bottom: 8px !important;
- }
- .welcome-email {
- font-size: 13.5px !important;
- padding: 9px 12px !important;
- border-radius: 10px !important;
- margin-bottom: 10px !important;
- }
- .pwa-instruction-box {
- padding: 12px !important;
- border-radius: 14px !important;
- margin-bottom: 8px !important;
- }
- .pwa-instruction-title {
- font-size: 13px !important;
- margin-bottom: 6px !important;
- }
- .pwa-instruction-steps {
- font-size: 12.5px !important;
- line-height: 1.4 !important;
- padding-left: 18px !important;
- }
- .pwa-instruction-steps li {
- margin-bottom: 4px !important;
- }
- .pwa-status-badge {
- font-size: 12.5px !important;
- padding: 8px 10px !important;
- border-radius: 10px !important;
- margin-bottom: 8px !important;
- }
- .btn-install-native {
- font-size: 13px !important;
- padding: 10px !important;
- border-radius: 10px !important;
- margin-top: 8px !important;
- }
- .welcome-bottom-group {
  width: 100% !important;
- flex-shrink: 0 !important;
- padding-top: 6px !important;
- }
- .btn-ok-robotic {
- font-size: 17px !important;
- padding: 13px !important;
- border-radius: 12px !important;
- min-height: 48px !important;
- letter-spacing: 1px !important;
- }
- .footer-tag {
- font-size: 11px !important;
- margin-top: 8px !important;
- letter-spacing: 1px !important;
+ max-width: 100% !important;
+ height: 100% !important;
+ border-radius: 18px !important;
+ padding: 16px 16px !important;
  }
  }
 
@@ -165,88 +78,95 @@
  display: flex;
  flex-direction: column;
  align-items: center;
+ justify-content: center;
  width: 100%;
- margin: auto 0;
+ flex: 1;
+ min-height: 0;
+ gap: 10px;
  }
+ /* Pembesaran +50% dari diagram awal (22px -> 33px) */
  .welcome-title {
- font-size: 26px;
+ font-size: clamp(28px, 6.5vw, 34px);
  font-weight: 900;
  color: var(--wa-text);
- margin-bottom: 14px;
- letter-spacing: 1px;
+ letter-spacing: 1.2px;
  text-transform: uppercase;
+ line-height: 1.15;
  }
+ /* Pembesaran +50% Logo 3D (92px -> 140px) dengan tulisan Sc + Projack12@06 nempel tengah */
  .logo-sc-3d-large {
- width: 112px;
- height: 112px;
- margin: 0 auto 12px auto;
+ width: 138px;
+ height: 138px;
+ margin: 2px auto;
  background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
- border-radius: 24px;
+ border-radius: 28px;
  display: flex;
  flex-direction: column;
  align-items: center;
  justify-content: center;
  position: relative;
+ flex-shrink: 0;
  box-shadow:
- 0 10px 26px rgba(0, 168, 132, 0.5),
- 0 4px 0 #003d31,
- inset 0 2px 5px rgba(255,255,255,0.4),
- inset 0 -3px 6px rgba(0,0,0,0.45);
- border: 3px solid var(--wa-green-light);
+ 0 12px 28px rgba(0, 168, 132, 0.5),
+ 0 5px 0 #003d31,
+ inset 0 2px 6px rgba(255,255,255,0.4),
+ inset 0 -4px 8px rgba(0,0,0,0.45);
+ border: 3.5px solid var(--wa-green-light);
  }
  .logo-sc-3d-large::before {
  content: "";
  position: absolute;
- top: 6px;
- left: 6px;
- right: 6px;
- bottom: 6px;
- border-radius: 17px;
- border: 1px solid rgba(167, 243, 208, 0.35);
+ top: 7px;
+ left: 7px;
+ right: 7px;
+ bottom: 7px;
+ border-radius: 20px;
+ border: 1.5px solid rgba(167, 243, 208, 0.35);
  pointer-events: none;
  }
  .logo-sc-main-txt {
  font-weight: 900;
- font-size: 48px;
- line-height: 0.88;
+ font-size: 62px;
+ line-height: 0.86;
  color: #ffffff;
- letter-spacing: -1px;
+ letter-spacing: -1.5px;
  margin: 0;
  padding: 0;
  text-shadow:
  0 2px 0 #004d3d,
- 0 4px 0 #003328,
- 0 7px 12px rgba(0,0,0,0.75);
+ 0 5px 0 #003328,
+ 0 8px 14px rgba(0,0,0,0.75);
  z-index: 2;
  }
  .logo-sc-sub-badge {
  margin-top: -2px;
- padding: 2px 8px;
+ padding: 3px 11px;
  border-radius: 99px;
- background: rgba(4, 35, 29, 0.92);
- border: 1px solid #34d399;
+ background: rgba(4, 35, 29, 0.94);
+ border: 1.5px solid #34d399;
  color: #ecfdf5;
- font-size: 10px;
+ font-size: 13px;
  font-weight: 800;
  line-height: 1.1;
  letter-spacing: 0.4px;
- box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
+ box-shadow: 0 2px 5px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
  z-index: 1;
  }
+ /* Subjudul +50% (17px -> 25px) */
  .brand-sub {
- font-size: 18px;
+ font-size: 25px;
  font-weight: 900;
  color: var(--wa-green);
- margin-bottom: 10px;
+ line-height: 1.15;
  }
+ /* Info Email +50% (13px -> 19px) */
  .welcome-email {
- font-size: 14px;
+ font-size: 18px;
  color: var(--wa-text-secondary);
- margin-bottom: 14px;
  background: var(--wa-card);
- padding: 10px 14px;
- border-radius: 12px;
+ padding: 12px 16px;
+ border-radius: 14px;
  border: 1px solid var(--wa-border);
  font-weight: 700;
  word-break: break-all;
@@ -255,14 +175,33 @@
  .pwa-instruction-box {
  background: var(--wa-card);
  border: 1px solid var(--wa-border);
- border-radius: 16px;
- padding: 14px;
- margin-bottom: 14px;
+ border-radius: 18px;
+ padding: 16px;
  text-align: left;
  width: 100%;
  }
+ .pwa-status-badge {
+ display: block;
+ font-size: 17px;
+ font-weight: 800;
+ padding: 12px 14px;
+ border-radius: 12px;
+ margin-bottom: 12px;
+ width: 100%;
+ text-align: center;
+ }
+ .badge-installed {
+ background: rgba(0, 168, 132, 0.18);
+ color: var(--wa-green-light);
+ border: 1.5px solid var(--wa-green);
+ }
+ .badge-browser {
+ background: rgba(234, 67, 53, 0.15);
+ color: #fca5a5;
+ border: 1.5px solid #ea4335;
+ }
  .pwa-instruction-title {
- font-size: 13px;
+ font-size: 18px;
  font-weight: 900;
  color: var(--wa-green);
  margin-bottom: 8px;
@@ -270,85 +209,68 @@
  text-align: center;
  letter-spacing: 0.5px;
  }
+ /* Langkah Instalasi +50% (12.5px -> 18px) */
  .pwa-instruction-steps {
- font-size: 13px;
+ font-size: 17.5px;
  color: #d1d7db;
  line-height: 1.45;
- padding-left: 18px;
+ padding-left: 24px;
  font-weight: 600;
  }
  .pwa-instruction-steps li {
- margin-bottom: 5px;
- }
- .pwa-status-badge {
- display: block;
- font-size: 13px;
- font-weight: 800;
- padding: 10px 14px;
- border-radius: 12px;
- margin-bottom: 10px;
- width: 100%;
- text-align: center;
- }
- .badge-installed {
- background: rgba(0, 168, 132, 0.18);
- color: var(--wa-green-light);
- border: 1px solid var(--wa-green);
- }
- .badge-browser {
- background: rgba(234, 67, 53, 0.15);
- color: #fca5a5;
- border: 1px solid #ea4335;
+ margin-bottom: 6px;
  }
  .btn-install-native {
  width: 100%;
- margin-top: 10px;
- padding: 12px;
- border-radius: 12px;
+ margin-top: 12px;
+ padding: 15px;
+ border-radius: 14px;
  border: none;
  background: var(--wa-green);
  color: var(--wa-panel);
  font-weight: 900;
- font-size: 13px;
+ font-size: 18px;
  cursor: pointer;
  text-transform: uppercase;
- box-shadow: 0 4px 14px rgba(0, 168, 132, 0.45);
+ box-shadow: 0 5px 16px rgba(0, 168, 132, 0.45);
  }
  .welcome-bottom-group {
  width: 100%;
- margin-bottom: 4px;
+ flex-shrink: 0;
+ padding-top: 10px;
  }
+ /* Tombol OK +50% (17px -> 25px, tinggi 64px) */
  .btn-ok-robotic {
  width: 100%;
  background: var(--wa-green);
  color: var(--wa-panel);
  border: none;
- padding: 14px;
- border-radius: 14px;
- font-size: 18px;
+ padding: 16px;
+ border-radius: 16px;
+ font-size: 25px;
  font-weight: 900;
  cursor: pointer;
- letter-spacing: 1px;
+ letter-spacing: 1.5px;
  text-transform: uppercase;
- box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
- min-height: 50px;
+ box-shadow: 0 6px 22px rgba(0, 168, 132, 0.45);
+ min-height: 64px;
  }
+ /* Footer +50% (11px -> 15px) */
  .footer-tag {
  margin-top: 10px;
- font-size: 11px;
+ font-size: 14.5px;
  color: var(--wa-text-secondary);
  letter-spacing: 1px;
  font-weight: 700;
  }
  .reset-banner {
- background: rgba(0, 168, 132, 0.2);
- border: 1px solid var(--wa-green-light);
+ background: rgba(0, 168, 132, 0.22);
+ border: 1.5px solid var(--wa-green-light);
  color: #ecfdf5;
- font-size: 12px;
+ font-size: 16px;
  font-weight: 800;
- padding: 8px 12px;
- border-radius: 10px;
- margin-bottom: 10px;
+ padding: 10px 14px;
+ border-radius: 12px;
  width: 100%;
  }
  .hidden { display: none !important; }

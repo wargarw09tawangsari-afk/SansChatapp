@@ -29,190 +29,138 @@
  html, body {
  width: 100%;
  height: 100%;
- min-height: 100dvh;
+ height: 100dvh;
+ max-height: 100dvh;
  background-color: var(--wa-bg);
  color: var(--wa-text);
- overflow-x: hidden;
- overflow-y: auto;
+ overflow: hidden;
  display: flex;
  justify-content: center;
  align-items: center;
+ padding: 6px;
  }
  .login-container {
  background: var(--wa-panel);
  width: 100%;
- max-width: 480px;
- min-height: 100dvh;
+ max-width: 560px;
+ height: 100%;
+ max-height: 100%;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
- padding: 20px 14px;
+ padding: 16px 16px;
  position: relative;
  margin: 0 auto;
- box-shadow: 0 0 50px rgba(0,0,0,0.9);
- border-left: 1px solid var(--wa-border);
- border-right: 1px solid var(--wa-border);
+ border: 2px solid var(--wa-green);
+ border-radius: 20px;
+ box-shadow: 0 0 40px rgba(0,0,0,0.9);
+ overflow-y: auto;
  }
 
- @media all and (display-mode: standalone), (max-width: 600px) {
+ @media all and (display-mode: standalone), (max-width: 768px) {
  html, body {
- padding: 8px !important;
- background-color: var(--wa-bg) !important;
- height: 100dvh !important;
- overflow: hidden !important;
+ padding: 6px !important;
  }
  .login-container {
- border: 2px solid var(--wa-green) !important;
- width: calc(100% - 16px) !important;
- max-width: calc(100% - 16px) !important;
- margin: 0 auto !important;
+ width: 100% !important;
+ max-width: 100% !important;
+ height: 100% !important;
  border-radius: 18px !important;
  padding: 14px 16px !important;
- height: calc(100dvh - 16px) !important;
- min-height: calc(100dvh - 16px) !important;
- box-sizing: border-box !important;
- overflow-y: auto !important;
  }
- .login-title {
- font-size: 21px !important;
- margin-bottom: 4px !important;
  }
- .login-subtitle {
- font-size: 13px !important;
- margin-bottom: 10px !important;
+
+ .login-top-bar {
+ width: 100%;
+ display: flex;
+ justify-content: flex-end;
+ flex-shrink: 0;
  }
- .logo-sc-3d-large {
- width: 96px !important;
- height: 96px !important;
- border-radius: 20px !important;
- border: 3px solid var(--wa-green-light) !important;
- margin: 6px auto 10px auto !important;
- }
- .logo-sc-main-txt {
- font-size: 42px !important;
- }
- .logo-sc-sub-badge {
- font-size: 9px !important;
- padding: 1.5px 6px !important;
- margin-top: -2px !important;
- }
- .field-group {
- margin-bottom: 10px !important;
- }
- .field-group label {
- font-size: 12px !important;
- margin-bottom: 4px !important;
- }
- .field-group input {
- font-size: 15px !important;
- padding: 10px 40px 10px 12px !important;
- min-height: 44px !important;
- border-radius: 12px !important;
- }
- .password-toggle {
- font-size: 19px !important;
- right: 12px !important;
- }
- .btn-3d-robotic {
- font-size: 16px !important;
- padding: 13px !important;
- min-height: 48px !important;
- border-radius: 12px !important;
- margin-top: 6px !important;
- letter-spacing: 1px !important;
- }
- .pwa-warning-box {
- font-size: 12px !important;
- padding: 10px 12px !important;
- border-radius: 12px !important;
- margin-bottom: 10px !important;
- }
- .pwa-warning-title {
- font-size: 12.5px !important;
- margin-bottom: 4px !important;
- }
- .pwa-warning-box ol {
- padding-left: 16px !important;
- margin-top: 4px !important;
- }
- .pwa-warning-box li {
- margin-bottom: 3px !important;
- }
+ /* Tombol Pojok HELP SYSTEM +50% (11px -> 16.5px) */
  .help-btn-3d {
- font-size: 11px !important;
- padding: 6px 10px !important;
- border-radius: 10px !important;
- top: 12px !important;
- right: 12px !important;
- }
+ background: #202c33;
+ color: var(--wa-green);
+ border: 1.5px solid var(--wa-green);
+ padding: 10px 16px;
+ border-radius: 12px;
+ text-decoration: none;
+ font-size: 16px;
+ font-weight: 800;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.35);
  }
 
  .login-content-top {
  display: flex;
  flex-direction: column;
+ justify-content: center;
  width: 100%;
- margin: auto 0;
+ flex: 1;
+ min-height: 0;
+ padding: 6px 0;
  }
+ /* Logo Sc 3D +50% (96px -> 136px) */
  .logo-sc-3d-large {
- width: 108px;
- height: 108px;
- margin: 10px auto 14px auto;
+ width: 134px;
+ height: 134px;
+ margin: 0 auto 12px auto;
  background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
- border-radius: 22px;
+ border-radius: 26px;
  display: flex;
  flex-direction: column;
  align-items: center;
  justify-content: center;
  position: relative;
+ flex-shrink: 0;
  box-shadow:
- 0 10px 28px rgba(0, 168, 132, 0.5),
- 0 4px 0 #003d31,
- inset 0 2px 5px rgba(255,255,255,0.4),
- inset 0 -3px 6px rgba(0,0,0,0.45);
- border: 3px solid var(--wa-green-light);
+ 0 12px 28px rgba(0, 168, 132, 0.5),
+ 0 5px 0 #003d31,
+ inset 0 2px 6px rgba(255,255,255,0.4),
+ inset 0 -4px 8px rgba(0,0,0,0.45);
+ border: 3.5px solid var(--wa-green-light);
  }
  .logo-sc-3d-large::before {
  content: "";
  position: absolute;
- top: 6px;
- left: 6px;
- right: 6px;
- bottom: 6px;
- border-radius: 16px;
- border: 1px solid rgba(167, 243, 208, 0.35);
+ top: 7px;
+ left: 7px;
+ right: 7px;
+ bottom: 7px;
+ border-radius: 19px;
+ border: 1.5px solid rgba(167, 243, 208, 0.35);
  pointer-events: none;
  }
  .logo-sc-main-txt {
  font-weight: 900;
- font-size: 46px;
- line-height: 0.88;
+ font-size: 60px;
+ line-height: 0.86;
  color: #ffffff;
- letter-spacing: -1px;
+ letter-spacing: -1.5px;
  margin: 0;
  padding: 0;
  text-shadow:
  0 2px 0 #004d3d,
- 0 4px 0 #003328,
- 0 7px 12px rgba(0,0,0,0.75);
+ 0 5px 0 #003328,
+ 0 8px 14px rgba(0,0,0,0.75);
  z-index: 2;
  }
  .logo-sc-sub-badge {
  margin-top: -2px;
- padding: 2px 8px;
+ padding: 3px 10px;
  border-radius: 99px;
- background: rgba(4, 35, 29, 0.92);
- border: 1px solid #34d399;
+ background: rgba(4, 35, 29, 0.94);
+ border: 1.5px solid #34d399;
  color: #ecfdf5;
- font-size: 9.5px;
+ font-size: 12.5px;
  font-weight: 800;
  line-height: 1.1;
  letter-spacing: 0.4px;
- box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
+ box-shadow: 0 2px 5px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
  z-index: 1;
  }
+ /* Judul SANSCHAT SYSTEM +50% (20px -> 30px) */
  .login-title {
- font-size: 24px;
+ font-size: clamp(26px, 6vw, 31px);
  font-weight: 900;
  color: var(--wa-text);
  margin-bottom: 6px;
@@ -220,23 +168,24 @@
  letter-spacing: 1px;
  text-transform: uppercase;
  }
+ /* Subjudul OTENTIKASI WARGA RT/RW +50% (13px -> 19px) */
  .login-subtitle {
- font-size: 14px;
+ font-size: 19px;
  color: var(--wa-green);
  text-align: center;
- margin-bottom: 14px;
+ margin-bottom: 16px;
  text-transform: uppercase;
  letter-spacing: 1px;
  font-weight: 800;
  }
  .pwa-warning-box {
  background: rgba(234, 67, 53, 0.18);
- border: 1px solid #ea4335;
+ border: 1.5px solid #ea4335;
  border-radius: 14px;
  padding: 14px;
  margin-bottom: 14px;
  color: #fca5a5;
- font-size: 13px;
+ font-size: 16.5px;
  line-height: 1.45;
  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
  }
@@ -244,12 +193,12 @@
  font-weight: 900;
  color: #f87171;
  margin-bottom: 6px;
- font-size: 13px;
+ font-size: 17px;
  text-transform: uppercase;
  letter-spacing: 0.5px;
  }
  .pwa-warning-box ol {
- padding-left: 18px;
+ padding-left: 22px;
  margin-top: 6px;
  font-weight: 600;
  }
@@ -258,59 +207,67 @@
  color: var(--wa-text);
  }
  .field-group {
- margin-bottom: 14px;
+ margin-bottom: 16px;
  position: relative;
  }
+ /* Label Input +50% (12px -> 18px) */
  .field-group label {
  display: block;
- font-size: 13px;
+ font-size: 18px;
  color: var(--wa-green);
- margin-bottom: 6px;
+ margin-bottom: 8px;
  font-weight: 800;
  letter-spacing: 0.8px;
  }
+ /* Kolom Input +50% (15px -> 22px, tinggi 62px) */
  .field-group input {
  width: 100%;
- padding: 14px 46px 14px 14px;
+ padding: 16px 56px 16px 16px;
  background: var(--wa-card);
- border: 1px solid var(--wa-border);
- border-radius: 14px;
+ border: 1.5px solid var(--wa-border);
+ border-radius: 16px;
  color: var(--wa-text);
- font-size: 16px;
+ font-size: 21px;
  font-weight: 700;
  outline: none;
  transition: border-color 0.15s;
- min-height: 50px;
+ min-height: 62px;
  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
  }
  .field-group input:focus {
  border-color: var(--wa-green);
  }
+ /* Ikon Mata +50% (20px -> 30px) */
  .password-toggle {
  position: absolute;
- right: 14px;
+ right: 16px;
  top: 50%;
  transform: translateY(-50%);
  cursor: pointer;
- font-size: 22px;
+ font-size: 30px;
  user-select: none;
  color: var(--wa-text-secondary);
  }
+ .login-bottom-group {
+ width: 100%;
+ flex-shrink: 0;
+ padding-top: 8px;
+ }
+ /* Tombol Utama VERIFIKASI & MASUK +50% (16px -> 24px, tinggi 64px) */
  .btn-3d-robotic {
  width: 100%;
  background: var(--wa-green);
  color: var(--wa-panel);
  border: none;
  padding: 16px;
- border-radius: 14px;
- font-size: 17px;
+ border-radius: 16px;
+ font-size: 23px;
  font-weight: 900;
  cursor: pointer;
- margin-top: 8px;
  letter-spacing: 1.2px;
  text-transform: uppercase;
  box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
- min-height: 52px;
+ min-height: 64px;
  }
  .btn-3d-robotic:disabled {
  background: var(--wa-border);
@@ -319,28 +276,16 @@
  cursor: not-allowed;
  opacity: 0.8;
  }
- .help-btn-3d {
- position: absolute;
- top: 14px;
- right: 14px;
- background: #202c33;
- color: var(--wa-green);
- border: 1px solid var(--wa-border);
- padding: 8px 12px;
- border-radius: 12px;
- text-decoration: none;
- font-size: 12px;
- font-weight: 800;
- z-index: 3;
- box-shadow: 0 4px 12px rgba(0,0,0,0.3);
- }
  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="login-container">
- <div class="login-content-top">
+ <div class="login-top-bar">
  <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
+ </div>
+
+ <div class="login-content-top">
  <div class="logo-sc-3d-large">
  <span class="logo-sc-main-txt">Sc</span>
  <span class="logo-sc-sub-badge">Projack12@06</span>
@@ -372,7 +317,7 @@
  </div>
  </div>
 
- <div style="width:100%; padding-bottom: 6px;">
+ <div class="login-bottom-group">
  <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
  </div>
 </div>
