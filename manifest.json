@@ -21,5 +21,10 @@
  "theme_color": "#111b21",
  "display": "standalone",
  "orientation": "portrait",
- "scope": "./"
+ "scope": "./",
+ "permissions": [
+ "notifications",
+ "background-sync",
+ "periodic-background-sync"
+ ]
 }
