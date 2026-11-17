@@ -1,4 +1,5 @@
-const CACHE_NAME = 'sanschat-v29';
+const CACHE_NAME = 'sanschat-v31';
+const USER_META_CACHE = 'sanschat-user-meta-v1';
 const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 const ASSETS_TO_CACHE = [
  './',
@@ -13,6 +14,34 @@ const ASSETS_TO_CACHE = [
 let swActiveUsername = "";
 let swRingtone = "standard";
 let lastNotifiedCallId = "";
+let lastNotifiedChatTime = 0;
+
+async function persistSwUserMeta(username, ringtone) {
+ if (!username) return;
+ swActiveUsername = String(username).trim().toUpperCase();
+ swRingtone = ringtone || "standard";
+ try {
+ const cache = await caches.open(USER_META_CACHE);
+ await cache.put('/active-user-meta', new Response(JSON.stringify({
+ username: swActiveUsername,
+ ringtone: swRingtone
+ })));
+ } catch (e) {}
+}
+
+async function restoreSwUserMeta() {
+ if (swActiveUsername) return swActiveUsername;
+ try {
+ const cache = await caches.open(USER_META_CACHE);
+ const resp = await cache.match('/active-user-meta');
+ if (resp) {
+ const data = await resp.json();
+ swActiveUsername = (data.username || "").trim().toUpperCase();
+ swRingtone = data.ringtone || "standard";
+ }
+ } catch (e) {}
+ return swActiveUsername;
+}
 
 self.addEventListener('install', (event) => {
  self.skipWaiting();
@@ -24,7 +53,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
  event.waitUntil(
  caches.keys().then((keys) =>
- Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+ Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== USER_META_CACHE).map((k) => caches.delete(k)))
  )
  );
  self.clients.claim();
@@ -32,31 +61,45 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('message', (event) => {
  if (event.data && event.data.type === 'SET_ACTIVE_USER') {
- swActiveUsername = String(event.data.username || "").trim().toUpperCase();
- swRingtone = event.data.ringtone || "standard";
+ event.waitUntil(persistSwUserMeta(event.data.username, event.data.ringtone));
+ }
+ if (event.data && event.data.type === 'CLEAR_ACTIVE_USER') {
+ swActiveUsername = "";
+ event.waitUntil(caches.delete(USER_META_CACHE));
  }
  if (event.data && event.data.type === 'TRIGGER_BG_CHECK') {
- swActiveUsername = String(event.data.username || swActiveUsername || "").trim().toUpperCase();
- event.waitUntil(checkBackgroundAlertsForUser(swActiveUsername));
+ event.waitUntil((async () => {
+ const u = event.data.username || await restoreSwUserMeta();
+ if (u) {
+ await persistSwUserMeta(u, event.data.ringtone || swRingtone);
+ await checkBackgroundAlertsForUser(u);
+ }
+ })());
  }
 });
 
 self.addEventListener('periodicsync', (event) => {
- if (event.tag === 'sanschat-bg-watcher' && swActiveUsername) {
- event.waitUntil(checkBackgroundAlertsForUser(swActiveUsername));
+ if (event.tag === 'sanschat-bg-watcher') {
+ event.waitUntil((async () => {
+ const u = await restoreSwUserMeta();
+ if (u) await checkBackgroundAlertsForUser(u);
+ })());
  }
 });
 
 self.addEventListener('sync', (event) => {
- if (event.tag === 'sanschat-bg-sync' && swActiveUsername) {
- event.waitUntil(checkBackgroundAlertsForUser(swActiveUsername));
+ if (event.tag === 'sanschat-bg-sync') {
+ event.waitUntil((async () => {
+ const u = await restoreSwUserMeta();
+ if (u) await checkBackgroundAlertsForUser(u);
+ })());
  }
 });
 
 async function checkBackgroundAlertsForUser(username) {
  if (!username) return;
  try {
- // 1. Cek Panggilan Suara / Video Call Masuk
+ // 1. Cek Panggilan Suara / Video Call Masuk untuk username tujuan
  const callResp = await fetch(S3_API_BASE, {
  method: 'POST',
  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -71,15 +114,15 @@ async function checkBackgroundAlertsForUser(username) {
  lastNotifiedCallId = callKey;
  const isVideo = incoming.type === 'video';
  await self.registration.showNotification(
- isVideo ? `📹 Video Call Masuk: ${incoming.callerName}` : `📞 Telpon Masuk: ${incoming.callerName}`,
+ isVideo ? `📹 VIDEO CALL MASUK: ${incoming.callerName}` : `📞 TELPON MASUK: ${incoming.callerName}`,
  {
- body: `${incoming.callerName} memanggil ${username}. Ketuk Terima untuk menjawab!`,
+ body: `${incoming.callerName} memanggil ${username}. Ketuk TERIMA untuk menjawab!`,
  icon: './icon-192.png',
  badge: './icon-192.png',
  tag: 'sanschat-incoming-call',
  renotify: true,
  requireInteraction: true,
- vibrate: [500, 200, 500, 200, 500, 200, 500],
+ vibrate: [600, 200, 600, 200, 600, 200, 600],
  data: {
  actionType: 'incoming_call',
  username: username,
@@ -96,7 +139,7 @@ async function checkBackgroundAlertsForUser(username) {
  }
  }
 
- // 2. Cek Chat Privat Masuk
+ // 2. Cek Chat Privat Masuk untuk username tujuan
  const chatResp = await fetch(S3_API_BASE, {
  method: 'POST',
  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -104,24 +147,29 @@ async function checkBackgroundAlertsForUser(username) {
  });
  const chatJson = await chatResp.json();
  if (chatJson && chatJson.data === true) {
+ const now = Date.now();
+ if (now - lastNotifiedChatTime > 12000) {
+ lastNotifiedChatTime = now;
  await self.registration.showNotification(
- `💬 Pesan Privat Baru untuk ${username}`,
+ `💬 CHAT MASUK UNTUK ${username}`,
  {
- body: 'Ketuk untuk membuka dan membalas pesan di Sc-SansChat.',
+ body: 'Ketuk TERIMA CHAT untuk membuka dan membalas pesan.',
  icon: './icon-192.png',
  badge: './icon-192.png',
  tag: 'sanschat-unread-private',
  renotify: true,
- vibrate: [300, 150, 300],
+ requireInteraction: true,
+ vibrate: [400, 150, 400, 150, 400],
  data: {
  actionType: 'open_private_chat',
  username: username
  },
  actions: [
- { action: 'open_chat', title: '💬 BUKA CHAT' }
+ { action: 'open_chat', title: '💬 TERIMA CHAT' }
  ]
  }
  );
+ }
  }
  } catch (e) {}
 }
@@ -147,18 +195,18 @@ self.addEventListener('notificationclick', (event) => {
  const clickedAction = event.action || 'default';
  event.notification.close();
 
- const targetUser = encodeURIComponent(notifData.username || swActiveUsername || '');
+ event.waitUntil((async () => {
+ const savedU = await restoreSwUserMeta();
+ const targetUser = encodeURIComponent(notifData.username || savedU || '');
  let targetUrl = `./utama.html?user=${targetUser}`;
 
  if (notifData.actionType === 'incoming_call') {
  if (clickedAction === 'reject_call') {
- event.waitUntil(
- fetch(S3_API_BASE, {
+ await fetch(S3_API_BASE, {
  method: 'POST',
  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
- body: JSON.stringify({ action: 'updateCallStatus', username: notifData.username || swActiveUsername, status: 'ENDED' })
- }).catch(() => {})
- );
+ body: JSON.stringify({ action: 'updateCallStatus', username: notifData.username || savedU, status: 'ENDED' })
+ }).catch(() => {});
  return;
  }
  const cType = encodeURIComponent(notifData.callType || 'voice');
@@ -170,15 +218,13 @@ self.addEventListener('notificationclick', (event) => {
  targetUrl = `./utama.html?user=${targetUser}&openPrivate=1`;
  }
 
- event.waitUntil(
- clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+ const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
  for (const client of clientList) {
  if ('navigate' in client) {
- client.navigate(targetUrl);
+ await client.navigate(targetUrl);
  return client.focus();
  }
  }
  if (clients.openWindow) return clients.openWindow(targetUrl);
- })
- );
+ })());
 });

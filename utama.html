@@ -19,11 +19,11 @@
  --wa-text: #e9edef;
  --wa-text-secondary: #8696a0;
  --wa-chat-bg: #efeae2;
- /* Skala tulisan & tombol sangat besar dan nyaman untuk HP Android */
- --font-xl: clamp(28px, 7.8vw, 40px);
- --font-lg: clamp(24px, 6.6vw, 34px);
- --font-md: clamp(20px, 5.5vw, 28px);
- --btn-touch: 70px;
+ /* Skala pembesaran maksimal proporsional layar HP Android */
+ --font-xl: clamp(30px, 8.4vw, 44px);
+ --font-lg: clamp(26px, 7.2vw, 38px);
+ --font-md: clamp(22px, 6vw, 30px);
+ --btn-touch: 84px;
  }
  * {
  box-sizing: border-box;
@@ -43,7 +43,7 @@
  display: flex;
  justify-content: center;
  align-items: center;
- padding: 0 5px;
+ padding: 0 4px;
  }
 
  .app-container {
@@ -72,15 +72,15 @@
  }
 
  /* ============================================================
-    1. HALAMAN UTAMA (#mainView)
+    1. HALAMAN UTAMA (#mainView) — PROFIL & TOMBOL BESAR MAKSIMAL
     ============================================================ */
  .main-header {
  background: var(--wa-panel);
- padding: 12px 10px;
+ padding: 10px 8px;
  display: flex;
  flex-direction: column;
  border-bottom: 2px solid #1f2c34;
- gap: 10px;
+ gap: 8px;
  flex-shrink: 0;
  }
  .header-top-row {
@@ -88,7 +88,8 @@
  justify-content: space-between;
  align-items: center;
  width: 100%;
- gap: 6px;
+ gap: 5px;
+ flex-wrap: wrap;
  }
  .header-left-group {
  display: flex;
@@ -99,24 +100,26 @@
  .header-right-group {
  display: flex;
  align-items: center;
- gap: 6px;
- flex-wrap: nowrap;
+ gap: 5px;
+ flex: 1;
+ justify-content: flex-end;
  }
 
+ /* Profil Avatar Diperbesar */
  .profile-avatar-clickable {
- width: 70px;
- height: 70px;
+ width: 88px;
+ height: 88px;
  border-radius: 50%;
  background: #2a3942;
- border: 3px solid var(--wa-green);
+ border: 3.5px solid var(--wa-green);
  cursor: pointer;
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 34px;
+ font-size: 44px;
  overflow: hidden;
  flex-shrink: 0;
- box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+ box-shadow: 0 4px 14px rgba(0,0,0,0.5);
  }
  .profile-avatar-clickable img {
  width: 100%;
@@ -128,7 +131,7 @@
  background: linear-gradient(145deg, #00b890 0%, #005c4b 70%, #042f26 100%);
  border: 2px solid var(--wa-green-light);
  border-radius: 16px;
- padding: 6px 10px;
+ padding: 7px 10px;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -136,14 +139,14 @@
  box-shadow: 0 4px 12px rgba(0,0,0,0.45), inset 0 1px 2px rgba(255,255,255,0.35);
  }
  .brand-line-top {
- font-size: 28px;
+ font-size: 32px;
  font-weight: 900;
- line-height: 0.88;
+ line-height: 0.86;
  color: #ffffff;
  text-shadow: 0 1.5px 0 #004235, 0 3px 5px rgba(0,0,0,0.85);
  }
  .brand-line-sub {
- font-size: 10px;
+ font-size: 11px;
  font-weight: 800;
  line-height: 1.1;
  color: #ecfdf5;
@@ -155,21 +158,22 @@
  margin-bottom: 1px;
  }
  .brand-line-bottom {
- font-size: 13px;
+ font-size: 14px;
  font-weight: 800;
  line-height: 1.1;
  color: #d1fae5;
  }
 
+ /* Tombol Header Utama Diperbesar */
  .btn-webaps {
  background: #202c33;
  color: var(--wa-green);
- border: 2px solid var(--wa-green);
- padding: 14px 11px;
+ border: 2.5px solid var(--wa-green);
+ padding: 14px 10px;
  min-height: var(--btn-touch);
  border-radius: 16px;
  font-weight: 900;
- font-size: clamp(16px, 4.3vw, 22px);
+ font-size: clamp(17px, 4.5vw, 24px);
  cursor: pointer;
  white-space: nowrap;
  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
@@ -190,8 +194,8 @@
  line-height: 1.1;
  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
  }
- .btn-chat-privat .lbl-top { font-size: clamp(15px, 4vw, 20px); display: block; }
- .btn-chat-privat .lbl-bot { font-size: clamp(15px, 4vw, 20px); display: block; }
+ .btn-chat-privat .lbl-top { font-size: clamp(16px, 4.2vw, 22px); display: block; }
+ .btn-chat-privat .lbl-bot { font-size: clamp(16px, 4.2vw, 22px); display: block; }
  .btn-privat-green { background: var(--wa-green); color: var(--wa-panel); }
  .btn-privat-red { background: #ea4335; color: #ffffff; animation: pulseRed 1.2s infinite; }
  @keyframes pulseRed { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
@@ -199,29 +203,30 @@
  .btn-logout {
  background: #202c33;
  color: #f87171;
- border: 2px solid #4b5563;
- padding: 14px 11px;
+ border: 2.5px solid #4b5563;
+ padding: 14px 10px;
  min-height: var(--btn-touch);
  border-radius: 16px;
  font-weight: 900;
- font-size: clamp(16px, 4.3vw, 22px);
+ font-size: clamp(17px, 4.5vw, 24px);
  cursor: pointer;
  white-space: nowrap;
  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
  }
 
+ /* Tombol Grup & Fitur Diperbesar */
  .btn-grup-plus {
  background: var(--wa-green);
  color: var(--wa-panel);
  border: none;
- padding: 14px 16px;
+ padding: 16px 18px;
  min-height: var(--btn-touch);
- border-radius: 16px;
+ border-radius: 18px;
  font-weight: 900;
- font-size: clamp(18px, 4.8vw, 24px);
+ font-size: clamp(20px, 5.4vw, 28px);
  cursor: pointer;
  white-space: nowrap;
- box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+ box-shadow: 0 4px 14px rgba(0,0,0,0.4);
  }
 
  .user-info-section {
@@ -250,12 +255,11 @@
  line-height: 1.25;
  }
 
- /* Banner Peringatan Chat Masuk Mengambang dengan Tombol TERIMA CHAT */
  .incoming-chat-banner {
  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
  border: 2.5px solid var(--wa-green-light);
- margin: 6px 10px;
- padding: 14px 14px;
+ margin: 6px 8px;
+ padding: 14px;
  border-radius: 18px;
  display: flex;
  justify-content: space-between;
@@ -277,9 +281,9 @@
  background: #25d366;
  color: #0b141a;
  border: none;
- padding: 14px 16px;
+ padding: 16px 18px;
  min-height: var(--btn-touch);
- border-radius: 14px;
+ border-radius: 16px;
  font-size: var(--font-lg);
  font-weight: 900;
  cursor: pointer;
@@ -289,7 +293,7 @@
 
  .announcement-perspective {
  perspective: 1000px;
- margin: 8px 10px 6px 10px;
+ margin: 6px 8px;
  flex-shrink: 0;
  }
  .announcement-bar {
@@ -311,7 +315,7 @@
  .fold-up-in { animation: foldUpIn 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
  @keyframes foldUpOut { 0% { transform: rotateX(0deg); opacity: 1; } 100% { transform: rotateX(90deg); opacity: 0; } }
  @keyframes foldUpIn { 0% { transform: rotateX(-90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
- .announcement-icon { font-size: 32px; flex-shrink: 0; margin-top: 2px; }
+ .announcement-icon { font-size: 34px; flex-shrink: 0; margin-top: 2px; }
  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 700; line-height: 1.35; }
 
  .chat-list-wrapper {
@@ -330,12 +334,12 @@
  display: flex;
  flex-direction: column;
  overscroll-behavior-y: contain;
- padding: 4px 0 24px 0;
+ padding: 4px 0 28px 0;
  scroll-behavior: smooth;
  }
  .chat-item {
  display: flex;
- padding: 18px 12px;
+ padding: 18px 10px;
  align-items: center;
  cursor: pointer;
  transition: background 0.15s;
@@ -349,25 +353,26 @@
  content: "";
  position: absolute;
  bottom: 0;
- left: 98px;
- right: 12px;
+ left: 108px;
+ right: 10px;
  height: 1px;
  background: #1f2c34;
  }
 
+ /* Avatar Grup Diperbesar */
  .avatar {
- width: 74px;
- height: 74px;
+ width: 86px;
+ height: 86px;
  border-radius: 50%;
  background: #2a3942;
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 36px;
+ font-size: 42px;
  margin-right: 12px;
  overflow: hidden;
  flex-shrink: 0;
- box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+ box-shadow: 0 3px 10px rgba(0,0,0,0.4);
  }
  .avatar img {
  width: 100%;
@@ -426,9 +431,10 @@
  flex-shrink: 0;
  }
 
+ /* Tombol Scroll Diperbesar (+350%) */
  .scroll-controls-floating {
  position: absolute;
- right: 12px;
+ right: 10px;
  bottom: 14px;
  display: flex;
  flex-direction: column;
@@ -436,22 +442,22 @@
  z-index: 40;
  }
  .chat-body-wrapper .scroll-controls-floating {
- bottom: 126px;
+ bottom: 138px;
  }
  .btn-scroll-fab {
- width: 68px;
- height: 68px;
+ width: 84px;
+ height: 84px;
  border-radius: 50%;
- background: rgba(17, 27, 33, 0.94);
+ background: rgba(17, 27, 33, 0.96);
  color: var(--wa-green-light);
- border: 3px solid var(--wa-green);
- font-size: 30px;
+ border: 3.5px solid var(--wa-green);
+ font-size: 40px;
  font-weight: 900;
  cursor: pointer;
  display: flex;
  align-items: center;
  justify-content: center;
- box-shadow: 0 4px 14px rgba(0,0,0,0.65);
+ box-shadow: 0 6px 18px rgba(0,0,0,0.75);
  }
  .btn-scroll-fab:active {
  background: var(--wa-green);
@@ -461,10 +467,12 @@
 
  /* ============================================================
     2. HALAMAN KEDUA / RUANG CHAT (#roomView)
+    - Tombol Kembali dari Halaman Kedua ke Halaman Utama Diperbesar 500x!
+    - Semua fitur Telpon/Video Call, Grup, Emoji, Tautan, Kamera & Ketik Pesan Diperbesar!
     ============================================================ */
  .room-header {
  background: #202c33;
- padding: 12px 10px;
+ padding: 10px 8px;
  display: flex;
  align-items: center;
  gap: 8px;
@@ -474,22 +482,35 @@
  border-bottom: 2px solid var(--wa-border);
  box-shadow: 0 3px 10px rgba(0,0,0,0.45);
  }
+ /* TOMBOL KEMBALI DARI HALAMAN KEDUA KE HALAMAN UTAMA (PEMBESARAN 500x) */
  .back-btn {
- font-size: 42px;
- color: var(--wa-text);
+ width: 96px;
+ height: 96px;
+ min-width: 96px;
+ min-height: 96px;
+ font-size: 64px;
+ line-height: 1;
+ color: #0b141a;
+ background: var(--wa-green);
+ border: 3px solid var(--wa-green-light);
+ border-radius: 22px;
  cursor: pointer;
- padding: 4px 8px;
+ padding: 0;
  flex-shrink: 0;
  display: flex;
  align-items: center;
  justify-content: center;
  font-weight: 900;
- min-height: var(--btn-touch);
+ box-shadow: 0 6px 18px rgba(0, 168, 132, 0.55);
+ }
+ .back-btn:active {
+ transform: scale(0.94);
+ background: var(--wa-green-light);
  }
  .room-header .profile-avatar-clickable {
- width: 60px;
- height: 60px;
- font-size: 28px;
+ width: 74px;
+ height: 74px;
+ font-size: 36px;
  }
  .room-user-info {
  flex: 1;
@@ -523,40 +544,41 @@
  flex-shrink: 0;
  position: relative;
  }
+ /* Tombol Telpon / Video Call Header Diperbesar */
  .btn-combo-call {
  background: #182229;
- border: 2px solid var(--wa-green);
+ border: 2.5px solid var(--wa-green);
  color: var(--wa-text);
- padding: 12px 14px;
+ padding: 14px 16px;
  min-height: var(--btn-touch);
- border-radius: 16px;
- font-size: 28px;
+ border-radius: 18px;
+ font-size: 36px;
  cursor: pointer;
  display: flex;
  align-items: center;
  gap: 4px;
- box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+ box-shadow: 0 4px 12px rgba(0,0,0,0.4);
  }
  .combo-dropdown-menu {
  position: absolute;
- top: 78px;
+ top: 92px;
  right: 0;
  background: #233138;
- border: 2.5px solid var(--wa-green);
- border-radius: 18px;
+ border: 3px solid var(--wa-green);
+ border-radius: 20px;
  padding: 14px;
  display: flex;
  flex-direction: column;
- gap: 10px;
- width: min(94vw, 360px);
+ gap: 12px;
+ width: min(94vw, 380px);
  box-shadow: 0 18px 50px rgba(0,0,0,0.92);
  z-index: 80;
  }
  .dropdown-search-input {
  width: 100%;
- padding: 14px 16px;
- min-height: 60px;
- border-radius: 14px;
+ padding: 16px;
+ min-height: 68px;
+ border-radius: 16px;
  border: 2px solid var(--wa-green);
  background: #111b21;
  color: var(--wa-text);
@@ -567,15 +589,15 @@
  .combo-menu-item {
  display: flex;
  align-items: center;
- gap: 12px;
- padding: 16px;
+ gap: 14px;
+ padding: 18px;
  min-height: var(--btn-touch);
  background: #182229;
  border: 1.5px solid var(--wa-border);
  color: var(--wa-text);
  font-size: var(--font-lg);
  font-weight: 900;
- border-radius: 14px;
+ border-radius: 16px;
  cursor: pointer;
  text-align: left;
  width: 100%;
@@ -601,7 +623,7 @@
  min-height: 0;
  overflow-y: auto;
  -webkit-overflow-scrolling: touch;
- padding: 12px 10px 136px 10px;
+ padding: 12px 10px 150px 10px;
  display: flex;
  flex-direction: column;
  gap: 16px;
@@ -657,7 +679,7 @@
  background: rgba(0, 168, 132, 0.18);
  }
  .btn-reply-msg {
- font-size: 30px;
+ font-size: 34px;
  color: #667781;
  background: none;
  border: none;
@@ -730,7 +752,7 @@
  align-items: center;
  gap: 10px;
  margin-top: 10px;
- padding: 14px 16px;
+ padding: 16px;
  background: rgba(0, 168, 132, 0.16);
  border-left: 5px solid var(--wa-green);
  border-radius: 14px;
@@ -762,7 +784,7 @@
  .poll-option-btn {
  width: 100%;
  text-align: left;
- padding: 16px;
+ padding: 18px;
  min-height: var(--btn-touch);
  margin-top: 10px;
  border-radius: 16px;
@@ -782,9 +804,9 @@
 
  .reply-preview-banner {
  position: fixed;
- bottom: 118px;
- left: 10px;
- right: 10px;
+ bottom: 130px;
+ left: 8px;
+ right: 8px;
  background: #f0f2f5;
  border: 2.5px solid var(--wa-green);
  border-radius: 16px;
@@ -810,47 +832,47 @@
  font-weight: 700;
  }
 
- /* INPUT PESAN SELALU MENGAMBANG 24PX DARI BATAS LAYAR BAWAH */
+ /* INPUT PESAN, EMOJI, TAUTAN, KAMERA & TOMBOL KIRIM DIPERBESAR MAKSIMAL (+350%) */
  .chat-input-wrapper {
  position: fixed;
  bottom: 24px;
- left: 10px;
- right: 10px;
- padding: 8px 10px;
- background: rgba(17, 27, 33, 0.97);
+ left: 8px;
+ right: 8px;
+ padding: 8px;
+ background: rgba(17, 27, 33, 0.98);
  backdrop-filter: blur(8px);
  display: flex;
  align-items: center;
  gap: 8px;
  z-index: 65;
  border: 3px solid var(--wa-green);
- border-radius: 44px;
- box-shadow: 0 10px 30px rgba(0,0,0,0.75);
+ border-radius: 48px;
+ box-shadow: 0 10px 32px rgba(0,0,0,0.8);
  }
 
  .emoji-picker-container {
  position: absolute;
- bottom: 98px;
+ bottom: 108px;
  left: 0;
  right: 0;
  background: #ffffff;
- border: 2px solid #d1d7db;
+ border: 2.5px solid #d1d7db;
  border-radius: 22px;
  padding: 14px;
  display: grid;
- grid-template-columns: repeat(5, 1fr);
+ grid-template-columns: repeat(4, 1fr);
  gap: 10px;
- max-height: 320px;
+ max-height: 340px;
  overflow-y: auto;
- box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+ box-shadow: 0 14px 40px rgba(0,0,0,0.5);
  z-index: 70;
  }
  .emoji-item {
- font-size: 46px;
+ font-size: 56px;
  text-align: center;
  cursor: pointer;
- padding: 6px;
- border-radius: 12px;
+ padding: 8px;
+ border-radius: 14px;
  user-select: none;
  }
  .emoji-item:active {
@@ -859,17 +881,17 @@
 
  .wa-attach-menu {
  position: absolute;
- bottom: 98px;
+ bottom: 108px;
  left: 0;
  right: 0;
  background: #ffffff;
  border-radius: 24px;
- padding: 20px 10px;
+ padding: 20px 8px;
  display: grid;
  grid-template-columns: repeat(4, 1fr);
  gap: 18px 6px;
- box-shadow: 0 14px 40px rgba(0,0,0,0.45);
- border: 2.5px solid var(--wa-green);
+ box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+ border: 3px solid var(--wa-green);
  z-index: 75;
  }
  .wa-attach-item {
@@ -881,19 +903,19 @@
  user-select: none;
  }
  .wa-attach-circle {
- width: 76px;
- height: 76px;
+ width: 88px;
+ height: 88px;
  border-radius: 50%;
  background: #f8fafc;
- border: 2px solid #e2e8f0;
- box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+ border: 2px solid #cbd5e1;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.18);
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 38px;
+ font-size: 46px;
  }
  .wa-attach-label {
- font-size: 18px;
+ font-size: 19px;
  font-weight: 900;
  color: #3b4a54;
  text-align: center;
@@ -902,14 +924,14 @@
  .chat-input-pill {
  flex: 1;
  min-width: 0;
- min-height: 70px;
+ min-height: 82px;
  background: #2a3942;
- border-radius: 35px;
+ border-radius: 41px;
  display: flex;
  align-items: center;
- padding: 4px 12px;
+ padding: 4px 14px;
  gap: 8px;
- border: 1.5px solid #374151;
+ border: 2px solid #374151;
  }
  .chat-input-pill input {
  flex: 1;
@@ -917,16 +939,16 @@
  background: none;
  border: none;
  color: var(--wa-text);
- font-size: var(--font-lg);
- font-weight: 700;
+ font-size: var(--font-xl);
+ font-weight: 800;
  outline: none;
- padding: 6px 0;
+ padding: 8px 0;
  }
  .chat-input-pill input::placeholder {
  color: var(--wa-text-secondary);
  }
  .pill-icon {
- font-size: 36px;
+ font-size: 44px;
  color: var(--wa-text-secondary);
  cursor: pointer;
  user-select: none;
@@ -938,8 +960,8 @@
  }
  .pill-icon:hover, .pill-icon:active { color: var(--wa-green); }
  .send-btn-circle {
- width: 70px;
- height: 70px;
+ width: 82px;
+ height: 82px;
  border-radius: 50%;
  background: var(--wa-green);
  color: #ffffff;
@@ -947,14 +969,14 @@
  align-items: center;
  justify-content: center;
  border: none;
- font-size: 34px;
+ font-size: 42px;
  cursor: pointer;
  flex-shrink: 0;
- box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+ box-shadow: 0 4px 14px rgba(0,0,0,0.45);
  }
  .send-btn-circle:active {
  background: #008f70;
- transform: scale(0.96);
+ transform: scale(0.95);
  }
 
  /* ============================================================
@@ -994,8 +1016,8 @@
  }
  .modal-input {
  width: 100%;
- padding: 14px 16px;
- min-height: 66px;
+ padding: 16px;
+ min-height: 74px;
  border-radius: 16px;
  border: 2px solid var(--wa-border);
  background: var(--wa-card);
@@ -1009,7 +1031,7 @@
  }
  .btn-group-call-role {
  width: 100%;
- padding: 16px;
+ padding: 18px;
  min-height: var(--btn-touch);
  border-radius: 16px;
  border: none;
@@ -1031,7 +1053,7 @@
  padding-right: 2px;
  }
  .member-row {
- padding: 14px 14px;
+ padding: 16px;
  background: var(--wa-card);
  border: 1.5px solid #222d34;
  border-radius: 16px;
@@ -1096,15 +1118,15 @@
  margin: 12px 0;
  }
  .call-user-avatar {
- width: 190px;
- height: 190px;
+ width: 210px;
+ height: 210px;
  border-radius: 50%;
  background: #202c33;
- border: 4.5px solid var(--wa-green);
+ border: 5px solid var(--wa-green);
  display: flex;
  align-items: center;
  justify-content: center;
- font-size: 86px;
+ font-size: 96px;
  animation: pulseRing 1.5s infinite;
  box-shadow: 0 12px 32px rgba(0,0,0,0.65);
  }
@@ -1138,7 +1160,7 @@
  }
  .call-dock-panel {
  width: 100%;
- max-width: 560px;
+ max-width: 580px;
  background: #182229;
  border: 2px solid var(--wa-border);
  border-radius: 30px;
@@ -1156,11 +1178,11 @@
  gap: 6px;
  }
  .btn-call-action {
- width: 78px;
- height: 78px;
+ width: 88px;
+ height: 88px;
  border-radius: 50%;
  border: none;
- font-size: 34px;
+ font-size: 40px;
  color: #ffffff;
  background: #2a3942;
  cursor: pointer;
@@ -1176,7 +1198,7 @@
  .btn-accept { background: #25d366; color: #111b21; animation: pulseRed 1.2s infinite; }
  .btn-reject { background: #ea4335; color: #ffffff; }
  .call-ctrl-lbl {
- font-size: 18px;
+ font-size: 19px;
  font-weight: 900;
  color: var(--wa-text);
  }
@@ -1254,7 +1276,7 @@
  background: #202c33;
  color: var(--wa-text);
  border: none;
- padding: 14px;
+ padding: 16px;
  min-height: var(--btn-touch);
  border-radius: 16px;
  font-weight: 800;
@@ -1266,7 +1288,7 @@
  background: #ea4335;
  color: #ffffff;
  border: none;
- padding: 14px;
+ padding: 16px;
  min-height: var(--btn-touch);
  border-radius: 16px;
  font-weight: 900;
@@ -1313,7 +1335,6 @@
  </div>
  </div>
 
- <!-- Banner Notifikasi Chat Masuk dengan Tombol TERIMA CHAT -->
  <div id="incomingChatBanner" class="incoming-chat-banner hidden">
  <div class="incoming-chat-text" id="incomingChatBannerText">💬 Pesan Privat Baru Masuk!</div>
  <button type="button" class="btn-accept-chat" onclick="acceptIncomingPrivateChat()">TERIMA CHAT</button>
@@ -1342,7 +1363,7 @@
       ========================================================== -->
  <div id="roomView" class="view-screen hidden">
  <div class="room-header">
- <span class="back-btn" onclick="handleBackToMain()">←</span>
+ <span class="back-btn" onclick="handleBackToMain()" title="Kembali ke Halaman Utama">←</span>
  <div class="profile-avatar-clickable" id="roomGroupAvatar" onclick="triggerProfileUpload('group')">👥</div>
 
  <div class="room-user-info" onclick="openGroupMembersModal()">
@@ -1357,7 +1378,6 @@
  <button class="btn-grup-plus" id="btnGroupMembersAction" onclick="openGroupMembersModal()">Grup +</button>
  <button class="btn-grup-plus hidden" id="btnSelectPrivateTarget" onclick="openPrivateRecipientPicker()">👤 Tujuan</button>
 
- <!-- Dropdown Menu Call dengan Field Search -->
  <div id="comboCallDropdown" class="combo-dropdown-menu hidden" onclick="event.stopPropagation()">
  <input type="text" id="searchComboCallInput" class="dropdown-search-input" placeholder="🔍 Cari menu / panggilan..." oninput="filterDropdownItems('searchComboCallInput', '#comboCallDropdown .combo-menu-item')">
  <button type="button" class="combo-menu-item" onclick="openCallDialog('voice')">📞 Telpon</button>
@@ -1382,7 +1402,6 @@
  <span style="cursor:pointer; font-weight:900; padding:4px 10px; color:#54656f;" onclick="cancelReplyQuote()">✕</span>
  </div>
 
- <!-- Input Pesan Mengambang 24px dari Batas Bawah Layar -->
  <div class="chat-input-wrapper" id="chatInputWrapper">
  <div id="emojiPickerPanel" class="emoji-picker-container hidden"></div>
 
@@ -1528,10 +1547,8 @@
  </div>
 
  <div class="call-center-stage">
- <!-- Tampilan Telpon Suara -->
  <div id="voiceAvatarStage" class="call-user-avatar">📞</div>
 
- <!-- Tampilan Video Call -->
  <div id="videoContainer" class="video-stage-wrapper hidden">
  <video id="localCameraPreview" autoplay playsinline muted></video>
  <iframe id="jitsiCallFrame" allow="camera; microphone; fullscreen; display-capture; autoplay"></iframe>
@@ -1689,7 +1706,6 @@
  let callDurationTimer = null;
  let callSeconds = 0;
  let wakeLockSentinel = null;
- let bgPingAudioTimer = null;
  let lastAlertedUnreadState = false;
 
  const announcementThemes = [
@@ -1721,13 +1737,11 @@
  buildEmojiPicker();
  syncInitialDashboardBundle();
 
- // Tangani parameter jika pengguna membuka dari notifikasi saat aplikasi tidak aktif
  handleDeepLinkNotificationParams();
 
- // Polling latar belakang cepat (setiap 3.5 detik) agar chat/telpon/video call langsung berdering
+ startBackgroundWebWorkerWatcher();
  setInterval(backgroundSyncWatcher, 3500);
 
- // Aktifkan kembali AudioContext & WakeLock saat pengguna menyentuh layar
  document.addEventListener('touchstart', unlockAudioAndWakeLock, { passive: true });
  document.addEventListener('click', unlockAudioAndWakeLock, { passive: true });
  document.addEventListener('visibilitychange', () => {
@@ -1755,7 +1769,89 @@
  });
  };
 
+ 
+ /* ============================================================================
+    MESIN DERING & WATCHER LATAR BELAKANG (WEB WORKER + SILENT AUDIO KEEP-ALIVE)
+    Memastikan HP username tujuan TETAP BERDERING meskipun aplikasi di background!
+    ============================================================================ */
+ let bgWorker = null;
+ let silentKeepAliveAudio = null;
+
+ function createSilentWavDataUrl() {
+ // File WAV 1 detik hening untuk menjaga sesi audio tetap aktif di Android background
+ const sampleRate = 8000;
+ const numSamples = sampleRate;
+ const buffer = new ArrayBuffer(44 + numSamples);
+ const view = new DataView(buffer);
+ const writeStr = (offset, str) => { for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i)); };
+ writeStr(0, 'RIFF');
+ view.setUint32(4, 36 + numSamples, true);
+ writeStr(8, 'WAVE');
+ writeStr(12, 'fmt ');
+ view.setUint32(16, 16, true);
+ view.setUint16(20, 1, true);
+ view.setUint16(22, 1, true);
+ view.setUint32(24, sampleRate, true);
+ view.setUint32(28, sampleRate, true);
+ view.setUint16(32, 1, true);
+ view.setUint16(34, 8, true);
+ writeStr(36, 'data');
+ view.setUint32(40, numSamples, true);
+ for (let i = 0; i < numSamples; i++) view.setUint8(44 + i, 128);
+ let binary = '';
+ const bytes = new Uint8Array(buffer);
+ for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+ return 'data:audio/wav;base64,' + btoa(binary);
+ }
+
+ function startBackgroundAudioKeepAlive() {
+ try {
+ if (!silentKeepAliveAudio) {
+ silentKeepAliveAudio = new Audio(createSilentWavDataUrl());
+ silentKeepAliveAudio.loop = true;
+ silentKeepAliveAudio.volume = 0.01;
+ }
+ if (silentKeepAliveAudio.paused) {
+ silentKeepAliveAudio.play().catch(() => {});
+ }
+ } catch (e) {}
+ }
+
+ function startBackgroundWebWorkerWatcher() {
+ if (bgWorker) return;
+ try {
+ const workerCode = `
+ let timer = null;
+ self.onmessage = function(e) {
+ if (e.data === 'START') {
+ if (timer) clearInterval(timer);
+ timer = setInterval(() => { self.postMessage('TICK'); }, 3000);
+ } else if (e.data === 'STOP') {
+ if (timer) clearInterval(timer);
+ timer = null;
+ }
+ };
+ `;
+ const blob = new Blob([workerCode], { type: 'application/javascript' });
+ bgWorker = new Worker(URL.createObjectURL(blob));
+ bgWorker.onmessage = function(e) {
+ if (e.data === 'TICK') {
+ backgroundSyncWatcher();
+ if (navigator.serviceWorker && navigator.serviceWorker.controller && currentUser && currentUser.username) {
+ navigator.serviceWorker.controller.postMessage({
+ type: 'TRIGGER_BG_CHECK',
+ username: currentUser.username,
+ ringtone: localStorage.getItem('sanschat_ringtone') || 'standard'
+ });
+ }
+ }
+ };
+ bgWorker.postMessage('START');
+ } catch (e) {}
+ }
+
  function unlockAudioAndWakeLock() {
+ startBackgroundAudioKeepAlive();
  try {
  if (!audioContext) {
  audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -1824,7 +1920,6 @@
  }
  }
 
- /* Filter Search Universal untuk Semua Dropdown & Modal Daftar Warga */
  function filterDropdownItems(inputId, itemSelector) {
  const query = (document.getElementById(inputId).value || "").trim().toLowerCase();
  const items = document.querySelectorAll(itemSelector);
@@ -1942,19 +2037,16 @@
  }).catch(() => {});
  }
 
- /* Watcher Latar Belakang & Layar Aktif: Panggilan & Chat Masuk ke Username Tujuan */
  function backgroundSyncWatcher() {
  if (!currentUser || !currentUser.username || !navigator.onLine) return;
  notifyServiceWorkerUser();
 
- // 1. Cek Panggilan Suara / Video Call Masuk untuk Username ini
  callServerAPI('checkIncomingCall', { username: currentUser.username }).then((incoming) => {
  if (incoming && incoming.callerName) {
  startIncomingCallUI(incoming);
  }
  }).catch(() => {});
 
- // 2. Cek Chat Privat Masuk untuk Username ini
  callServerAPI('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnread) => {
  updatePrivateButtonBadge(hasUnread);
  const banner = document.getElementById('incomingChatBanner');
@@ -1981,6 +2073,9 @@
  if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 400]);
 
  if ("Notification" in window && Notification.permission === "granted") {
+ if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+ try { navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ACTIVE_USER' }); } catch (e) {}
+ }
  if ('serviceWorker' in navigator) {
  navigator.serviceWorker.ready.then((reg) => {
  const actions = actionType === 'incoming_call'
@@ -2102,6 +2197,9 @@
 
  s3.classList.add('active');
  s3.innerText = "3. ⏳ Uninstall Aplikasi & Service Worker...";
+ if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+ try { navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ACTIVE_USER' }); } catch (e) {}
+ }
  if ('serviceWorker' in navigator) {
  try {
  const regs = await navigator.serviceWorker.getRegistrations();
@@ -2115,6 +2213,9 @@
 
  s4.classList.add('active');
  s4.innerText = "4. ⏳ Install Ulang & Jalankan Pengaturan Awal...";
+ if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+ try { navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ACTIVE_USER' }); } catch (e) {}
+ }
  if ('serviceWorker' in navigator) {
  try {
  await navigator.serviceWorker.register('./service-worker.js');
@@ -2834,7 +2935,7 @@
  <div style="font-weight:900; word-break:break-word;">${c.nama}</div>
  <div style="font-size:var(--font-md); color:#8696a0; font-weight:700;">${c.username} • ${c.alamat || '-'}</div>
  </div>
- <button class="btn-grup-plus" style="flex-shrink:0;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "'")}')">${btnLabel}</button>
+ <button class="btn-grup-plus" style="flex-shrink:0;" onclick="handleContactPicked('${mode}', '${c.nama.replace(/'/g, "\'")}', '${c.username}', '${(c.alamat || '-').replace(/'/g, "\'")}')">${btnLabel}</button>
  `;
  list.appendChild(row);
  });
@@ -3045,7 +3146,7 @@
  }
 
  /* ============================================================================
-    SISTEM TELPON SUARA & VIDEO CALL AKTIF (DENGAN TOMBOL TERIMA & TOLAK RESMI)
+    SISTEM TELPON SUARA & VIDEO CALL AKTIF
     ============================================================================ */
  function openCallDialog(type) {
  document.getElementById('comboCallDropdown').classList.add('hidden');
@@ -3087,7 +3188,7 @@
  <div style="font-weight:900; word-break:break-word;">${m.nama}</div>
  <div style="font-size:var(--font-md); color:#8696a0;">(${m.username})</div>
  </div>
- <button class="btn-grup-plus" style="flex-shrink:0;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'")}', '${type}')">Panggil</button>
+ <button class="btn-grup-plus" style="flex-shrink:0;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', '${type}')">Panggil</button>
  `;
  list.appendChild(row);
  });
@@ -3371,8 +3472,8 @@
  <div style="font-size:var(--font-md); color:#8696a0;">(${m.username})</div>
  </div>
  <div style="display:flex; gap:6px; flex-shrink:0;">
- <button class="btn-grup-plus" style="padding:10px 12px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'")}', 'voice')" title="Telpon">📞</button>
- <button class="btn-grup-plus" style="padding:10px 12px; background:#0284c7; color:#fff;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "'")}', 'video')" title="Video Call">📹</button>
+ <button class="btn-grup-plus" style="padding:10px 12px;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', 'voice')" title="Telpon">📞</button>
+ <button class="btn-grup-plus" style="padding:10px 12px; background:#0284c7; color:#fff;" onclick="startOutgoingCall('${m.username}', '${m.nama.replace(/'/g, "\'")}', 'video')" title="Video Call">📹</button>
  </div>
  `;
  list.appendChild(row);
