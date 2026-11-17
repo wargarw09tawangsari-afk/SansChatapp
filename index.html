@@ -5,366 +5,461 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Sc-SansChat - Selamat Datang</title>
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="theme-color" content="#0b141a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
-  :root {
-    --wa-bg: #0b141a;
-    --wa-panel: #111b21;
-    --wa-card: #182229;
-    --wa-border: #2a3942;
-    --wa-green: #00a884;
-    --wa-green-light: #25d366;
-    --wa-text: #e9edef;
-    --wa-text-secondary: #8696a0;
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  html, body {
-    width: 100%;
-    height: 100%;
-    min-height: 100dvh;
-    background-color: var(--wa-bg);
-    color: var(--wa-text);
-    overflow-x: hidden;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .welcome-container {
-    background: var(--wa-panel);
-    width: 100%;
-    max-width: 480px;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 16px;
-    text-align: center;
-    margin: 0 auto;
-    box-shadow: 0 0 50px rgba(0,0,0,0.9);
-    border-left: 1px solid var(--wa-border);
-    border-right: 1px solid var(--wa-border);
-  }
+ :root {
+ --wa-bg: #0b141a;
+ --wa-panel: #111b21;
+ --wa-card: #182229;
+ --wa-border: #2a3942;
+ --wa-green: #00a884;
+ --wa-green-light: #25d366;
+ --wa-text: #e9edef;
+ --wa-text-secondary: #8696a0;
+ }
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ -webkit-tap-highlight-color: transparent;
+ }
+ html, body {
+ width: 100%;
+ height: 100%;
+ min-height: 100dvh;
+ background-color: var(--wa-bg);
+ color: var(--wa-text);
+ overflow-x: hidden;
+ overflow-y: auto;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ }
+ .welcome-container {
+ background: var(--wa-panel);
+ width: 100%;
+ max-width: 480px;
+ min-height: 100dvh;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+ align-items: center;
+ padding: 20px 16px;
+ text-align: center;
+ margin: 0 auto;
+ box-shadow: 0 0 50px rgba(0,0,0,0.9);
+ border-left: 1px solid var(--wa-border);
+ border-right: 1px solid var(--wa-border);
+ }
 
-  @media all and (display-mode: standalone), (max-width: 600px) {
-    html, body {
-      padding: 14px !important;
-      background-color: var(--wa-bg) !important;
-      height: 100dvh !important;
-      overflow: hidden !important;
-    }
-    .welcome-container {
-      border: 3px solid var(--wa-green) !important;
-      width: calc(100% - 28px) !important;
-      max-width: calc(100% - 28px) !important;
-      margin: 0 auto !important;
-      border-radius: 24px !important;
-      padding: 18px 20px !important;
-      height: calc(100dvh - 28px) !important;
-      min-height: calc(100dvh - 28px) !important;
-      box-sizing: border-box !important;
-      overflow-y: auto !important;
-    }
-    .welcome-title {
-      font-size: 24px !important;
-      letter-spacing: 1.2px !important;
-      margin-bottom: 10px !important;
-    }
-    .logo-sc-3d-large {
-      width: 350px !important;
-      height: 350px !important;
-      max-width: 65vw !important;
-      max-height: 65vw !important;
-      font-size: 130px !important;
-      border-radius: 36px !important;
-      border: 5px solid var(--wa-green-light) !important;
-      margin: 8px auto 12px auto !important;
-    }
-    .brand-sub {
-      font-size: 20px !important;
-      margin-bottom: 10px !important;
-    }
-    .welcome-email {
-      font-size: 14px !important;
-      padding: 10px 14px !important;
-      border-radius: 12px !important;
-      margin-bottom: 12px !important;
-    }
-    .pwa-instruction-box {
-      padding: 14px !important;
-      border-radius: 16px !important;
-      margin-bottom: 12px !important;
-    }
-    .pwa-instruction-title {
-      font-size: 14px !important;
-      margin-bottom: 6px !important;
-    }
-    .pwa-instruction-steps {
-      font-size: 13px !important;
-      line-height: 1.4 !important;
-      padding-left: 18px !important;
-    }
-    .pwa-instruction-steps li {
-      margin-bottom: 4px !important;
-    }
-    .pwa-status-badge {
-      font-size: 13px !important;
-      padding: 10px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-    }
-    .btn-install-native {
-      font-size: 14px !important;
-      padding: 12px !important;
-      border-radius: 12px !important;
-      margin-top: 10px !important;
-    }
-    .btn-ok-robotic {
-      font-size: 20px !important;
-      padding: 14px !important;
-      border-radius: 14px !important;
-      min-height: 52px !important;
-      letter-spacing: 1.2px !important;
-    }
-    .footer-tag {
-      font-size: 12px !important;
-      margin-top: 8px !important;
-      letter-spacing: 1px !important;
-    }
-  }
+ @media all and (display-mode: standalone), (max-width: 600px) {
+ html, body {
+ padding: 8px !important;
+ background-color: var(--wa-bg) !important;
+ height: 100dvh !important;
+ overflow: hidden !important;
+ }
+ .welcome-container {
+ border: 2px solid var(--wa-green) !important;
+ width: calc(100% - 16px) !important;
+ max-width: calc(100% - 16px) !important;
+ margin: 0 auto !important;
+ border-radius: 18px !important;
+ padding: 14px 16px !important;
+ height: calc(100dvh - 16px) !important;
+ min-height: calc(100dvh - 16px) !important;
+ box-sizing: border-box !important;
+ overflow-y: auto !important;
+ justify-content: space-between !important;
+ }
+ .welcome-header-group {
+ margin: 0 !important;
+ flex: 1;
+ justify-content: center;
+ }
+ .welcome-title {
+ font-size: 22px !important;
+ letter-spacing: 1px !important;
+ margin-bottom: 10px !important;
+ }
+ .logo-sc-3d-large {
+ width: 104px !important;
+ height: 104px !important;
+ border-radius: 22px !important;
+ border: 3px solid var(--wa-green-light) !important;
+ margin: 4px auto 10px auto !important;
+ }
+ .logo-sc-main-txt {
+ font-size: 44px !important;
+ }
+ .logo-sc-sub-badge {
+ font-size: 9.5px !important;
+ padding: 1.5px 7px !important;
+ margin-top: -2px !important;
+ }
+ .brand-sub {
+ font-size: 18px !important;
+ margin-bottom: 8px !important;
+ }
+ .welcome-email {
+ font-size: 13.5px !important;
+ padding: 9px 12px !important;
+ border-radius: 10px !important;
+ margin-bottom: 10px !important;
+ }
+ .pwa-instruction-box {
+ padding: 12px !important;
+ border-radius: 14px !important;
+ margin-bottom: 8px !important;
+ }
+ .pwa-instruction-title {
+ font-size: 13px !important;
+ margin-bottom: 6px !important;
+ }
+ .pwa-instruction-steps {
+ font-size: 12.5px !important;
+ line-height: 1.4 !important;
+ padding-left: 18px !important;
+ }
+ .pwa-instruction-steps li {
+ margin-bottom: 4px !important;
+ }
+ .pwa-status-badge {
+ font-size: 12.5px !important;
+ padding: 8px 10px !important;
+ border-radius: 10px !important;
+ margin-bottom: 8px !important;
+ }
+ .btn-install-native {
+ font-size: 13px !important;
+ padding: 10px !important;
+ border-radius: 10px !important;
+ margin-top: 8px !important;
+ }
+ .welcome-bottom-group {
+ width: 100% !important;
+ flex-shrink: 0 !important;
+ padding-top: 6px !important;
+ }
+ .btn-ok-robotic {
+ font-size: 17px !important;
+ padding: 13px !important;
+ border-radius: 12px !important;
+ min-height: 48px !important;
+ letter-spacing: 1px !important;
+ }
+ .footer-tag {
+ font-size: 11px !important;
+ margin-top: 8px !important;
+ letter-spacing: 1px !important;
+ }
+ }
 
-  .welcome-header-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin: auto 0;
-  }
-  .welcome-title {
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--wa-text);
-    margin-bottom: 16px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .logo-sc-3d-large {
-    width: 110px;
-    height: 110px;
-    margin: 0 auto 14px auto;
-    background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 52px;
-    color: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.4);
-    border: 3px solid var(--wa-green-light);
-  }
-  .brand-sub {
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--wa-green);
-    margin-bottom: 12px;
-  }
-  .welcome-email {
-    font-size: 14px;
-    color: var(--wa-text-secondary);
-    margin-bottom: 16px;
-    background: var(--wa-card);
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1px solid var(--wa-border);
-    font-weight: 700;
-    word-break: break-all;
-    width: 100%;
-  }
-  .pwa-instruction-box {
-    background: var(--wa-card);
-    border: 1px solid var(--wa-border);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 16px;
-    text-align: left;
-    width: 100%;
-  }
-  .pwa-instruction-title {
-    font-size: 13px;
-    font-weight: 900;
-    color: var(--wa-green);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
-  .pwa-instruction-steps {
-    font-size: 13px;
-    color: #d1d7db;
-    line-height: 1.5;
-    padding-left: 18px;
-    font-weight: 600;
-  }
-  .pwa-instruction-steps li {
-    margin-bottom: 6px;
-  }
-  .pwa-status-badge {
-    display: block;
-    font-size: 13px;
-    font-weight: 800;
-    padding: 10px 14px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    width: 100%;
-    text-align: center;
-  }
-  .badge-installed {
-    background: rgba(0, 168, 132, 0.18);
-    color: var(--wa-green-light);
-    border: 1px solid var(--wa-green);
-  }
-  .badge-browser {
-    background: rgba(234, 67, 53, 0.15);
-    color: #fca5a5;
-    border: 1px solid #ea4335;
-  }
-  .btn-install-native {
-    width: 100%;
-    margin-top: 10px;
-    padding: 14px;
-    border-radius: 14px;
-    border: none;
-    background: var(--wa-green);
-    color: var(--wa-panel);
-    font-weight: 900;
-    font-size: 14px;
-    cursor: pointer;
-    text-transform: uppercase;
-  }
-  .btn-ok-robotic {
-    width: 100%;
-    background: var(--wa-green);
-    color: var(--wa-panel);
-    border: none;
-    padding: 16px;
-    border-radius: 16px;
-    font-size: 18px;
-    font-weight: 900;
-    cursor: pointer;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
-    min-height: 52px;
-  }
-  .footer-tag {
-    margin-top: 12px;
-    font-size: 11px;
-    color: var(--wa-text-secondary);
-    letter-spacing: 1px;
-    font-weight: 700;
-  }
-  .hidden { display: none !important; }
+ .welcome-header-group {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ width: 100%;
+ margin: auto 0;
+ }
+ .welcome-title {
+ font-size: 26px;
+ font-weight: 900;
+ color: var(--wa-text);
+ margin-bottom: 14px;
+ letter-spacing: 1px;
+ text-transform: uppercase;
+ }
+ .logo-sc-3d-large {
+ width: 112px;
+ height: 112px;
+ margin: 0 auto 12px auto;
+ background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
+ border-radius: 24px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ position: relative;
+ box-shadow:
+ 0 10px 26px rgba(0, 168, 132, 0.5),
+ 0 4px 0 #003d31,
+ inset 0 2px 5px rgba(255,255,255,0.4),
+ inset 0 -3px 6px rgba(0,0,0,0.45);
+ border: 3px solid var(--wa-green-light);
+ }
+ .logo-sc-3d-large::before {
+ content: "";
+ position: absolute;
+ top: 6px;
+ left: 6px;
+ right: 6px;
+ bottom: 6px;
+ border-radius: 17px;
+ border: 1px solid rgba(167, 243, 208, 0.35);
+ pointer-events: none;
+ }
+ .logo-sc-main-txt {
+ font-weight: 900;
+ font-size: 48px;
+ line-height: 0.88;
+ color: #ffffff;
+ letter-spacing: -1px;
+ margin: 0;
+ padding: 0;
+ text-shadow:
+ 0 2px 0 #004d3d,
+ 0 4px 0 #003328,
+ 0 7px 12px rgba(0,0,0,0.75);
+ z-index: 2;
+ }
+ .logo-sc-sub-badge {
+ margin-top: -2px;
+ padding: 2px 8px;
+ border-radius: 99px;
+ background: rgba(4, 35, 29, 0.92);
+ border: 1px solid #34d399;
+ color: #ecfdf5;
+ font-size: 10px;
+ font-weight: 800;
+ line-height: 1.1;
+ letter-spacing: 0.4px;
+ box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
+ text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+ z-index: 1;
+ }
+ .brand-sub {
+ font-size: 18px;
+ font-weight: 900;
+ color: var(--wa-green);
+ margin-bottom: 10px;
+ }
+ .welcome-email {
+ font-size: 14px;
+ color: var(--wa-text-secondary);
+ margin-bottom: 14px;
+ background: var(--wa-card);
+ padding: 10px 14px;
+ border-radius: 12px;
+ border: 1px solid var(--wa-border);
+ font-weight: 700;
+ word-break: break-all;
+ width: 100%;
+ }
+ .pwa-instruction-box {
+ background: var(--wa-card);
+ border: 1px solid var(--wa-border);
+ border-radius: 16px;
+ padding: 14px;
+ margin-bottom: 14px;
+ text-align: left;
+ width: 100%;
+ }
+ .pwa-instruction-title {
+ font-size: 13px;
+ font-weight: 900;
+ color: var(--wa-green);
+ margin-bottom: 8px;
+ text-transform: uppercase;
+ text-align: center;
+ letter-spacing: 0.5px;
+ }
+ .pwa-instruction-steps {
+ font-size: 13px;
+ color: #d1d7db;
+ line-height: 1.45;
+ padding-left: 18px;
+ font-weight: 600;
+ }
+ .pwa-instruction-steps li {
+ margin-bottom: 5px;
+ }
+ .pwa-status-badge {
+ display: block;
+ font-size: 13px;
+ font-weight: 800;
+ padding: 10px 14px;
+ border-radius: 12px;
+ margin-bottom: 10px;
+ width: 100%;
+ text-align: center;
+ }
+ .badge-installed {
+ background: rgba(0, 168, 132, 0.18);
+ color: var(--wa-green-light);
+ border: 1px solid var(--wa-green);
+ }
+ .badge-browser {
+ background: rgba(234, 67, 53, 0.15);
+ color: #fca5a5;
+ border: 1px solid #ea4335;
+ }
+ .btn-install-native {
+ width: 100%;
+ margin-top: 10px;
+ padding: 12px;
+ border-radius: 12px;
+ border: none;
+ background: var(--wa-green);
+ color: var(--wa-panel);
+ font-weight: 900;
+ font-size: 13px;
+ cursor: pointer;
+ text-transform: uppercase;
+ box-shadow: 0 4px 14px rgba(0, 168, 132, 0.45);
+ }
+ .welcome-bottom-group {
+ width: 100%;
+ margin-bottom: 4px;
+ }
+ .btn-ok-robotic {
+ width: 100%;
+ background: var(--wa-green);
+ color: var(--wa-panel);
+ border: none;
+ padding: 14px;
+ border-radius: 14px;
+ font-size: 18px;
+ font-weight: 900;
+ cursor: pointer;
+ letter-spacing: 1px;
+ text-transform: uppercase;
+ box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+ min-height: 50px;
+ }
+ .footer-tag {
+ margin-top: 10px;
+ font-size: 11px;
+ color: var(--wa-text-secondary);
+ letter-spacing: 1px;
+ font-weight: 700;
+ }
+ .reset-banner {
+ background: rgba(0, 168, 132, 0.2);
+ border: 1px solid var(--wa-green-light);
+ color: #ecfdf5;
+ font-size: 12px;
+ font-weight: 800;
+ padding: 8px 12px;
+ border-radius: 10px;
+ margin-bottom: 10px;
+ width: 100%;
+ }
+ .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
 <div class="welcome-container">
-  <div class="welcome-header-group">
-    <div class="welcome-title">SELAMAT DATANG</div>
-    <div class="logo-sc-3d-large">Sc</div>
-    <div class="brand-sub">Sc-SansChat</div>
-    <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
+ <div class="welcome-header-group">
+ <div class="welcome-title">SELAMAT DATANG</div>
+ <div class="logo-sc-3d-large">
+ <span class="logo-sc-main-txt">Sc</span>
+ <span class="logo-sc-sub-badge">Projack12@06</span>
+ </div>
+ <div class="brand-sub">Sc-SansChat</div>
+ <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
 
-    <div class="pwa-instruction-box">
-      <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
-      <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
-      <ol class="pwa-instruction-steps">
-        <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
-        <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
-        <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
-      </ol>
-      <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
-        📲 INSTAL APLIKASI SEKARANG
-      </button>
-    </div>
-  </div>
+ <div id="resetCompleteBanner" class="reset-banner hidden">
+ 🔄 Reset Logout Selesai! Cache & data lama telah dibersihkan. Silakan instal ulang aplikasi di bawah ini.
+ </div>
 
-  <div style="width:100%; margin-bottom: 10px;">
-    <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
-    <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
-  </div>
+ <div class="pwa-instruction-box">
+ <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
+ <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
+ <ol class="pwa-instruction-steps">
+ <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
+ <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
+ <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
+ </ol>
+ <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
+ 📲 INSTAL ULANG / PASANG APLIKASI
+ </button>
+ </div>
+ </div>
+
+ <div class="welcome-bottom-group">
+ <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
+ <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
+ </div>
 </div>
 
 <script>
-  let deferredInstallPrompt = null;
+ let deferredInstallPrompt = null;
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then((reg) => {
-      reg.update();
-    }).catch(() => {});
-  }
+ if ('serviceWorker' in navigator) {
+ navigator.serviceWorker.register('./service-worker.js').then((reg) => {
+ reg.update();
+ }).catch(() => {});
+ }
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredInstallPrompt = e;
-    document.getElementById('btnInstallPwaDirect').classList.remove('hidden');
-  });
+ window.addEventListener('beforeinstallprompt', (e) => {
+ e.preventDefault();
+ deferredInstallPrompt = e;
+ const btnInstall = document.getElementById('btnInstallPwaDirect');
+ btnInstall.classList.remove('hidden');
 
-  window.addEventListener('appinstalled', () => {
-    deferredInstallPrompt = null;
-    document.getElementById('btnInstallPwaDirect').classList.add('hidden');
-    updatePwaBadgeStatus();
-  });
+ const urlParams = new URLSearchParams(window.location.search);
+ if (urlParams.get('reinstall') === '1') {
+ setTimeout(() => {
+ triggerNativePwaInstall();
+ }, 600);
+ }
+ });
 
-  window.onload = function() {
-    updatePwaBadgeStatus();
-  };
+ window.addEventListener('appinstalled', () => {
+ deferredInstallPrompt = null;
+ document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+ updatePwaBadgeStatus();
+ });
 
-  function updatePwaBadgeStatus() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const badge = document.getElementById('pwaStatusBadge');
-    if (isStandalone) {
-      badge.className = "pwa-status-badge badge-installed";
-      badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda";
-    } else {
-      badge.className = "pwa-status-badge badge-browser";
-      badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama";
-    }
-  }
+ window.onload = function() {
+ const urlParams = new URLSearchParams(window.location.search);
+ if (urlParams.get('reinstall') === '1') {
+ document.getElementById('resetCompleteBanner').classList.remove('hidden');
+ }
+ updatePwaBadgeStatus();
+ };
 
-  function triggerNativePwaInstall() {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then(() => {
-      deferredInstallPrompt = null;
-      document.getElementById('btnInstallPwaDirect').classList.add('hidden');
-    });
-  }
+ function updatePwaBadgeStatus() {
+ const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+ const badge = document.getElementById('pwaStatusBadge');
+ if (isStandalone) {
+ badge.className = "pwa-status-badge badge-installed";
+ badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda";
+ } else {
+ badge.className = "pwa-status-badge badge-browser";
+ badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama";
+ }
+ }
 
-  function proceedToLogin() {
-    const btn = document.getElementById('btnOkWelcome');
-    btn.innerText = "MEMBUKA LOGIN...";
-    btn.disabled = true;
+ function triggerNativePwaInstall() {
+ if (!deferredInstallPrompt) return;
+ deferredInstallPrompt.prompt();
+ deferredInstallPrompt.userChoice.then(() => {
+ deferredInstallPrompt = null;
+ document.getElementById('btnInstallPwaDirect').classList.add('hidden');
+ });
+ }
 
-    // Normalisasi: aktifkan kembali izin, cache & data saat klik OK
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission().catch(() => {});
-    }
+ function proceedToLogin() {
+ const btn = document.getElementById('btnOkWelcome');
+ btn.innerText = "MEMBUKA LOGIN...";
+ btn.disabled = true;
 
-    const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
-    window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
-  }
+ if ('Notification' in window && Notification.permission === 'default') {
+ Notification.requestPermission().catch(() => {});
+ }
+
+ const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
+ window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
+ }
 </script>
 </body>
 </html>

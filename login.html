@@ -4,420 +4,474 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Sc-SansChat - Login</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="theme-color" content="#0b141a">
 <style>
-  :root {
-    --wa-bg: #0b141a;
-    --wa-panel: #111b21;
-    --wa-card: #182229;
-    --wa-border: #2a3942;
-    --wa-green: #00a884;
-    --wa-green-light: #25d366;
-    --wa-text: #e9edef;
-    --wa-text-secondary: #8696a0;
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  html, body {
-    width: 100%;
-    height: 100%;
-    min-height: 100dvh;
-    background-color: var(--wa-bg);
-    color: var(--wa-text);
-    overflow-x: hidden;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .login-container {
-    background: var(--wa-panel);
-    width: 100%;
-    max-width: 480px;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 24px 18px;
-    position: relative;
-    margin: 0 auto;
-    box-shadow: 0 0 50px rgba(0,0,0,0.9);
-    border-left: 1px solid var(--wa-border);
-    border-right: 1px solid var(--wa-border);
-  }
+ :root {
+ --wa-bg: #0b141a;
+ --wa-panel: #111b21;
+ --wa-card: #182229;
+ --wa-border: #2a3942;
+ --wa-green: #00a884;
+ --wa-green-light: #25d366;
+ --wa-text: #e9edef;
+ --wa-text-secondary: #8696a0;
+ }
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ -webkit-tap-highlight-color: transparent;
+ }
+ html, body {
+ width: 100%;
+ height: 100%;
+ min-height: 100dvh;
+ background-color: var(--wa-bg);
+ color: var(--wa-text);
+ overflow-x: hidden;
+ overflow-y: auto;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ }
+ .login-container {
+ background: var(--wa-panel);
+ width: 100%;
+ max-width: 480px;
+ min-height: 100dvh;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+ padding: 20px 14px;
+ position: relative;
+ margin: 0 auto;
+ box-shadow: 0 0 50px rgba(0,0,0,0.9);
+ border-left: 1px solid var(--wa-border);
+ border-right: 1px solid var(--wa-border);
+ }
 
-  @media all and (display-mode: standalone), (max-width: 600px) {
-    html, body {
-      padding: 14px !important;
-      background-color: var(--wa-bg) !important;
-      height: 100dvh !important;
-      overflow: hidden !important;
-    }
-    .login-container {
-      border: 3px solid var(--wa-green) !important;
-      width: calc(100% - 28px) !important;
-      max-width: calc(100% - 28px) !important;
-      margin: 0 auto !important;
-      border-radius: 24px !important;
-      padding: 14px 18px !important;
-      height: calc(100dvh - 28px) !important;
-      min-height: calc(100dvh - 28px) !important;
-      box-sizing: border-box !important;
-      overflow-y: auto !important;
-    }
-    .login-title {
-      font-size: 22px !important;
-      margin-bottom: 4px !important;
-    }
-    .login-subtitle {
-      font-size: 13px !important;
-      margin-bottom: 10px !important;
-    }
-    .logo-sc-3d-large {
-      width: 350px !important;
-      height: 350px !important;
-      max-width: 55vw !important;
-      max-height: 55vw !important;
-      font-size: 110px !important;
-      border-radius: 32px !important;
-      border: 5px solid var(--wa-green-light) !important;
-      margin: 6px auto 10px auto !important;
-    }
-    .field-group {
-      margin-bottom: 10px !important;
-    }
-    .field-group label {
-      font-size: 12px !important;
-      margin-bottom: 4px !important;
-    }
-    .field-group input {
-      font-size: 15px !important;
-      padding: 10px 40px 10px 12px !important;
-      min-height: 44px !important;
-      border-radius: 12px !important;
-    }
-    .password-toggle {
-      font-size: 20px !important;
-      right: 12px !important;
-    }
-    .btn-3d-robotic {
-      font-size: 16px !important;
-      padding: 14px !important;
-      min-height: 50px !important;
-      border-radius: 14px !important;
-      margin-top: 8px !important;
-      letter-spacing: 1px !important;
-    }
-    .pwa-warning-box {
-      font-size: 12px !important;
-      padding: 10px !important;
-      border-radius: 12px !important;
-      margin-bottom: 10px !important;
-    }
-    .pwa-warning-title {
-      font-size: 13px !important;
-      margin-bottom: 4px !important;
-    }
-    .pwa-warning-box ol {
-      padding-left: 16px !important;
-      margin-top: 4px !important;
-    }
-    .pwa-warning-box li {
-      margin-bottom: 3px !important;
-    }
-    .help-btn-3d {
-      font-size: 11px !important;
-      padding: 6px 10px !important;
-      border-radius: 10px !important;
-      top: 12px !important;
-      right: 12px !important;
-    }
-  }
+ @media all and (display-mode: standalone), (max-width: 600px) {
+ html, body {
+ padding: 8px !important;
+ background-color: var(--wa-bg) !important;
+ height: 100dvh !important;
+ overflow: hidden !important;
+ }
+ .login-container {
+ border: 2px solid var(--wa-green) !important;
+ width: calc(100% - 16px) !important;
+ max-width: calc(100% - 16px) !important;
+ margin: 0 auto !important;
+ border-radius: 18px !important;
+ padding: 14px 16px !important;
+ height: calc(100dvh - 16px) !important;
+ min-height: calc(100dvh - 16px) !important;
+ box-sizing: border-box !important;
+ overflow-y: auto !important;
+ }
+ .login-title {
+ font-size: 21px !important;
+ margin-bottom: 4px !important;
+ }
+ .login-subtitle {
+ font-size: 13px !important;
+ margin-bottom: 10px !important;
+ }
+ .logo-sc-3d-large {
+ width: 96px !important;
+ height: 96px !important;
+ border-radius: 20px !important;
+ border: 3px solid var(--wa-green-light) !important;
+ margin: 6px auto 10px auto !important;
+ }
+ .logo-sc-main-txt {
+ font-size: 42px !important;
+ }
+ .logo-sc-sub-badge {
+ font-size: 9px !important;
+ padding: 1.5px 6px !important;
+ margin-top: -2px !important;
+ }
+ .field-group {
+ margin-bottom: 10px !important;
+ }
+ .field-group label {
+ font-size: 12px !important;
+ margin-bottom: 4px !important;
+ }
+ .field-group input {
+ font-size: 15px !important;
+ padding: 10px 40px 10px 12px !important;
+ min-height: 44px !important;
+ border-radius: 12px !important;
+ }
+ .password-toggle {
+ font-size: 19px !important;
+ right: 12px !important;
+ }
+ .btn-3d-robotic {
+ font-size: 16px !important;
+ padding: 13px !important;
+ min-height: 48px !important;
+ border-radius: 12px !important;
+ margin-top: 6px !important;
+ letter-spacing: 1px !important;
+ }
+ .pwa-warning-box {
+ font-size: 12px !important;
+ padding: 10px 12px !important;
+ border-radius: 12px !important;
+ margin-bottom: 10px !important;
+ }
+ .pwa-warning-title {
+ font-size: 12.5px !important;
+ margin-bottom: 4px !important;
+ }
+ .pwa-warning-box ol {
+ padding-left: 16px !important;
+ margin-top: 4px !important;
+ }
+ .pwa-warning-box li {
+ margin-bottom: 3px !important;
+ }
+ .help-btn-3d {
+ font-size: 11px !important;
+ padding: 6px 10px !important;
+ border-radius: 10px !important;
+ top: 12px !important;
+ right: 12px !important;
+ }
+ }
 
-  .login-content-top {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: auto 0;
-  }
-  .logo-sc-3d-large {
-    width: 110px;
-    height: 110px;
-    margin: 14px auto 16px auto;
-    background: linear-gradient(135deg, var(--wa-green) 0%, #005c4b 100%);
-    border-radius: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 52px;
-    color: #ffffff;
-    box-shadow: 0 10px 28px rgba(0, 168, 132, 0.45);
-    border: 3px solid var(--wa-green-light);
-  }
-  .login-title {
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--wa-text);
-    margin-bottom: 8px;
-    text-align: center;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .login-subtitle {
-    font-size: 15px;
-    color: var(--wa-green);
-    text-align: center;
-    margin-bottom: 18px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 800;
-  }
-  .pwa-warning-box {
-    background: rgba(234, 67, 53, 0.18);
-    border: 1px solid #ea4335;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 18px;
-    color: #fca5a5;
-    font-size: 14px;
-    line-height: 1.5;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  }
-  .pwa-warning-title {
-    font-weight: 900;
-    color: #f87171;
-    margin-bottom: 8px;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .pwa-warning-box ol {
-    padding-left: 20px;
-    margin-top: 8px;
-    font-weight: 600;
-  }
-  .pwa-warning-box li {
-    margin-bottom: 6px;
-    color: var(--wa-text);
-  }
-  .field-group {
-    margin-bottom: 18px;
-    position: relative;
-  }
-  .field-group label {
-    display: block;
-    font-size: 14px;
-    color: var(--wa-green);
-    margin-bottom: 8px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-  }
-  .field-group input {
-    width: 100%;
-    padding: 18px 52px 18px 18px;
-    background: var(--wa-card);
-    border: 1px solid var(--wa-border);
-    border-radius: 16px;
-    color: var(--wa-text);
-    font-size: 17px;
-    font-weight: 700;
-    outline: none;
-    transition: border-color 0.15s;
-    min-height: 56px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
-  }
-  .field-group input:focus {
-    border-color: var(--wa-green);
-  }
-  .password-toggle {
-    position: absolute;
-    right: 18px;
-    top: 59%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 24px;
-    user-select: none;
-    color: var(--wa-text-secondary);
-  }
-  .btn-3d-robotic {
-    width: 100%;
-    background: var(--wa-green);
-    color: var(--wa-panel);
-    border: none;
-    padding: 18px;
-    border-radius: 16px;
-    font-size: 18px;
-    font-weight: 900;
-    cursor: pointer;
-    margin-top: 10px;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
-    min-height: 58px;
-  }
-  .btn-3d-robotic:disabled {
-    background: var(--wa-border);
-    color: var(--wa-text-secondary);
-    box-shadow: none;
-    cursor: not-allowed;
-    opacity: 0.8;
-  }
-  .help-btn-3d {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    background: #202c33;
-    color: var(--wa-green);
-    border: 1px solid var(--wa-border);
-    padding: 10px 14px;
-    border-radius: 14px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 800;
-    z-index: 3;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-  .hidden { display: none !important; }
+ .login-content-top {
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+ margin: auto 0;
+ }
+ .logo-sc-3d-large {
+ width: 108px;
+ height: 108px;
+ margin: 10px auto 14px auto;
+ background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
+ border-radius: 22px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ position: relative;
+ box-shadow:
+ 0 10px 28px rgba(0, 168, 132, 0.5),
+ 0 4px 0 #003d31,
+ inset 0 2px 5px rgba(255,255,255,0.4),
+ inset 0 -3px 6px rgba(0,0,0,0.45);
+ border: 3px solid var(--wa-green-light);
+ }
+ .logo-sc-3d-large::before {
+ content: "";
+ position: absolute;
+ top: 6px;
+ left: 6px;
+ right: 6px;
+ bottom: 6px;
+ border-radius: 16px;
+ border: 1px solid rgba(167, 243, 208, 0.35);
+ pointer-events: none;
+ }
+ .logo-sc-main-txt {
+ font-weight: 900;
+ font-size: 46px;
+ line-height: 0.88;
+ color: #ffffff;
+ letter-spacing: -1px;
+ margin: 0;
+ padding: 0;
+ text-shadow:
+ 0 2px 0 #004d3d,
+ 0 4px 0 #003328,
+ 0 7px 12px rgba(0,0,0,0.75);
+ z-index: 2;
+ }
+ .logo-sc-sub-badge {
+ margin-top: -2px;
+ padding: 2px 8px;
+ border-radius: 99px;
+ background: rgba(4, 35, 29, 0.92);
+ border: 1px solid #34d399;
+ color: #ecfdf5;
+ font-size: 9.5px;
+ font-weight: 800;
+ line-height: 1.1;
+ letter-spacing: 0.4px;
+ box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
+ text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+ z-index: 1;
+ }
+ .login-title {
+ font-size: 24px;
+ font-weight: 900;
+ color: var(--wa-text);
+ margin-bottom: 6px;
+ text-align: center;
+ letter-spacing: 1px;
+ text-transform: uppercase;
+ }
+ .login-subtitle {
+ font-size: 14px;
+ color: var(--wa-green);
+ text-align: center;
+ margin-bottom: 14px;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ font-weight: 800;
+ }
+ .pwa-warning-box {
+ background: rgba(234, 67, 53, 0.18);
+ border: 1px solid #ea4335;
+ border-radius: 14px;
+ padding: 14px;
+ margin-bottom: 14px;
+ color: #fca5a5;
+ font-size: 13px;
+ line-height: 1.45;
+ box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+ }
+ .pwa-warning-title {
+ font-weight: 900;
+ color: #f87171;
+ margin-bottom: 6px;
+ font-size: 13px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+ .pwa-warning-box ol {
+ padding-left: 18px;
+ margin-top: 6px;
+ font-weight: 600;
+ }
+ .pwa-warning-box li {
+ margin-bottom: 5px;
+ color: var(--wa-text);
+ }
+ .field-group {
+ margin-bottom: 14px;
+ position: relative;
+ }
+ .field-group label {
+ display: block;
+ font-size: 13px;
+ color: var(--wa-green);
+ margin-bottom: 6px;
+ font-weight: 800;
+ letter-spacing: 0.8px;
+ }
+ .field-group input {
+ width: 100%;
+ padding: 14px 46px 14px 14px;
+ background: var(--wa-card);
+ border: 1px solid var(--wa-border);
+ border-radius: 14px;
+ color: var(--wa-text);
+ font-size: 16px;
+ font-weight: 700;
+ outline: none;
+ transition: border-color 0.15s;
+ min-height: 50px;
+ box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+ }
+ .field-group input:focus {
+ border-color: var(--wa-green);
+ }
+ .password-toggle {
+ position: absolute;
+ right: 14px;
+ top: 50%;
+ transform: translateY(-50%);
+ cursor: pointer;
+ font-size: 22px;
+ user-select: none;
+ color: var(--wa-text-secondary);
+ }
+ .btn-3d-robotic {
+ width: 100%;
+ background: var(--wa-green);
+ color: var(--wa-panel);
+ border: none;
+ padding: 16px;
+ border-radius: 14px;
+ font-size: 17px;
+ font-weight: 900;
+ cursor: pointer;
+ margin-top: 8px;
+ letter-spacing: 1.2px;
+ text-transform: uppercase;
+ box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
+ min-height: 52px;
+ }
+ .btn-3d-robotic:disabled {
+ background: var(--wa-border);
+ color: var(--wa-text-secondary);
+ box-shadow: none;
+ cursor: not-allowed;
+ opacity: 0.8;
+ }
+ .help-btn-3d {
+ position: absolute;
+ top: 14px;
+ right: 14px;
+ background: #202c33;
+ color: var(--wa-green);
+ border: 1px solid var(--wa-border);
+ padding: 8px 12px;
+ border-radius: 12px;
+ text-decoration: none;
+ font-size: 12px;
+ font-weight: 800;
+ z-index: 3;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+ }
+ .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="login-container">
-  <div class="login-content-top">
-    <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
-    <div class="logo-sc-3d-large">Sc</div>
-    <div class="login-title">SANSCHAT SYSTEM</div>
-    <div class="login-subtitle">Otentikasi Warga RT/RW</div>
+ <div class="login-content-top">
+ <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
+ <div class="logo-sc-3d-large">
+ <span class="logo-sc-main-txt">Sc</span>
+ <span class="logo-sc-sub-badge">Projack12@06</span>
+ </div>
+ <div class="login-title">SANSCHAT SYSTEM</div>
+ <div class="login-subtitle">Otentikasi Warga RT/RW</div>
 
-    <div id="pwaWarningCard" class="pwa-warning-box hidden">
-      <div class="pwa-warning-title">⚠️ AKSES DIBATASI (BELUM DIINSTAL)</div>
-      <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
-      <ol>
-        <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
-        <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
-        <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
-      </ol>
-    </div>
+ <div id="pwaWarningCard" class="pwa-warning-box hidden">
+ <div class="pwa-warning-title">⚠️ AKSES DIBATASI (BELUM DIINSTAL)</div>
+ <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
+ <ol>
+ <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
+ <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
+ <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
+ </ol>
+ </div>
 
-    <div class="field-group">
-      <label>USERNAME WARGA</label>
-      <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
-    </div>
+ <div class="field-group">
+ <label>USERNAME WARGA</label>
+ <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
+ </div>
 
-    <div class="field-group">
-      <label>KODE AKSES / PASSWORD</label>
-      <div style="position:relative;">
-        <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()">
-        <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
-      </div>
-    </div>
-  </div>
+ <div class="field-group">
+ <label>KODE AKSES / PASSWORD</label>
+ <div style="position:relative;">
+ <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()">
+ <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+ </div>
+ </div>
+ </div>
 
-  <div style="width:100%; padding-bottom: 12px;">
-    <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
-  </div>
+ <div style="width:100%; padding-bottom: 6px;">
+ <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
+ </div>
 </div>
 
 <script>
-  const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+ const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 
-  window.onload = function() {
-    const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
-    if (savedUser) {
-      document.getElementById('loginUsername').value = savedUser.toUpperCase();
-    }
-    checkPWAInstallationStatus();
-  };
+ window.onload = function() {
+ const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
+ if (savedUser) {
+ document.getElementById('loginUsername').value = savedUser.toUpperCase();
+ }
+ checkPWAInstallationStatus();
+ };
 
-  function checkPWAInstallationStatus() {
-    const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const btnSubmit = document.getElementById('btnLoginSubmit');
-    const warningCard = document.getElementById('pwaWarningCard');
+ function checkPWAInstallationStatus() {
+ const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
+ const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+ const btnSubmit = document.getElementById('btnLoginSubmit');
+ const warningCard = document.getElementById('pwaWarningCard');
 
-    if (usernameInput === 'ADMINPUSAT' || isStandalone) {
-      btnSubmit.disabled = false;
-      btnSubmit.innerText = "VERIFIKASI & MASUK";
-      warningCard.classList.add('hidden');
-    } else {
-      btnSubmit.disabled = true;
-      btnSubmit.innerText = "APLIKASI BELUM DIINSTAL";
-      warningCard.classList.remove('hidden');
-    }
-  }
+ if (usernameInput === 'ADMINPUSAT' || isStandalone) {
+ btnSubmit.disabled = false;
+ btnSubmit.innerText = "VERIFIKASI & MASUK";
+ warningCard.classList.add('hidden');
+ } else {
+ btnSubmit.disabled = true;
+ btnSubmit.innerText = "APLIKASI BELUM DIINSTAL";
+ warningCard.classList.remove('hidden');
+ }
+ }
 
-  function togglePasswordVisibility() {
-    const passInput = document.getElementById('loginPassword');
-    const eyeIcon = document.getElementById('eyeIcon');
-    if (passInput.type === 'password') {
-      passInput.type = 'text';
-      eyeIcon.innerText = '👁️';
-    } else {
-      passInput.type = 'password';
-      eyeIcon.innerText = '👁️‍🗨️';
-    }
-  }
+ function togglePasswordVisibility() {
+ const passInput = document.getElementById('loginPassword');
+ const eyeIcon = document.getElementById('eyeIcon');
+ if (passInput.type === 'password') {
+ passInput.type = 'text';
+ eyeIcon.innerText = '👁️';
+ } else {
+ passInput.type = 'password';
+ eyeIcon.innerText = '👁️‍🗨️';
+ }
+ }
 
-  function saveUserMemoryAndRedirect(userObj) {
-    const cleanUsername = String(userObj.username || "").trim().toUpperCase();
-    try {
-      localStorage.setItem('sanschat_active_username', cleanUsername);
-      localStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
-      sessionStorage.setItem('sanschat_active_username', cleanUsername);
-      sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
-    } catch (e) {}
+ function saveUserMemoryAndRedirect(userObj) {
+ const cleanUsername = String(userObj.username || "").trim().toUpperCase();
+ try {
+ localStorage.setItem('sanschat_active_username', cleanUsername);
+ localStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+ sessionStorage.setItem('sanschat_active_username', cleanUsername);
+ sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+ } catch (e) {}
 
-    const base = window.location.href.split('?')[0].replace(/login\.html$/, '').replace(/index\.html$/, '');
-    const finalUtamaUrl = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(cleanUsername);
+ const base = window.location.href.split('?')[0].replace(/login\.html$/, '').replace(/index\.html$/, '');
+ const finalUtamaUrl = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(cleanUsername);
 
-    window.location.href = finalUtamaUrl;
-  }
+ window.location.href = finalUtamaUrl;
+ }
 
-  function doLogin() {
-    const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    
-    if (usernameInput !== 'ADMINPUSAT' && !isStandalone) {
-      alert("Harap instal aplikasi terlebih dahulu ke layar utama HP Android Anda melalui menu browser.");
-      return;
-    }
+ function doLogin() {
+ const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
+ const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+ 
+ if (usernameInput !== 'ADMINPUSAT' && !isStandalone) {
+ alert("Harap instal aplikasi terlebih dahulu ke layar utama HP Android Anda melalui menu browser.");
+ return;
+ }
 
-    const u = usernameInput;
-    const p = document.getElementById('loginPassword').value.trim();
-    if (!u || !p) { alert("Harap isi Username dan Password!"); return; }
+ const u = usernameInput;
+ const p = document.getElementById('loginPassword').value.trim();
+ if (!u || !p) { alert("Harap isi Username dan Password!"); return; }
 
-    const btn = document.getElementById('btnLoginSubmit');
-    btn.innerText = "MEMVERIFIKASI...";
-    btn.disabled = true;
+ const btn = document.getElementById('btnLoginSubmit');
+ btn.innerText = "MEMVERIFIKASI...";
+ btn.disabled = true;
 
-    fetch(S3_API_BASE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
-    })
-    .then(r => r.json())
-    .then(resObj => {
-      const res = resObj.data;
-      if (res && res.success && res.user) {
-        btn.innerText = "MEMBUKA HALAMAN UTAMA...";
-        saveUserMemoryAndRedirect(res.user);
-      } else {
-        btn.innerText = "VERIFIKASI & MASUK";
-        btn.disabled = false;
-        alert((res && res.message) ? res.message : "Login gagal!");
-      }
-    })
-    .catch(err => {
-      btn.innerText = "VERIFIKASI & MASUK";
-      btn.disabled = false;
-      alert("Koneksi bermasalah: " + err.message);
-    });
-  }
+ fetch(S3_API_BASE, {
+ method: 'POST',
+ headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+ body: JSON.stringify({ action: 'loginUser', username: u, password: p })
+ })
+ .then(r => r.json())
+ .then(resObj => {
+ const res = resObj.data;
+ if (res && res.success && res.user) {
+ btn.innerText = "MEMBUKA HALAMAN UTAMA...";
+ saveUserMemoryAndRedirect(res.user);
+ } else {
+ btn.innerText = "VERIFIKASI & MASUK";
+ btn.disabled = false;
+ alert((res && res.message) ? res.message : "Login gagal!");
+ }
+ })
+ .catch(err => {
+ btn.innerText = "VERIFIKASI & MASUK";
+ btn.disabled = false;
+ alert("Koneksi bermasalah: " + err.message);
+ });
+ }
 </script>
 </body>
 </html>
