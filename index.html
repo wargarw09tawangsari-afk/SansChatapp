@@ -45,36 +45,40 @@
  .welcome-container {
  background: var(--wa-panel);
  width: 100%;
- max-width: 560px;
+ max-width: 640px;
  height: 100%;
  max-height: 100%;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
  align-items: center;
- padding: 18px 18px;
+ /* Batas atas 24px dan batas bawah 24px */
+ padding: 24px 16px 24px 16px;
  text-align: center;
  margin: 0 auto;
- border: 2px solid var(--wa-green);
+ border: 2.5px solid var(--wa-green);
  border-radius: 20px;
  box-shadow: 0 0 40px rgba(0,0,0,0.9);
- overflow-y: auto;
+ overflow: hidden;
  }
 
- @media all and (display-mode: standalone), (max-width: 768px) {
- html, body {
- padding: 6px !important;
+ /* Batas Atas 24px: Ucapan Selamat Datang (Pembesaran 2.5x) */
+ .welcome-top-anchor {
+ width: 100%;
+ flex-shrink: 0;
+ margin-bottom: 8px;
  }
- .welcome-container {
- width: 100% !important;
- max-width: 100% !important;
- height: 100% !important;
- border-radius: 18px !important;
- padding: 16px 16px !important;
- }
+ .welcome-title {
+ font-size: clamp(28px, 8.2vw, 44px);
+ font-weight: 900;
+ color: var(--wa-text);
+ letter-spacing: 1px;
+ text-transform: uppercase;
+ line-height: 1.1;
  }
 
- .welcome-header-group {
+ /* Area Tengah Fleksibel: otomatis memampat jika tinggi layar terbatas */
+ .welcome-middle-group {
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -82,24 +86,17 @@
  width: 100%;
  flex: 1;
  min-height: 0;
- gap: 10px;
+ overflow-y: auto;
+ gap: clamp(6px, 1.4dvh, 12px);
+ padding: 2px 0;
  }
- /* Pembesaran +50% dari diagram awal (22px -> 33px) */
- .welcome-title {
- font-size: clamp(28px, 6.5vw, 34px);
- font-weight: 900;
- color: var(--wa-text);
- letter-spacing: 1.2px;
- text-transform: uppercase;
- line-height: 1.15;
- }
- /* Pembesaran +50% Logo 3D (92px -> 140px) dengan tulisan Sc + Projack12@06 nempel tengah */
+
  .logo-sc-3d-large {
- width: 138px;
- height: 138px;
- margin: 2px auto;
+ width: clamp(104px, 26vw, 136px);
+ height: clamp(104px, 26vw, 136px);
+ margin: 0 auto;
  background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
- border-radius: 28px;
+ border-radius: 26px;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -107,26 +104,26 @@
  position: relative;
  flex-shrink: 0;
  box-shadow:
- 0 12px 28px rgba(0, 168, 132, 0.5),
- 0 5px 0 #003d31,
+ 0 10px 24px rgba(0, 168, 132, 0.5),
+ 0 4px 0 #003d31,
  inset 0 2px 6px rgba(255,255,255,0.4),
  inset 0 -4px 8px rgba(0,0,0,0.45);
- border: 3.5px solid var(--wa-green-light);
+ border: 3px solid var(--wa-green-light);
  }
  .logo-sc-3d-large::before {
  content: "";
  position: absolute;
- top: 7px;
- left: 7px;
- right: 7px;
- bottom: 7px;
- border-radius: 20px;
+ top: 6px;
+ left: 6px;
+ right: 6px;
+ bottom: 6px;
+ border-radius: 19px;
  border: 1.5px solid rgba(167, 243, 208, 0.35);
  pointer-events: none;
  }
  .logo-sc-main-txt {
  font-weight: 900;
- font-size: 62px;
+ font-size: clamp(46px, 12vw, 62px);
  line-height: 0.86;
  color: #ffffff;
  letter-spacing: -1.5px;
@@ -134,59 +131,64 @@
  padding: 0;
  text-shadow:
  0 2px 0 #004d3d,
- 0 5px 0 #003328,
- 0 8px 14px rgba(0,0,0,0.75);
+ 0 4px 0 #003328,
+ 0 7px 12px rgba(0,0,0,0.75);
  z-index: 2;
  }
  .logo-sc-sub-badge {
  margin-top: -2px;
- padding: 3px 11px;
+ padding: 2px 9px;
  border-radius: 99px;
  background: rgba(4, 35, 29, 0.94);
  border: 1.5px solid #34d399;
  color: #ecfdf5;
- font-size: 13px;
+ font-size: clamp(10px, 2.8vw, 13px);
  font-weight: 800;
  line-height: 1.1;
- letter-spacing: 0.4px;
+ letter-spacing: 0.3px;
  box-shadow: 0 2px 5px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
  z-index: 1;
  }
- /* Subjudul +50% (17px -> 25px) */
+
+ /* Subjudul & Email (Pembesaran 2.5x adaptif) */
  .brand-sub {
- font-size: 25px;
+ font-size: clamp(22px, 6vw, 32px);
  font-weight: 900;
  color: var(--wa-green);
  line-height: 1.15;
+ flex-shrink: 0;
  }
- /* Info Email +50% (13px -> 19px) */
  .welcome-email {
- font-size: 18px;
+ font-size: clamp(15px, 4.3vw, 22px);
  color: var(--wa-text-secondary);
  background: var(--wa-card);
- padding: 12px 16px;
+ padding: 9px 14px;
  border-radius: 14px;
  border: 1px solid var(--wa-border);
  font-weight: 700;
  word-break: break-all;
  width: 100%;
+ flex-shrink: 0;
  }
+
  .pwa-instruction-box {
  background: var(--wa-card);
  border: 1px solid var(--wa-border);
- border-radius: 18px;
- padding: 16px;
+ border-radius: 16px;
+ padding: clamp(10px, 2dvh, 14px);
  text-align: left;
  width: 100%;
+ flex-shrink: 1;
+ min-height: 0;
  }
  .pwa-status-badge {
  display: block;
- font-size: 17px;
+ font-size: clamp(14px, 4vw, 20px);
  font-weight: 800;
- padding: 12px 14px;
+ padding: 8px 12px;
  border-radius: 12px;
- margin-bottom: 12px;
+ margin-bottom: 8px;
  width: 100%;
  text-align: center;
  }
@@ -201,64 +203,63 @@
  border: 1.5px solid #ea4335;
  }
  .pwa-instruction-title {
- font-size: 18px;
+ font-size: clamp(15px, 4.2vw, 21px);
  font-weight: 900;
  color: var(--wa-green);
- margin-bottom: 8px;
+ margin-bottom: 6px;
  text-transform: uppercase;
  text-align: center;
  letter-spacing: 0.5px;
  }
- /* Langkah Instalasi +50% (12.5px -> 18px) */
  .pwa-instruction-steps {
- font-size: 17.5px;
+ font-size: clamp(14px, 3.9vw, 20px);
  color: #d1d7db;
- line-height: 1.45;
- padding-left: 24px;
+ line-height: 1.38;
+ padding-left: 22px;
  font-weight: 600;
  }
  .pwa-instruction-steps li {
- margin-bottom: 6px;
+ margin-bottom: 4px;
  }
  .btn-install-native {
  width: 100%;
- margin-top: 12px;
- padding: 15px;
- border-radius: 14px;
+ margin-top: 8px;
+ padding: 12px;
+ border-radius: 12px;
  border: none;
  background: var(--wa-green);
  color: var(--wa-panel);
  font-weight: 900;
- font-size: 18px;
+ font-size: clamp(15px, 4.2vw, 20px);
  cursor: pointer;
  text-transform: uppercase;
  box-shadow: 0 5px 16px rgba(0, 168, 132, 0.45);
  }
+
+ /* Batas Bawah 24px: Tombol OK & Footer selalu tampil dan tidak pernah terpotong */
  .welcome-bottom-group {
  width: 100%;
  flex-shrink: 0;
- padding-top: 10px;
+ padding-top: 8px;
  }
- /* Tombol OK +50% (17px -> 25px, tinggi 64px) */
  .btn-ok-robotic {
  width: 100%;
  background: var(--wa-green);
  color: var(--wa-panel);
  border: none;
- padding: 16px;
+ padding: 14px;
  border-radius: 16px;
- font-size: 25px;
+ font-size: clamp(22px, 6.5vw, 30px);
  font-weight: 900;
  cursor: pointer;
  letter-spacing: 1.5px;
  text-transform: uppercase;
  box-shadow: 0 6px 22px rgba(0, 168, 132, 0.45);
- min-height: 64px;
+ min-height: 58px;
  }
- /* Footer +50% (11px -> 15px) */
  .footer-tag {
- margin-top: 10px;
- font-size: 14.5px;
+ margin-top: 8px;
+ font-size: clamp(13px, 3.5vw, 17px);
  color: var(--wa-text-secondary);
  letter-spacing: 1px;
  font-weight: 700;
@@ -267,9 +268,9 @@
  background: rgba(0, 168, 132, 0.22);
  border: 1.5px solid var(--wa-green-light);
  color: #ecfdf5;
- font-size: 16px;
+ font-size: clamp(14px, 3.8vw, 18px);
  font-weight: 800;
- padding: 10px 14px;
+ padding: 8px 12px;
  border-radius: 12px;
  width: 100%;
  }
@@ -279,8 +280,13 @@
 <body>
 
 <div class="welcome-container">
- <div class="welcome-header-group">
+ <!-- 24px dari batas atas -->
+ <div class="welcome-top-anchor">
  <div class="welcome-title">SELAMAT DATANG</div>
+ </div>
+
+ <!-- Area tengah yang otomatis mampat jika layar HP pendek -->
+ <div class="welcome-middle-group">
  <div class="logo-sc-3d-large">
  <span class="logo-sc-main-txt">Sc</span>
  <span class="logo-sc-sub-badge">Projack12@06</span>
@@ -306,6 +312,7 @@
  </div>
  </div>
 
+ <!-- 24px dari batas bawah -->
  <div class="welcome-bottom-group">
  <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
  <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
