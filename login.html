@@ -18,7 +18,9 @@
  --wa-green-light: #25d366;
  --wa-text: #e9edef;
  --wa-text-secondary: #8696a0;
- --font-body-1pt-smaller: clamp(20.5px, 5.8vw, 21pt);
+ --font-xl: clamp(26px, 7.6vw, 38px);
+ --font-lg: clamp(22px, 6.2vw, 32px);
+ --btn-h: 74px;
  }
  * {
  box-sizing: border-box;
@@ -37,10 +39,8 @@
  display: flex;
  justify-content: center;
  align-items: center;
- /* Batasan kanan & kiri 5px dari batas layar */
- padding: 0 5px;
+ padding: 4px 5px;
  }
- /* 1 Frame utuh mulai tombol HELP SYSTEM sampai tombol bagian bawah VERIFIKASI & MASUK */
  .login-container {
  background: var(--wa-panel);
  width: 100%;
@@ -48,14 +48,13 @@
  display: flex;
  flex-direction: column;
  justify-content: flex-start;
- padding: 14px 12px;
+ padding: 16px 12px;
  position: relative;
- border: 2.5px solid var(--wa-green);
- border-radius: 18px;
+ border: 3px solid var(--wa-green);
+ border-radius: 20px;
  box-shadow: 0 0 36px rgba(0,0,0,0.9);
- gap: 10px;
+ gap: 12px;
  }
-
  .login-top-bar {
  width: 100%;
  display: flex;
@@ -64,22 +63,24 @@
  .help-btn-3d {
  background: #202c33;
  color: var(--wa-green);
- border: 1.5px solid var(--wa-green);
- padding: 9px 14px;
- border-radius: 12px;
+ border: 2px solid var(--wa-green);
+ padding: 14px 18px;
+ border-radius: 14px;
  text-decoration: none;
- font-size: var(--font-body-1pt-smaller);
+ font-size: var(--font-lg);
  font-weight: 900;
  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
  line-height: 1.2;
+ min-height: 62px;
+ display: inline-flex;
+ align-items: center;
  }
-
  .logo-sc-3d-large {
- width: 118px;
- height: 118px;
+ width: 124px;
+ height: 124px;
  margin: 0 auto;
  background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
- border-radius: 24px;
+ border-radius: 26px;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -100,42 +101,36 @@
  left: 6px;
  right: 6px;
  bottom: 6px;
- border-radius: 17px;
+ border-radius: 18px;
  border: 1.5px solid rgba(167, 243, 208, 0.35);
  pointer-events: none;
  }
  .logo-sc-main-txt {
  font-weight: 900;
- font-size: 52px;
+ font-size: 56px;
  line-height: 0.86;
  color: #ffffff;
  letter-spacing: -1.5px;
  margin: 0;
  padding: 0;
- text-shadow:
- 0 2px 0 #004d3d,
- 0 4px 0 #003328,
- 0 7px 12px rgba(0,0,0,0.75);
+ text-shadow: 0 2px 0 #004d3d, 0 4px 0 #003328, 0 7px 12px rgba(0,0,0,0.75);
  z-index: 2;
  }
  .logo-sc-sub-badge {
  margin-top: -2px;
- padding: 2px 9px;
+ padding: 2px 10px;
  border-radius: 99px;
  background: rgba(4, 35, 29, 0.94);
  border: 1.5px solid #34d399;
  color: #ecfdf5;
- font-size: 11.5px;
+ font-size: 12px;
  font-weight: 800;
  line-height: 1.1;
  letter-spacing: 0.3px;
- box-shadow: 0 2px 5px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
- text-shadow: 0 1px 2px rgba(0,0,0,0.9);
  z-index: 1;
  }
-
  .login-title {
- font-size: var(--font-body-1pt-smaller);
+ font-size: var(--font-xl);
  font-weight: 900;
  color: var(--wa-text);
  text-align: center;
@@ -144,7 +139,7 @@
  line-height: 1.2;
  }
  .login-subtitle {
- font-size: var(--font-body-1pt-smaller);
+ font-size: var(--font-lg);
  color: var(--wa-green);
  text-align: center;
  text-transform: uppercase;
@@ -154,28 +149,27 @@
  }
  .pwa-warning-box {
  background: rgba(234, 67, 53, 0.18);
- border: 1.5px solid #ea4335;
- border-radius: 12px;
- padding: 10px 12px;
+ border: 2px solid #ea4335;
+ border-radius: 14px;
+ padding: 12px 14px;
  color: #fca5a5;
- font-size: var(--font-body-1pt-smaller);
- line-height: 1.3;
- box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+ font-size: var(--font-lg);
+ line-height: 1.35;
  }
  .pwa-warning-title {
  font-weight: 900;
  color: #f87171;
- margin-bottom: 4px;
- font-size: var(--font-body-1pt-smaller);
+ margin-bottom: 6px;
+ font-size: var(--font-lg);
  text-transform: uppercase;
  }
  .pwa-warning-box ol {
- padding-left: 24px;
- margin-top: 4px;
- font-weight: 600;
+ padding-left: 26px;
+ margin-top: 6px;
+ font-weight: 700;
  }
  .pwa-warning-box li {
- margin-bottom: 4px;
+ margin-bottom: 5px;
  color: var(--wa-text);
  }
  .field-group {
@@ -184,55 +178,52 @@
  }
  .field-group label {
  display: block;
- font-size: var(--font-body-1pt-smaller);
+ font-size: var(--font-lg);
  color: var(--wa-green);
- margin-bottom: 5px;
- font-weight: 800;
+ margin-bottom: 6px;
+ font-weight: 900;
  letter-spacing: 0.5px;
  line-height: 1.2;
  }
  .field-group input {
  width: 100%;
- padding: 12px 54px 12px 14px;
+ padding: 16px 64px 16px 16px;
  background: var(--wa-card);
- border: 1.5px solid var(--wa-border);
- border-radius: 14px;
+ border: 2px solid var(--wa-border);
+ border-radius: 16px;
  color: var(--wa-text);
- font-size: var(--font-body-1pt-smaller);
- font-weight: 700;
+ font-size: var(--font-lg);
+ font-weight: 800;
  outline: none;
- transition: border-color 0.15s;
- min-height: 56px;
- box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+ min-height: 68px;
  }
  .field-group input:focus {
  border-color: var(--wa-green);
  }
  .password-toggle {
  position: absolute;
- right: 14px;
+ right: 16px;
  top: 50%;
  transform: translateY(-50%);
  cursor: pointer;
- font-size: 30px;
+ font-size: 36px;
  user-select: none;
  color: var(--wa-text-secondary);
  }
-
  .btn-3d-robotic {
  width: 100%;
  background: var(--wa-green);
  color: var(--wa-panel);
  border: none;
- padding: 14px;
- border-radius: 14px;
- font-size: var(--font-body-1pt-smaller);
+ padding: 16px;
+ border-radius: 18px;
+ font-size: var(--font-xl);
  font-weight: 900;
  cursor: pointer;
  letter-spacing: 1px;
  text-transform: uppercase;
  box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
- min-height: 58px;
+ min-height: var(--btn-h);
  margin-top: 4px;
  }
  .btn-3d-robotic:disabled {
