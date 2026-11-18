@@ -1,347 +1,114 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Sc-SansChat - Selamat Datang</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#0b141a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<style>
-  :root {
-    --wa-bg: #0b141a;
-    --wa-panel: #111b21;
-    --wa-card: #182229;
-    --wa-border: #2a3942;
-    --wa-green: #00a884;
-    --wa-green-light: #25d366;
-    --wa-text: #e9edef;
-    --wa-text-secondary: #8696a0;
-    --font-xl: clamp(32px, 9.2vw, 48px);
-    --font-lg: clamp(26px, 7.2vw, 38px);
-    --btn-h: 86px;
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  html, body {
-    width: 100%;
-    min-height: 100dvh;
-    background-color: var(--wa-bg);
-    color: var(--wa-text);
-    overflow-x: hidden;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 5px;
-  }
-  .welcome-container {
-    background: var(--wa-panel);
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 18px 12px;
-    text-align: center;
-    border: 3px solid var(--wa-green);
-    border-radius: 22px;
-    box-shadow: 0 0 36px rgba(0,0,0,0.9);
-    gap: 14px;
-  }
-  .welcome-title {
-    font-size: var(--font-xl);
-    font-weight: 900;
-    color: var(--wa-text);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    line-height: 1.15;
-    width: 100%;
-  }
-  .logo-sc-3d-large {
-    width: 148px;
-    height: 148px;
-    margin: 0 auto;
-    background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
-    border-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    flex-shrink: 0;
-    box-shadow:
-      0 12px 28px rgba(0, 168, 132, 0.5),
-      0 5px 0 #003d31,
-      inset 0 2px 6px rgba(255,255,255,0.4),
-      inset 0 -4px 8px rgba(0,0,0,0.45);
-    border: 3.5px solid var(--wa-green-light);
-  }
-  .logo-sc-3d-large::before {
-    content: "";
-    position: absolute;
-    top: 7px;
-    left: 7px;
-    right: 7px;
-    bottom: 7px;
-    border-radius: 21px;
-    border: 1.5px solid rgba(167, 243, 208, 0.35);
-    pointer-events: none;
-  }
-  .logo-sc-main-txt {
-    font-weight: 900;
-    font-size: 68px;
-    line-height: 0.86;
-    color: #ffffff;
-    letter-spacing: -1.5px;
-    text-shadow: 0 2px 0 #004d3d, 0 4px 0 #003328, 0 7px 12px rgba(0,0,0,0.75);
-    z-index: 2;
-  }
-  .logo-sc-sub-badge {
-    margin-top: -2px;
-    padding: 3px 12px;
-    border-radius: 99px;
-    background: rgba(4, 35, 29, 0.94);
-    border: 1.5px solid #34d399;
-    color: #ecfdf5;
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: 0.3px;
-    z-index: 1;
-  }
-  .brand-sub {
-    font-size: var(--font-lg);
-    font-weight: 900;
-    color: var(--wa-green);
-    line-height: 1.15;
-  }
-  .welcome-email {
-    font-size: var(--font-lg);
-    color: var(--wa-text-secondary);
-    background: var(--wa-card);
-    padding: 14px 16px;
-    border-radius: 16px;
-    border: 1.5px solid var(--wa-border);
-    font-weight: 800;
-    word-break: break-all;
-    width: 100%;
-    line-height: 1.25;
-  }
-  .pwa-instruction-box {
-    background: var(--wa-card);
-    border: 1.5px solid var(--wa-border);
-    border-radius: 18px;
-    padding: 16px;
-    text-align: left;
-    width: 100%;
-  }
-  .pwa-status-badge {
-    display: block;
-    font-size: var(--font-lg);
-    font-weight: 900;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    width: 100%;
-    text-align: center;
-    line-height: 1.25;
-  }
-  .badge-installed {
-    background: rgba(0, 168, 132, 0.18);
-    color: var(--wa-green-light);
-    border: 2px solid var(--wa-green);
-  }
-  .badge-browser {
-    background: rgba(234, 67, 53, 0.15);
-    color: #fca5a5;
-    border: 2px solid #ea4335;
-  }
-  .pwa-instruction-title {
-    font-size: var(--font-lg);
-    font-weight: 900;
-    color: var(--wa-green);
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 1.25;
-  }
-  .pwa-instruction-steps {
-    font-size: var(--font-lg);
-    color: #d1d7db;
-    line-height: 1.38;
-    padding-left: 32px;
-    font-weight: 700;
-  }
-  .pwa-instruction-steps li {
-    margin-bottom: 8px;
-  }
-  .btn-install-native {
-    width: 100%;
-    margin-top: 12px;
-    padding: 18px;
-    border-radius: 18px;
-    border: none;
-    background: var(--wa-green);
-    color: var(--wa-panel);
-    font-weight: 900;
-    font-size: var(--font-lg);
-    cursor: pointer;
-    text-transform: uppercase;
-    min-height: var(--btn-h);
-    box-shadow: 0 6px 18px rgba(0, 168, 132, 0.45);
-  }
-  .btn-ok-robotic {
-    width: 100%;
-    background: var(--wa-green);
-    color: var(--wa-panel);
-    border: none;
-    padding: 18px;
-    border-radius: 20px;
-    font-size: var(--font-xl);
-    font-weight: 900;
-    cursor: pointer;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    box-shadow: 0 6px 22px rgba(0, 168, 132, 0.45);
-    min-height: var(--btn-h);
-  }
-  .footer-tag {
-    font-size: var(--font-lg);
-    color: var(--wa-text-secondary);
-    letter-spacing: 0.5px;
-    font-weight: 800;
-    line-height: 1.25;
-    word-break: break-word;
-  }
-  .reset-banner {
-    background: rgba(0, 168, 132, 0.22);
-    border: 2px solid var(--wa-green-light);
-    color: #ecfdf5;
-    font-size: var(--font-lg);
-    font-weight: 800;
-    padding: 12px 14px;
-    border-radius: 14px;
-    width: 100%;
-    line-height: 1.25;
-  }
-  .hidden { display: none !important; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sc-SansChat - Portal Warga RW 09</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#111b21">
+    <style>
+        :root {
+            --bg-dark: #0b141a;
+            --panel-bg: rgba(17, 27, 33, 0.85);
+            --accent-green: #00a884;
+            --accent-glow: rgba(0, 168, 132, 0.4);
+            --text-main: #e9edef;
+            --text-muted: #8696a0;
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 20%, #1f2c34 0%, var(--bg-dark) 80%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
+            text-align: center;
+        }
+        .logo-box {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #00a884, #005c4b);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px var(--accent-glow);
+            font-size: 40px;
+        }
+        h1 { font-size: 24px; margin-bottom: 8px; color: #fff; }
+        p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-primary { background: linear-gradient(135deg, #00a884, #008069); color: #fff; box-shadow: 0 4px 15px var(--accent-glow); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-glass); }
+        .footer-tag { margin-top: 20px; font-size: 12px; color: var(--text-muted); }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="logo-box">🛡️</div>
+        <h1>Sc-SansChat RW 09</h1>
+        <p>Aplikasi Komunikasi Resmi Warga Perumahan Griya Taman Asri Cluster Sansiviera Tawangsari Sidoarjo.</p>
+        
+        <button class="btn btn-primary" onclick="window.location.href='./login.html'">🔑 Masuk Portal Warga</button>
+        <button class="btn btn-secondary" id="installBtn" style="display:none;" onclick="installPWA()">📱 Pasang Aplikasi (PWA)</button>
+        
+        <div class="footer-tag">ProJack12-2026 • Secure PWA Environment</div>
+    </div>
 
-<div class="welcome-container">
-  <div class="welcome-title">SELAMAT DATANG</div>
+    <script>
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').style.display = 'flex';
+        });
 
-  <div class="logo-sc-3d-large">
-    <span class="logo-sc-main-txt">Sc</span>
-    <span class="logo-sc-sub-badge">Projack12@06</span>
-  </div>
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installBtn').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
 
-  <div class="brand-sub">Sc-SansChat</div>
-  <div class="welcome-email">wargarw09tawangsari@gmail.com</div>
-
-  <div id="resetCompleteBanner" class="reset-banner hidden">
-    🔄 Reset Logout Selesai! Cache & data lama telah dibersihkan. Silakan instal ulang aplikasi di bawah ini.
-  </div>
-
-  <div class="pwa-instruction-box">
-    <div id="pwaStatusBadge" class="pwa-status-badge badge-browser">📱 Wajib Instal Aplikasi di HP Android</div>
-    <div class="pwa-instruction-title">Langkah Pemasangan Aplikasi</div>
-    <ol class="pwa-instruction-steps">
-      <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
-      <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
-      <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka.</li>
-    </ol>
-    <button id="btnInstallPwaDirect" class="btn-install-native hidden" onclick="triggerNativePwaInstall()">
-      📲 INSTAL ULANG / PASANG APLIKASI
-    </button>
-  </div>
-
-  <button id="btnOkWelcome" class="btn-ok-robotic" onclick="proceedToLogin()">OK</button>
-  <div class="footer-tag">PROJACK12-2026 • RW 09 SANSIVERA</div>
-</div>
-
-<script>
-  let deferredInstallPrompt = null;
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then((reg) => {
-      reg.update();
-    }).catch(() => {});
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredInstallPrompt = e;
-    const btnInstall = document.getElementById('btnInstallPwaDirect');
-    btnInstall.classList.remove('hidden');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('reinstall') === '1') {
-      setTimeout(() => {
-        triggerNativePwaInstall();
-      }, 600);
-    }
-  });
-
-  window.addEventListener('appinstalled', () => {
-    deferredInstallPrompt = null;
-    document.getElementById('btnInstallPwaDirect').classList.add('hidden');
-    updatePwaBadgeStatus();
-  });
-
-  window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('reinstall') === '1') {
-      document.getElementById('resetCompleteBanner').classList.remove('hidden');
-    }
-    updatePwaBadgeStatus();
-  };
-
-  function updatePwaBadgeStatus() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const badge = document.getElementById('pwaStatusBadge');
-    if (isStandalone) {
-      badge.className = "pwa-status-badge badge-installed";
-      badge.innerText = "✅ Aplikasi Sudah Terinstal di HP Anda";
-    } else {
-      badge.className = "pwa-status-badge badge-browser";
-      badge.innerText = "⚠️ Mode Browser — Wajib Instal ke Layar Utama";
-    }
-  }
-
-  function triggerNativePwaInstall() {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then(() => {
-      deferredInstallPrompt = null;
-      document.getElementById('btnInstallPwaDirect').classList.add('hidden');
-    });
-  }
-
-  function proceedToLogin() {
-    const btn = document.getElementById('btnOkWelcome');
-    btn.innerText = "MEMBUKA LOGIN...";
-    btn.disabled = true;
-
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission().catch(() => {});
-    }
-
-    const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
-    window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
-  }
-</script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+        }
+    </script>
 </body>
 </html>
