@@ -250,10 +250,6 @@ function getUserProfileDetail(username) {
   return null;
 }
 
-/**
- * Mendapatkan daftar grup/chat yang diassign ke user berdasarkan Role user
- * dicocokkan dengan Sheet NamaGrup (Kolom A: Nama Grup, Kolom B: Sheet Chat, Kolom D: Foto Grup).
- */
 function getUserAssignedGroups(username) {
   const ss = getSpreadsheet();
   const userSheet = ss.getSheetByName("Users");
@@ -281,13 +277,10 @@ function getUserAssignedGroups(username) {
     const gName = String(groupData[j][0] || "").trim();
     const sName = String(groupData[j][1] || "").trim();
     const gFoto = String(groupData[j][3] || "").trim();
-    
-    // Pastikan user memiliki role yang sama dengan Nama Grup (Kolom A)
     if (gName !== "" && userRoles.includes(gName.toUpperCase())) {
       let lastMessage = "";
       let lastTime = "";
-      const targetSheetName = sName !== "" ? sName : gName;
-      const chatSheet = resolveChatSheet(ss, targetSheetName);
+      const chatSheet = resolveChatSheet(ss, sName || gName);
       if (chatSheet && chatSheet.getLastRow() >= 2) {
         const lastRowVals = chatSheet.getRange(chatSheet.getLastRow(), 1, 1, 4).getValues()[0];
         lastTime = (lastRowVals[0] instanceof Date) ? lastRowVals[0].toISOString() : String(lastRowVals[0] || "");
@@ -295,7 +288,7 @@ function getUserAssignedGroups(username) {
       }
       assignedRooms.push({
         name: gName,
-        sheetName: sName !== "" ? sName : gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, ""),
+        sheetName: sName || gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, ""),
         foto: gFoto,
         lastMessage: lastMessage,
         lastTime: lastTime
@@ -381,7 +374,12 @@ function resolveChatSheet(ss, chatSheetName) {
   let sheet = ss.getSheetByName(raw);
   if (sheet) return sheet;
 
-  // Cek tabel NamaGrup kolom A (Nama Grup) -> kolom B (Sheet Chat)
+  // Fallback 1: Jika dikirim "Grup RT38", coba "ChatRT38"
+  const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+  sheet = ss.getSheetByName(altChat);
+  if (sheet) return sheet;
+
+  // Fallback 2: Cek tabel NamaGrup kolom A (Nama Grup) -> kolom B (Sheet Chat)
   const ng = ss.getSheetByName("NamaGrup");
   if (ng && ng.getLastRow() >= 2) {
     const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
@@ -395,12 +393,7 @@ function resolveChatSheet(ss, chatSheetName) {
     }
   }
 
-  // Fallback 1: Jika dikirim "Grup RT38", coba "ChatRT38"
-  const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
-  sheet = ss.getSheetByName(altChat);
-  if (sheet) return sheet;
-
-  // Fallback 2: Pencarian case-insensitive di seluruh tab sheet
+  // Fallback 3: Pencarian case-insensitive di seluruh tab sheet
   const allSheets = ss.getSheets();
   for (let j = 0; j < allSheets.length; j++) {
     if (allSheets[j].getName().trim().toUpperCase() === raw.toUpperCase()) {
