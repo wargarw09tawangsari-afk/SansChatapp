@@ -1489,7 +1489,7 @@
     <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
   </div>
 
-  <!-- POPUP PILIHAN TELPON / VIDEO CALL SAAT NAMA DI AREA CHAT DIKLIK -->
+  <!-- POPUP PILIHAN TELPON / VIDEO CALL SAAT NAMA WARGA DIKLIK DI HALAMAN KEDUA (APLIKASI CHAT) -->
   <div id="senderInlineCallPopup" class="sender-inline-call-menu hidden" onclick="event.stopPropagation()">
     <div class="sender-inline-header" id="senderInlineHeaderTitle">📞 Hubungi Warga</div>
     <button type="button" class="combo-menu-item" onclick="executeDirectCallFromSender('voice')">📞 Telpon</button>
@@ -1667,11 +1667,12 @@
 
   function escapeJsStr(str) {
     return String(str || "")
-      .replace(/\\/g, "\\\\")
-      .replace(/'/g, "\\'")
+      .replace(/\/g, "\\")
+      .replace(/'/g, "\'")
       .replace(/"/g, "&quot;")
-      .replace(/\n/g, " ")
-      .replace(/\r/g, "");
+      .replace(/
+/g, " ")
+      .replace(//g, "");
   }
 
   function escapeHtml(str) {
@@ -2372,7 +2373,7 @@
 
   function openChatRoom(sheetName, name, foto) {
     isPrivateChatMode = false;
-    activeChatSheet = sheetName || name.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+    activeChatSheet = sheetName;
     activeGroupName = name;
     cancelReplyQuote();
 
@@ -2480,6 +2481,9 @@
     document.getElementById('replyPreviewText').innerText = "";
   }
 
+  /**
+   * Mengaktifkan popup pilihan Telpon & Video Call ketika nama warga diklik di area chat (Halaman Kedua)
+   */
   function openSenderActionMenu(event, senderUsername, senderNama) {
     if (event) event.stopPropagation();
     const targetU = String(senderUsername || senderNama || "").trim().toUpperCase();
