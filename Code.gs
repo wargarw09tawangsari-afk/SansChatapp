@@ -61,6 +61,12 @@ function doPost(e) {
       case 'loginUser':
         result = loginUser(payload.username, payload.password);
         break;
+      case 'loginUserWithBundle':
+        result = loginUserWithBundle(payload.username, payload.password);
+        break;
+      case 'getGroupMappings':
+        result = getGroupMappings();
+        break;
       case 'getInitialDashboardBundle':
         result = getInitialDashboardBundle(payload.username);
         break;
@@ -215,11 +221,43 @@ function loginUser(username, password) {
   return { success: false, message: "Username atau Password Salah!" };
 }
 
+function loginUserWithBundle(username, password) {
+  const auth = loginUser(username, password);
+  if (!auth || !auth.success) return auth;
+  const cleanUser = auth.user.username;
+  auth.bundle = getInitialDashboardBundle(cleanUser);
+  return auth;
+}
+
+function getGroupMappings() {
+  const ss = getSpreadsheet();
+  const ng = ss.getSheetByName("NamaGrup");
+  if (!ng || ng.getLastRow() < 2) return [];
+  const data = ng.getRange(2, 1, ng.getLastRow() - 1, Math.max(4, ng.getLastColumn())).getValues();
+  const mappings = [];
+  for (let i = 0; i < data.length; i++) {
+    const colA = String(data[i][0] || "").trim(); // Nama Grup
+    const colB = String(data[i][1] || "").trim(); // Nama Sheet Chat (misal ChatRT38)
+    const colC = String(data[i][2] || "").trim(); // Pengaturan Kolom Log
+    const colD = String(data[i][3] || "").trim(); // Foto Grup
+    if (colA || colB) {
+      mappings.push({
+        groupName: colA,
+        sheetName: colB || colA.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, ""),
+        colSetting: colC,
+        foto: colD
+      });
+    }
+  }
+  return mappings;
+}
+
 function getInitialDashboardBundle(username) {
   const cleanUser = String(username || "").trim().toUpperCase();
   return {
     profile: getUserProfileDetail(cleanUser),
     groups: getUserAssignedGroups(cleanUser),
+    groupMappings: getGroupMappings(),
     announcements: getAnnouncements(),
     hasUnreadPrivate: hasUnreadPrivateMessages(cleanUser),
     incomingCall: checkIncomingCall(cleanUser)
@@ -274,21 +312,26 @@ function getUserAssignedGroups(username) {
   const groupData = groupSheet.getDataRange().getValues();
   let assignedRooms = [];
   for (let j = 1; j < groupData.length; j++) {
-    const gName = String(groupData[j][0] || "").trim();
-    const sName = String(groupData[j][1] || "").trim();
-    const gFoto = String(groupData[j][3] || "").trim();
-    if (gName !== "" && userRoles.includes(gName.toUpperCase())) {
+    const gName = String(groupData[j][0] || "").trim(); // Kolom A: Nama Grup (contoh: Grup RT38)
+    const sName = String(groupData[j][1] || "").trim(); // Kolom B: Nama Sheet (contoh: ChatRT38)
+    const gColSetting = String(groupData[j][2] || "").trim(); // Kolom C: Pengaturan Kolom
+    const gFoto = String(groupData[j][3] || "").trim(); // Kolom D: Foto Grup
+
+    if (gName !== "" && (userRoles.includes(gName.toUpperCase()) || (sName && userRoles.includes(sName.toUpperCase())))) {
       let lastMessage = "";
       let lastTime = "";
-      const chatSheet = resolveChatSheet(ss, sName || gName);
+      const targetSheetName = sName || gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+      const chatSheet = resolveChatSheet(ss, targetSheetName, gName);
       if (chatSheet && chatSheet.getLastRow() >= 2) {
         const lastRowVals = chatSheet.getRange(chatSheet.getLastRow(), 1, 1, 4).getValues()[0];
         lastTime = (lastRowVals[0] instanceof Date) ? lastRowVals[0].toISOString() : String(lastRowVals[0] || "");
+        // Kolom C (index 2) = Pengirim, Kolom D (index 3) = Isi Pesan/Log
         lastMessage = (lastRowVals[2] ? lastRowVals[2] + ": " : "") + String(lastRowVals[3] || "");
       }
       assignedRooms.push({
         name: gName,
-        sheetName: sName || gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, ""),
+        sheetName: chatSheet ? chatSheet.getName() : targetSheetName,
+        colSetting: gColSetting,
         foto: gFoto,
         lastMessage: lastMessage,
         lastTime: lastTime
@@ -369,34 +412,44 @@ function getGroupMembersByRole(groupName) {
   return members;
 }
 
-function resolveChatSheet(ss, chatSheetName) {
-  const raw = String(chatSheetName || "ChatRT37").trim();
-  let sheet = ss.getSheetByName(raw);
-  if (sheet) return sheet;
-
-  // Fallback 1: Jika dikirim "Grup RT38", coba "ChatRT38"
-  const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
-  sheet = ss.getSheetByName(altChat);
-  if (sheet) return sheet;
-
-  // Fallback 2: Cek tabel NamaGrup kolom A (Nama Grup) -> kolom B (Sheet Chat)
+function lookupTargetSheetNameFromNamaGrup(ss, rawSheetOrGroup, fallbackGroupName) {
+  const q1 = String(rawSheetOrGroup || "").trim();
+  const q2 = String(fallbackGroupName || "").trim();
   const ng = ss.getSheetByName("NamaGrup");
   if (ng && ng.getLastRow() >= 2) {
     const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
     for (let i = 0; i < ngData.length; i++) {
-      const gName = String(ngData[i][0] || "").trim();
-      const sName = String(ngData[i][1] || "").trim();
-      if (gName.toUpperCase() === raw.toUpperCase() || sName.toUpperCase() === raw.toUpperCase()) {
-        if (sName && ss.getSheetByName(sName)) return ss.getSheetByName(sName);
-        if (gName && ss.getSheetByName(gName)) return ss.getSheetByName(gName);
+      const colA = String(ngData[i][0] || "").trim(); // Kolom A: Nama Grup
+      const colB = String(ngData[i][1] || "").trim(); // Kolom B: Sheet Chat (misal ChatRT38)
+      if ((q1 && (colA.toUpperCase() === q1.toUpperCase() || colB.toUpperCase() === q1.toUpperCase())) ||
+          (q2 && (colA.toUpperCase() === q2.toUpperCase() || colB.toUpperCase() === q2.toUpperCase()))) {
+        if (colB) return colB;
       }
     }
   }
+  return q1 || q2.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+}
 
-  // Fallback 3: Pencarian case-insensitive di seluruh tab sheet
+function resolveChatSheet(ss, chatSheetName, groupName) {
+  // Prioritas Utama: Selalu sinkronkan dengan sheet "NamaGrup" kolom A -> kolom B
+  const mappedSheetName = lookupTargetSheetNameFromNamaGrup(ss, chatSheetName, groupName);
+  let sheet = ss.getSheetByName(mappedSheetName);
+  if (sheet) return sheet;
+
+  const raw = String(chatSheetName || "").trim();
+  if (raw) {
+    sheet = ss.getSheetByName(raw);
+    if (sheet) return sheet;
+    const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+    sheet = ss.getSheetByName(altChat);
+    if (sheet) return sheet;
+  }
+
+  // Pencarian case-insensitive di seluruh tab sheet
   const allSheets = ss.getSheets();
+  const targetUpper = mappedSheetName.toUpperCase();
   for (let j = 0; j < allSheets.length; j++) {
-    if (allSheets[j].getName().trim().toUpperCase() === raw.toUpperCase()) {
+    if (allSheets[j].getName().trim().toUpperCase() === targetUpper) {
       return allSheets[j];
     }
   }
@@ -408,17 +461,20 @@ function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, reply
   lock.tryLock(10000);
   try {
     const ss = getSpreadsheet();
-    const targetRoom = String(chatSheetName || "ChatRT37").trim();
-    let sheet = resolveChatSheet(ss, targetRoom);
+    const mappedName = lookupTargetSheetNameFromNamaGrup(ss, chatSheetName, "");
+    let sheet = resolveChatSheet(ss, mappedName, "");
     if (!sheet) {
-      const safeName = targetRoom.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+      const safeName = mappedName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
       sheet = ss.insertSheet(safeName);
+      // Kolom A: Timestamp, Kolom B: SenderUsername, Kolom C: SenderNama, Kolom D: Pesan/Aktivitas, Kolom E: Tipe, Kolom F: MediaUrl, Kolom G: ReplyTo, Kolom H: ReadBy
       sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
     }
     const cleanUser = String(username || "").trim().toUpperCase();
-    sheet.appendRow([new Date(), cleanUser, nama || cleanUser, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
+    const cleanNama = String(nama || cleanUser).trim();
+    // Simpan sesuai struktur log sheet grup: Kolom C = SenderNama, Kolom D = Pesan/Aktivitas
+    sheet.appendRow([new Date(), cleanUser, cleanNama, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
     SpreadsheetApp.flush();
-    return { success: true };
+    return { success: true, resolvedSheet: sheet.getName() };
   } finally {
     lock.releaseLock();
   }
@@ -426,7 +482,7 @@ function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, reply
 
 function getMessages(chatSheetName, readerUsername) {
   const ss = getSpreadsheet();
-  const sheet = resolveChatSheet(ss, chatSheetName);
+  const sheet = resolveChatSheet(ss, chatSheetName, "");
   if (!sheet || sheet.getLastRow() < 2) return [];
 
   const lastRow = sheet.getLastRow();
@@ -438,6 +494,17 @@ function getMessages(chatSheetName, readerUsername) {
   for (let i = 0; i < data.length; i++) {
     let rawTime = data[i][0];
     let timeStr = (rawTime instanceof Date) ? rawTime.toISOString() : String(rawTime || "");
+    // Kolom B (index 1) = Username, Kolom C (index 2) = Nama Sender, Kolom D (index 3) = Isi Pesan / Log Aktivitas
+    let colBUser = String(data[i][1] || "").trim();
+    let colCSender = String(data[i][2] || "").trim();
+    let colDPesan = String(data[i][3] || "").trim();
+    let colETipe = String(data[i][4] || "text").trim();
+    let colFMedia = String(data[i][5] || "").trim();
+    let colGReply = String(data[i][6] || "").trim();
+
+    // Lewati baris kosong total di kolom C dan D
+    if (!colCSender && !colDPesan && !colFMedia) continue;
+
     let readByStr = String(data[i][7] || "");
     let readList = readByStr ? readByStr.split(",").map(s => s.trim().toUpperCase()).filter(Boolean) : [];
 
@@ -448,13 +515,14 @@ function getMessages(chatSheetName, readerUsername) {
 
     msgs.push({
       rowNumber: i + 2,
+      resolvedSheet: sheet.getName(),
       timestamp: timeStr,
-      senderUsername: String(data[i][1] || ""),
-      senderNama: String(data[i][2] || ""),
-      pesan: String(data[i][3] || ""),
-      tipe: String(data[i][4] || "text"),
-      mediaUrl: String(data[i][5] || ""),
-      replyTo: String(data[i][6] || ""),
+      senderUsername: colBUser || colCSender.toUpperCase(),
+      senderNama: colCSender || colBUser,
+      pesan: colDPesan,
+      tipe: colETipe || "text",
+      mediaUrl: colFMedia,
+      replyTo: colGReply,
       readCount: readList.length
     });
   }

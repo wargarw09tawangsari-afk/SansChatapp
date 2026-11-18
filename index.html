@@ -237,6 +237,8 @@
   }
   .hidden { display: none !important; }
 </style>
+<link rel="prefetch" href="login.html" as="document">
+<link rel="preload" href="login.html" as="fetch" crossorigin="anonymous">
 </head>
 <body>
 
@@ -330,17 +332,27 @@
     });
   }
 
+  // Pre-warm cache login.html & utama.html di background agar transisi instan tanpa jeda
+  (function warmUpPagesInBackground() {
+    try {
+      fetch('./login.html', { cache: 'force-cache' }).catch(() => {});
+      fetch('./utama.html', { cache: 'force-cache' }).catch(() => {});
+    } catch (e) {}
+  })();
+
   function proceedToLogin() {
     const btn = document.getElementById('btnOkWelcome');
     btn.innerText = "MEMBUKA LOGIN...";
     btn.disabled = true;
 
     if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission().catch(() => {});
+      try { Notification.requestPermission().catch(() => {}); } catch (e) {}
     }
 
+    // Bypass cache & langsung replace ke login.html agar zero-latency
     const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
-    window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
+    const loginUrl = (base.endsWith('/') ? base : base + '/') + "login.html?bypass=1";
+    window.location.replace(loginUrl);
   }
 </script>
 </body>

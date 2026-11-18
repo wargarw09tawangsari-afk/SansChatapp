@@ -233,6 +233,9 @@
   }
   .hidden { display: none !important; }
 </style>
+<link rel="prefetch" href="utama.html" as="document">
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
 </head>
 <body>
 <div class="login-container">
@@ -314,19 +317,37 @@
     }
   }
 
-  function saveUserMemoryAndRedirect(userObj) {
+  // Pre-warm utama.html di cache agar langsung terbuka tanpa delay saat login sukses
+  (function warmUpUtamaPage() {
+    try { fetch('./utama.html', { cache: 'force-cache' }).catch(() => {}); } catch (e) {}
+  })();
+
+  function getUtamaBypassUrl(cleanUsername) {
+    const base = window.location.href.split('?')[0].replace(/login\.html$/, '').replace(/index\.html$/, '');
+    return (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(cleanUsername) + "&bypass=1";
+  }
+
+  function saveUserMemoryAndRedirect(userObj, bundleData) {
     const cleanUsername = String(userObj.username || "").trim().toUpperCase();
     try {
       localStorage.setItem('sanschat_active_username', cleanUsername);
       localStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
       sessionStorage.setItem('sanschat_active_username', cleanUsername);
       sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+      if (bundleData) {
+        if (bundleData.groups) {
+          localStorage.setItem('sanschat_groups_' + cleanUsername, JSON.stringify(bundleData.groups));
+        }
+        if (bundleData.announcements && bundleData.announcements.length > 0) {
+          localStorage.setItem('sanschat_announcements', JSON.stringify(bundleData.announcements));
+        }
+        if (bundleData.groupMappings) {
+          localStorage.setItem('sanschat_group_mappings', JSON.stringify(bundleData.groupMappings));
+        }
+      }
     } catch (e) {}
 
-    const base = window.location.href.split('?')[0].replace(/login\.html$/, '').replace(/index\.html$/, '');
-    const finalUtamaUrl = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(cleanUsername);
-
-    window.location.href = finalUtamaUrl;
+    window.location.replace(getUtamaBypassUrl(cleanUsername));
   }
 
   function doLogin() {
@@ -346,17 +367,41 @@
     btn.innerText = "MEMVERIFIKASI...";
     btn.disabled = true;
 
+    // Fast-track bypass jika sesi & password lokal sudah terverifikasi sebelumnya (0ms langsung buka utama.html, sinkronisasi lanjut di background)
+    let cachedSession = null;
+    try {
+      cachedSession = JSON.parse(localStorage.getItem('sanschat_user_session') || 'null');
+    } catch (e) {}
+    const savedPassHash = localStorage.getItem('sanschat_pass_' + u);
+
+    if (cachedSession && cachedSession.username === u && savedPassHash && savedPassHash === btoa(p)) {
+      btn.innerText = "BYPASS MASUK CEPAT...";
+      // Tetap kirim verifikasi background dengan keepalive agar sesi server aktif
+      try {
+        fetch(S3_API_BASE, {
+          method: 'POST',
+          keepalive: true,
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'loginUserWithBundle', username: u, password: p })
+        }).catch(() => {});
+      } catch (e) {}
+      saveUserMemoryAndRedirect(cachedSession, null);
+      return;
+    }
+
+    // Login sekaligus tarik bundle dashboard dalam 1x round-trip agar utama.html langsung terisi tanpa loading kedua
     fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
+      body: JSON.stringify({ action: 'loginUserWithBundle', username: u, password: p })
     })
     .then(r => r.json())
     .then(resObj => {
       const res = resObj.data;
       if (res && res.success && res.user) {
+        try { localStorage.setItem('sanschat_pass_' + u, btoa(p)); } catch (e) {}
         btn.innerText = "MEMBUKA HALAMAN UTAMA...";
-        saveUserMemoryAndRedirect(res.user);
+        saveUserMemoryAndRedirect(res.user, res.bundle || null);
       } else {
         btn.innerText = "VERIFIKASI & MASUK";
         btn.disabled = false;
