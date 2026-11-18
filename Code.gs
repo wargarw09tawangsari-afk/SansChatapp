@@ -6,9 +6,6 @@
  */
 const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
 
-/**
- * Handle HTTP GET Request
- */
 function doGet(e) {
   ensureDefaultSheets();
   const params = (e && e.parameter) ? e.parameter : {};
@@ -25,16 +22,6 @@ function doGet(e) {
 
   const page = String(params.page || "").trim().toLowerCase();
   const userParam = String(params.user || "").trim().toUpperCase();
-
-  if (page === 'login') {
-    const tmpl = HtmlService.createTemplateFromFile('login');
-    tmpl.s3Url = getSansChatUrl();
-    tmpl.s1Url = getHelpSystemUrl();
-    return tmpl.evaluate()
-      .setTitle('Sc-SansChat - Access Portal')
-      .addMetaTag('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  }
 
   if (page === 'utama') {
     const tmpl = HtmlService.createTemplateFromFile('utama');
@@ -54,9 +41,6 @@ function doGet(e) {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
-/**
- * Handle HTTP POST Request (API Router)
- */
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents);
@@ -142,11 +126,6 @@ function doPost(e) {
   }
 }
 
-/**
- * ============================================================================
- * DATABASE & SETUP HELPERS
- * ============================================================================
- */
 function getSpreadsheet() {
   return SpreadsheetApp.openById(SPREADSHEET_ID);
 }
@@ -167,7 +146,7 @@ function ensureDefaultSheets() {
   if (!ss.getSheetByName("Informasi")) {
     const inf = ss.insertSheet("Informasi");
     inf.appendRow(["Isi Pengumuman"]);
-    inf.appendRow(["Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga."]);
+    inf.appendRow(["Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk aktif memantau grup masing-masing."]);
   }
   if (!ss.getSheetByName("ChatPrivat")) {
     const cp = ss.insertSheet("ChatPrivat");
@@ -199,11 +178,6 @@ function getScriptUrl() {
   return (s3 && s3.startsWith("http")) ? s3 : ScriptApp.getService().getUrl();
 }
 
-/**
- * ============================================================================
- * AUTHENTICATION & PROFILE
- * ============================================================================
- */
 function loginUser(username, password) {
   const ss = getSpreadsheet();
   const sheet = ss.getSheetByName("Users");
@@ -294,11 +268,6 @@ function getAllWargaContacts() {
   })).filter(r => r.username && r.nama);
 }
 
-/**
- * ============================================================================
- * GROUPS & MAPPINGS
- * ============================================================================
- */
 function getGroupMappings() {
   const ss = getSpreadsheet();
   const ng = ss.getSheetByName("NamaGrup");
@@ -306,10 +275,10 @@ function getGroupMappings() {
   const data = ng.getRange(2, 1, ng.getLastRow() - 1, Math.max(4, ng.getLastColumn())).getValues();
   const mappings = [];
   for (let i = 0; i < data.length; i++) {
-    const colA = String(data[i][0] || "").trim(); // Nama Grup
-    const colB = String(data[i][1] || "").trim(); // Nama Sheet Chat
-    const colC = String(data[i][2] || "").trim(); // Pengaturan Kolom
-    const colD = String(data[i][3] || "").trim(); // Foto Grup
+    const colA = String(data[i][0] || "").trim();
+    const colB = String(data[i][1] || "").trim();
+    const colC = String(data[i][2] || "").trim();
+    const colD = String(data[i][3] || "").trim();
     if (colA || colB) {
       mappings.push({
         groupName: colA,
@@ -434,11 +403,6 @@ function getGroupMembersByRole(groupName) {
   return members;
 }
 
-/**
- * ============================================================================
- * CHAT & RESOLUTION HELPERS
- * ============================================================================
- */
 function lookupTargetSheetNameFromNamaGrup(ss, rawSheetOrGroup, fallbackGroupName) {
   const q1 = String(rawSheetOrGroup || "").trim();
   const q2 = String(fallbackGroupName || "").trim();
@@ -447,8 +411,8 @@ function lookupTargetSheetNameFromNamaGrup(ss, rawSheetOrGroup, fallbackGroupNam
   if (ng && ng.getLastRow() >= 2) {
     const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, ng.getLastColumn()).getValues();
     for (let i = 0; i < ngData.length; i++) {
-      const colA = String(ngData[i][0] || "").trim(); // Nama Grup
-      const colB = String(ngData[i][1] || "").trim(); // Sheet Chat
+      const colA = String(ngData[i][0] || "").trim();
+      const colB = String(ngData[i][1] || "").trim();
 
       if ((q1 && (colA.toUpperCase() === q1.toUpperCase() || colB.toUpperCase() === q1.toUpperCase())) ||
           (q2 && (colA.toUpperCase() === q2.toUpperCase() || colB.toUpperCase() === q2.toUpperCase()))) {
@@ -571,11 +535,6 @@ function votePollOption(chatSheetName, rowNumber, optionindex, voterUsername) {
   }
 }
 
-/**
- * ============================================================================
- * PRIVATE CHAT
- * ============================================================================
- */
 function sendPrivateMessage(username, nama, pesan, tipe, mediaUrl, targetUsername, replyTo) {
   const lock = LockService.getScriptLock();
   lock.tryLock(10000);
@@ -664,11 +623,6 @@ function markPrivateMessagesAsRead(username) {
   }
 }
 
-/**
- * ============================================================================
- * CALL SYSTEM (PANGGILAN AKTIF)
- * ============================================================================
- */
 function initiateCall(targetUsername, callerUsername, callerName, type, roomUrl) {
   const ss = getSpreadsheet();
   let sheet = ss.getSheetByName("PanggilanAktif");
