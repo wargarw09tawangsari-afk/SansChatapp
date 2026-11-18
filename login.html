@@ -2,104 +2,161 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Login - Sc-SansChat</title>
     <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="./icon-192.png">
     <style>
         :root {
-            --bg-dark: #0b141a;
-            --panel-bg: rgba(17, 27, 33, 0.85);
-            --accent-green: #00a884;
-            --accent-glow: rgba(0, 168, 132, 0.4);
-            --text-main: #e9edef;
-            --text-muted: #8696a0;
-            --border-glass: rgba(255, 255, 255, 0.1);
+            --wa-bg: #0b141a;
+            --wa-panel: #111b21;
+            --wa-card: #182229;
+            --wa-border: #2a3942;
+            --wa-green: #00a884;
+            --wa-green-light: #25d366;
+            --wa-text: #e9edef;
+            --wa-text-secondary: #8696a0;
+            --font-xl: clamp(28px, 8.5vw, 42px);
+            --font-lg: clamp(20px, 6vw, 28px);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 20%, #1f2c34 0%, var(--bg-dark) 80%);
-            color: var(--text-main);
+            background-color: var(--wa-bg);
+            color: var(--wa-text);
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            padding: 12px;
         }
         .login-card {
-            background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-glass);
+            background: var(--wa-panel);
+            width: 100%;
+            max-width: 440px;
+            padding: 24px 20px;
+            border: 3px solid var(--wa-green);
             border-radius: 24px;
-            padding: 30px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 20px var(--accent-glow);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        h2 { text-align: center; margin-bottom: 6px; font-size: 22px; color: #fff; }
-        .subtitle { text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
-        .input-group { margin-bottom: 16px; position: relative; }
-        label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; font-weight: 600; }
-        input {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            color: #fff;
+        .login-title { font-size: var(--font-xl); font-weight: 900; color: #fff; text-align: center; text-transform: uppercase; }
+        .login-subtitle { font-size: var(--font-lg); color: var(--wa-green-light); font-weight: 800; text-align: center; }
+        
+        .pwa-warning-box {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid #ef4444;
+            border-radius: 16px;
+            padding: 14px;
+            color: #fca5a5;
             font-size: 15px;
-            outline: none;
-            text-transform: uppercase;
+            line-height: 1.4;
+            display: none;
         }
-        input#passwordInput { text-transform: none; padding-right: 45px; }
-        input:focus { border-color: var(--accent-green); box-shadow: 0 0 10px var(--accent-glow); }
-        .toggle-pass {
-            position: absolute;
-            right: 14px;
-            top: 36px;
-            background: none;
-            border: none;
-            cursor: pointer;
+        .pwa-warning-title { font-weight: 900; color: #f87171; margin-bottom: 6px; text-transform: uppercase; }
+        .pwa-warning-box ol { padding-left: 20px; margin-top: 6px; }
+        .pwa-warning-box li { margin-bottom: 4px; color: #e9edef; }
+
+        .field-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .field-group label { font-size: 15px; color: var(--wa-green); font-weight: 900; text-transform: uppercase; }
+        .field-group input {
+            width: 100%;
+            padding: 16px 60px 16px 16px;
+            background: var(--wa-card);
+            border: 2px solid var(--wa-border);
+            border-radius: 16px;
+            color: #fff;
             font-size: 18px;
+            font-weight: 800;
+            outline: none;
+        }
+        .field-group input:focus { border-color: var(--wa-green); }
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-20%);
+            cursor: pointer;
+            font-size: 28px;
+            user-select: none;
         }
         .btn-login {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00a884, #008069);
+            padding: 18px;
+            background: var(--wa-green);
+            color: #111b21;
             border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
+            border-radius: 18px;
+            font-size: 20px;
+            font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 4px 15px var(--accent-glow);
-            margin-top: 10px;
+            box-shadow: 0 6px 20px rgba(0, 168, 132, 0.4);
+            text-transform: uppercase;
+            margin-top: 6px;
         }
-        .error-msg { color: #f15c6d; font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+        .btn-login:disabled { background: var(--wa-border); color: var(--wa-text-secondary); cursor: not-allowed; box-shadow: none; }
+        .back-link { text-align: center; margin-top: 8px; font-size: 14px; }
+        .back-link a { color: var(--wa-green-light); text-decoration: none; font-weight: 800; }
     </style>
 </head>
 <body>
     <div class="login-card">
-        <h2>Otentikasi Warga</h2>
-        <div class="subtitle">Masukkan Username & Password terdaftar</div>
-        
-        <div class="input-group">
-            <label>Username / ID Warga</label>
-            <input type="text" id="userInput" placeholder="Contoh: W38AE" autocomplete="off">
-        </div>
-        
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="passwordInput" placeholder="Masukkan password">
-            <button type="button" class="toggle-pass" id="togglePassBtn" onclick="togglePassword()">👁️</button>
+        <div class="login-title">Otentikasi Warga</div>
+        <div class="login-subtitle">RW 09 Cluster Sansiviera</div>
+
+        <div class="pwa-warning-box" id="pwaWarningBox">
+            <div class="pwa-warning-title">⚠️ Akses Dibatasi (Belum Diinstal)</div>
+            <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
+            <ol>
+                <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
+                <li>Pilih <b>"Tambahkan ke Layar Utama" / "Instal Aplikasi"</b>.</li>
+                <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
+            </ol>
         </div>
 
-        <button class="btn-login" onclick="processLogin()">Masuk SansChat</button>
-        <div class="error-msg" id="errorMsg"></div>
+        <div class="field-group">
+            <label>Username / ID Warga</label>
+            <input type="text" id="userInput" placeholder="CONTOH: W38AE" autocomplete="off" oninput="this.value = this.value.toUpperCase(); checkPWAStatus();">
+        </div>
+
+        <div class="field-group">
+            <label>Password / Kode Akses</label>
+            <div style="position:relative;">
+                <input type="password" id="passwordInput" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') processLogin()">
+                <span class="password-toggle" id="togglePassBtn" onclick="togglePassword()">👁️</span>
+            </div>
+        </div>
+
+        <button class="btn-login" id="loginSubmitBtn" onclick="processLogin()">Verifikasi & Masuk</button>
+
+        <div class="back-link">
+            <a href="./index.html">⬅️ Kembali ke Panduan Beranda</a>
+        </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkPWAStatus();
+        });
+
+        function checkPWAStatus() {
+            const userInput = document.getElementById('userInput').value.trim().toUpperCase();
+            const isStandalone = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+            const btn = document.getElementById('loginSubmitBtn');
+            const warningBox = document.getElementById('pwaWarningBox');
+
+            if (userInput === 'ADMINPUSAT' || isStandalone) {
+                btn.disabled = false;
+                warningBox.style.display = 'none';
+            } else {
+                btn.disabled = true;
+                warningBox.style.display = 'block';
+            }
+        }
 
         function togglePassword() {
             const passInput = document.getElementById('passwordInput');
@@ -116,15 +173,21 @@
         async function processLogin() {
             const user = document.getElementById('userInput').value.trim().toUpperCase();
             const pass = document.getElementById('passwordInput').value.trim();
-            const errDiv = document.getElementById('errorMsg');
-            
-            if (!user || !pass) {
-                errDiv.textContent = "Username dan Password wajib diisi!";
-                errDiv.style.display = "block";
+            const isStandalone = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+
+            if (user !== 'ADMINPUSAT' && !isStandalone) {
+                alert("Harap instal aplikasi terlebih dahulu ke layar utama HP Android Anda melalui menu browser.");
                 return;
             }
 
-            errDiv.style.display = "none";
+            if (!user || !pass) {
+                alert("Username dan Password wajib diisi!");
+                return;
+            }
+
+            const btn = document.getElementById('loginSubmitBtn');
+            btn.textContent = "MEMVERIFIKASI...";
+            btn.disabled = true;
 
             try {
                 const response = await fetch(SCRIPT_URL, {
@@ -148,12 +211,14 @@
 
                     window.location.href = `./utama.html?user=${encodeURIComponent(data.user.username)}`;
                 } else {
-                    errDiv.textContent = (data && data.message) ? data.message : "Login gagal, periksa kembali data Anda.";
-                    errDiv.style.display = "block";
+                    btn.textContent = "Verifikasi & Masuk";
+                    btn.disabled = false;
+                    alert((data && data.message) ? data.message : "Login gagal, periksa kembali data Anda.");
                 }
             } catch (e) {
-                errDiv.textContent = "Kesalahan koneksi server.";
-                errDiv.style.display = "block";
+                btn.textContent = "Verifikasi & Masuk";
+                btn.disabled = false;
+                alert("Kesalahan koneksi server Google Apps Script.");
             }
         }
     </script>

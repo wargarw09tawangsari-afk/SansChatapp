@@ -2,158 +2,178 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sc-SansChat - Ruang Warga RW 09</title>
-    <link rel="manifest" href="./manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sc-SansChat - Ruang Utama</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <meta name="theme-color" content="#111b21">
     <style>
         :root {
             --wa-bg: #0b141a;
             --wa-panel: #111b21;
-            --wa-card: #202c33;
+            --wa-card: #182229;
+            --wa-border: #2a3942;
             --wa-green: #00a884;
             --wa-green-light: #25d366;
             --wa-text: #e9edef;
             --wa-text-secondary: #8696a0;
-            --wa-border: #222d34;
-            --font-sm: 14px;
-            --font-md: 16px;
-            --font-lg: 19px;
-            --font-xl: 22px;
-            --btn-touch: 60px;
+            --wa-chat-bg: #efeae2;
+            --font-xl: clamp(34px, 9.5vw, 50px);
+            --font-lg: clamp(28px, 8vw, 42px);
+            --font-md: clamp(24px, 6.8vw, 34px);
+            --btn-touch: 96px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--wa-bg); color: var(--wa-text); height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; height: 100%; height: 100dvh; max-height: 100dvh; background-color: var(--wa-bg); color: var(--wa-text); overflow: hidden; display: flex; justify-content: center; align-items: center; padding: 0 4px; }
         
-        /* APP HEADER */
-        .app-header { background: var(--wa-panel); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--wa-border); z-index: 50; }
-        .app-title { font-size: var(--font-xl); font-weight: 900; color: var(--wa-green-light); display: flex; align-items: center; gap: 8px; }
-        .app-controls { display: flex; align-items: center; gap: 12px; }
-        .btn-header { background: var(--wa-card); border: 1.5px solid var(--wa-border); color: var(--wa-text); padding: 8px 14px; border-radius: 12px; font-weight: 800; font-size: var(--font-sm); cursor: pointer; }
+        .app-container { background: var(--wa-panel); width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 3px solid var(--wa-green); border-radius: 18px; }
+        .view-screen { flex: 1; min-height: 0; width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         
-        /* MAIN LAYOUT */
-        .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
+        /* HEADER UTAMA */
+        .main-header { background: var(--wa-panel); padding: 12px 10px; display: flex; flex-direction: column; border-bottom: 2.5px solid #1f2c34; gap: 10px; flex-shrink: 0; }
+        .header-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; flex-wrap: wrap; }
+        .header-left-group { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .header-right-group { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; }
         
-        /* SIDEBAR CHAT LIST */
-        .sidebar { width: 100%; background: var(--wa-panel); display: flex; flex-direction: column; border-right: 2px solid var(--wa-border); z-index: 10; transition: transform 0.3s ease; }
-        @media(min-width: 768px) { .sidebar { width: 380px; } }
-        .sidebar.hidden-mobile { display: none; }
-        @media(min-width: 768px) { .sidebar.hidden-mobile { display: flex; } }
+        .profile-avatar-clickable { width: 120px; height: 120px; border-radius: 50%; background: #2a3942; border: 4px solid var(--wa-green); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 60px; overflow: hidden; flex-shrink: 0; box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+        .profile-avatar-clickable img { width: 100%; height: 100%; object-fit: cover; }
         
-        .user-profile-bar { padding: 14px 16px; background: var(--wa-card); display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--wa-border); }
-        .user-info-box { display: flex; align-items: center; gap: 12px; }
-        .user-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--wa-green); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; overflow: hidden; }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .user-name { font-size: var(--font-lg); font-weight: 900; color: var(--wa-text); }
-        .user-role { font-size: var(--font-sm); color: var(--wa-green-light); font-weight: 700; }
+        .brand-frame-3d { background: linear-gradient(145deg, #00b890 0%, #005c4b 70%, #042f26 100%); border: 2.5px solid var(--wa-green-light); border-radius: 20px; padding: 10px 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.4); }
+        .brand-line-top { font-size: 42px; font-weight: 900; line-height: 0.84; color: #ffffff; text-shadow: 0 2px 0 #004235, 0 4px 6px rgba(0,0,0,0.85); }
+        .brand-line-sub { font-size: 13px; font-weight: 800; line-height: 1.1; color: #ecfdf5; background: rgba(4, 35, 29, 0.92); border: 1.5px solid #34d399; border-radius: 99px; padding: 3px 8px; margin-top: 1px; margin-bottom: 2px; }
+        .brand-line-bottom { font-size: 17px; font-weight: 800; line-height: 1.1; color: #d1fae5; }
         
-        .rooms-list { flex: 1; overflow-y: auto; padding: 8px; }
-        .room-item { padding: 14px; border-radius: 16px; margin-bottom: 6px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: background 0.2s; background: rgba(255,255,255,0.02); border: 1px solid transparent; }
-        .room-item:hover, .room-item.active { background: var(--wa-card); border-color: var(--wa-border); }
-        .room-avatar { width: 54px; height: 54px; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-        .room-details { flex: 1; min-width: 0; }
-        .room-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .room-name { font-size: var(--font-lg); font-weight: 900; color: var(--wa-text); }
-        .room-time { font-size: var(--font-sm); color: var(--wa-text-secondary); font-weight: 700; }
-        .room-last-msg { font-size: var(--font-md); color: var(--wa-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+        .btn-webaps { background: #202c33; color: var(--wa-green); border: 3px solid var(--wa-green); padding: 16px; min-height: 98px; border-radius: 20px; font-weight: 900; font-size: clamp(20px, 5.2vw, 28px); cursor: pointer; white-space: nowrap; box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
+        .btn-chat-privat { border: none; padding: 12px 16px; min-height: 98px; border-radius: 20px; font-weight: 900; cursor: pointer; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
+        .btn-chat-privat .lbl-top { font-size: clamp(19px, 4.8vw, 25px); display: block; }
+        .btn-chat-privat .lbl-bot { font-size: clamp(19px, 4.8vw, 25px); display: block; }
+        .btn-privat-green { background: var(--wa-green); color: var(--wa-panel); }
+        .btn-privat-red { background: #ea4335; color: #ffffff; }
         
-        /* CHAT WINDOW */
-        .chat-pane { flex: 1; display: none; flex-direction: column; background: #0efe8; background-image: radial-gradient(#1f2c34 1px, transparent 0); background-size: 24px 24px; position: relative; }
-        .chat-pane.active { display: flex; }
-        @media(max-width: 777px) { .chat-pane.active { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 30; } }
+        .btn-logout { background: #202c33; color: #f87171; border: 3px solid #4b5563; padding: 16px; min-height: 98px; border-radius: 20px; font-weight: 900; font-size: clamp(20px, 5.2vw, 28px); cursor: pointer; white-space: nowrap; box-shadow: 0 6px 14px rgba(0,0,0,0.4); }
         
-        .chat-header { background: var(--wa-panel); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--wa-border); }
-        .chat-header-left { display: flex; align-items: center; gap: 12px; }
-        .btn-back-mobile { background: none; border: none; color: var(--wa-text); font-size: 26px; cursor: pointer; display: block; }
-        @media(min-width: 768px) { .btn-back-mobile { display: none; } }
-        .chat-header-info { display: flex; flex-direction: column; cursor: pointer; }
-        .chat-header-title { font-size: var(--font-lg); font-weight: 900; color: var(--wa-text); }
-        .chat-header-status { font-size: var(--font-sm); color: var(--wa-green-light); font-weight: 700; }
+        .user-info-section { display: flex; flex-direction: column; width: 100%; padding: 4px 2px 0 2px; }
+        .user-info-name { font-size: var(--font-xl); font-weight: 900; color: var(--wa-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
+        .user-info-address { font-size: var(--font-lg); color: var(--wa-green-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; font-weight: 800; line-height: 1.25; }
         
-        .chat-header-actions { display: flex; align-items: center; gap: 14px; }
-        .btn-action-icon { background: none; border: none; font-size: 28px; cursor: pointer; padding: 4px; }
+        /* DAFTAR GRUP CHAT */
+        .chat-list-wrapper { flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-list { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; padding: 4px 0 32px 0; }
+        .chat-item { display: flex; padding: 20px 12px; align-items: center; cursor: pointer; transition: background 0.15s; position: relative; flex-shrink: 0; }
+        .chat-item:active { background: #202c33; }
+        .chat-item::after { content: ""; position: absolute; bottom: 0; left: 116px; right: 12px; height: 1.5px; background: #1f2c34; }
         
-        /* MESSAGES AREA */
-        .chat-messages-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 120px; }
-        .message-bubble { max-width: 82%; padding: 12px 16px; border-radius: 18px; position: relative; word-wrap: break-word; box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-size: var(--font-lg); }
-        .message-bubble.incoming { background: var(--wa-panel); align-self: flex-start; border-top-left-radius: 4px; border: 1.5px solid var(--wa-border); }
-        .message-bubble.outgoing { background: #005c4b; align-self: flex-end; border-top-right-radius: 4px; }
+        .avatar { width: 94px; height: 94px; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-size: 46px; margin-right: 14px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.45); }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .chat-details { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+        .chat-title-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+        .chat-name { font-size: var(--font-xl); font-weight: 900; color: var(--wa-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
+        .chat-time { font-size: var(--font-md); color: var(--wa-text-secondary); font-weight: 700; flex-shrink: 0; margin-left: 10px; }
+        .chat-last-msg { font-size: var(--font-lg); color: var(--wa-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; font-weight: 600; }
         
-        .msg-sender-name { font-size: var(--font-sm); color: var(--wa-green-light); font-weight: 900; margin-bottom: 4px; cursor: pointer; text-decoration: underline dotted; }
-        .msg-text-content { color: var(--wa-text); font-weight: 600; white-space: pre-wrap; word-break: break-word; }
-        .msg-meta { font-size: 11px; color: var(--wa-text-secondary); text-align: right; margin-top: 6px; display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-weight: 700; }
+        /* RUANG CHAT AKTIF */
+        .chat-body-wrapper { display: none; flex-direction: column; width: 100%; height: 100%; background: #0b141a; position: relative; }
+        .chat-body-wrapper.active { display: flex; }
+        .chat-room-header { background: var(--wa-panel); padding: 14px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2.5px solid #1f2c34; flex-shrink: 0; }
         
-        /* INPUT & ATTACHMENT MENU */
-        .chat-input-wrapper { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px; background: var(--wa-panel); display: flex; align-items: center; gap: 10px; border-top: 2px solid var(--wa-border); z-index: 65; }
-        .chat-input-pill { flex: 1; background: var(--wa-card); border-radius: 30px; display: flex; align-items: center; padding: 6px 16px; gap: 10px; border: 1.5px solid var(--wa-border); }
-        .chat-input-pill input { flex: 1; background: none; border: none; color: var(--wa-text); font-size: var(--font-lg); font-weight: 700; outline: none; padding: 8px 0; }
-        .pill-icon { font-size: 28px; cursor: pointer; user-select: none; }
-        .send-btn-circle { width: 56px; height: 56px; border-radius: 50%; background: var(--wa-green); color: #fff; display: flex; align-items: center; justify-content: center; border: none; font-size: 26px; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .messages-scroll-area { flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 14px; background-color: #0b141a; background-image: radial-gradient(rgba(0, 168, 132, 0.12) 1.5px, transparent 0); background-size: 24px 24px; padding-bottom: 140px; }
         
-        /* WA ATTACH MENU POPUP */
-        .wa-attach-menu { position: absolute; bottom: 85px; left: 14px; right: 14px; background: var(--wa-panel); border-radius: 24px; padding: 20px 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; border: 3px solid var(--wa-green); box-shadow: 0 14px 40px rgba(0,0,0,0.8); z-index: 75; }
-        .wa-attach-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
-        .wa-attach-circle { width: 68px; height: 68px; border-radius: 50%; background: var(--wa-card); border: 2px solid var(--wa-border); display: flex; align-items: center; justify-content: center; font-size: 32px; }
-        .wa-attach-label { font-size: 13px; font-weight: 800; color: var(--wa-text); text-align: center; }
-
-        /* MODALS */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11,20,26,0.9); z-index: 95; display: flex; justify-content: center; align-items: center; padding: 16px; }
-        .modal-card { background: var(--wa-panel); border: 3px solid var(--wa-green); border-radius: 22px; width: 100%; max-width: 480px; max-height: 90vh; padding: 20px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
-        .modal-title { font-size: var(--font-xl); font-weight: 900; color: var(--wa-text); text-align: center; }
-        .modal-input { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid var(--wa-border); background: var(--wa-card); color: var(--wa-text); font-size: var(--font-lg); font-weight: 700; outline: none; }
-        .btn-modal { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--wa-green); color: #fff; font-weight: 900; font-size: var(--font-lg); cursor: pointer; }
+        .message-bubble { max-width: 88%; padding: 14px 18px; border-radius: 20px; position: relative; word-wrap: break-word; box-shadow: 0 4px 14px rgba(0,0,0,0.4); font-size: var(--font-lg); }
+        .message-bubble.incoming { background: var(--wa-panel); align-self: flex-start; border-top-left-radius: 4px; border: 2px solid var(--wa-border); }
+        .message-bubble.outgoing { background: #005c4b; align-self: flex-end; border-top-right-radius: 4px; border: 2px solid #008f72; }
+        
+        .msg-sender-name { font-size: var(--font-lg); color: #008069; font-weight: 900; margin-bottom: 4px; cursor: pointer; text-decoration: underline dotted; }
+        .msg-text-content { color: #111b21; font-weight: 600; white-space: pre-wrap; word-break: break-word; font-size: var(--font-lg); }
+        .message-bubble.incoming .msg-text-content { color: var(--wa-text); }
+        
+        /* INPUT PESAN & MENU LAMPIRAN */
+        .chat-input-wrapper { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: rgba(17, 27, 33, 0.98); display: flex; align-items: center; gap: 10px; z-index: 65; border-top: 3px solid var(--wa-green); border-radius: 36px 36px 0 0; }
+        .chat-input-pill { flex: 1; min-height: 82px; background: #2a3942; border-radius: 41px; display: flex; align-items: center; padding: 4px 16px; gap: 10px; border: 2px solid #374151; }
+        .chat-input-pill input { flex: 1; background: none; border: none; color: var(--wa-text); font-size: var(--font-xl); font-weight: 800; outline: none; }
+        .pill-icon { font-size: 44px; color: var(--wa-text-secondary); cursor: pointer; user-select: none; }
+        .send-btn-circle { width: 82px; height: 82px; border-radius: 50%; background: var(--wa-green); color: #ffffff; display: flex; align-items: center; justify-content: center; border: none; font-size: 42px; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 14px rgba(0,0,0,0.45); }
+        
+        /* MENU LAMPIRAN POP-UP (POLLING, GAMBAR AI, ACARA, DLL) */
+        .wa-attach-menu { position: absolute; bottom: 108px; left: 8px; right: 8px; background: #ffffff; border-radius: 24px; padding: 20px 8px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 6px; box-shadow: 0 14px 40px rgba(0,0,0,0.5); border: 3px solid var(--wa-green); z-index: 75; }
+        .wa-attach-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+        .wa-attach-circle { width: 88px; height: 88px; border-radius: 50%; background: #f8fafc; border: 2px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.18); display: flex; align-items: center; justify-content: center; font-size: 46px; }
+        .wa-attach-label { font-size: 19px; font-weight: 900; color: #3b4a54; text-align: center; }
+        
+        /* MODAL MENGAMBANG */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 20, 26, 0.92); z-index: 95; display: flex; justify-content: center; align-items: center; padding: 8px; }
+        .modal-card { background: var(--wa-panel); border: 3px solid var(--wa-green); border-radius: 22px; width: 96vw; max-width: 96vw; max-height: 92dvh; padding: 18px 14px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 18px 50px rgba(0,0,0,0.9); overflow-y: auto; }
+        .modal-title { font-size: var(--font-xl); font-weight: 900; color: var(--wa-text); text-align: center; text-transform: uppercase; }
+        .modal-input { width: 100%; padding: 16px; min-height: 74px; border-radius: 16px; border: 2px solid var(--wa-border); background: var(--wa-card); color: var(--wa-text); font-size: var(--font-lg); font-weight: 700; outline: none; }
+        .btn-modal-action { width: 100%; padding: 18px; min-height: var(--btn-touch); border-radius: 16px; border: none; background: var(--wa-green); color: var(--wa-panel); font-weight: 900; font-size: var(--font-lg); cursor: pointer; }
+        
+        /* LAYAR PANGGILAN JITSI */
+        .call-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0b141a; z-index: 105; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 28px 14px; }
+        .call-dock-panel { width: 100%; max-width: 580px; background: #182229; border: 2px solid var(--wa-border); border-radius: 30px; padding: 18px 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 10px; z-index: 10; box-shadow: 0 12px 35px rgba(0,0,0,0.8); }
+        .btn-call-action { width: 88px; height: 88px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 42px; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.4); }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="app-title">🛡️ Sc-SansChat RW 09</div>
-        <div class="app-controls">
-            <button class="btn-header" onclick="location.reload()">🔄 Refresh</button>
-            <button class="btn-header" style="background:#ef4444; color:#fff;" onclick="logoutApp()">🚪 Keluar</button>
-        </div>
-    </header>
-
-    <div class="main-container">
-        <!-- SIDEBAR -->
-        <div class="sidebar" id="sidebarPane">
-            <div class="user-profile-bar">
-                <div class="user-info-box">
-                    <div class="user-avatar" id="myAvatarBox">👤</div>
-                    <div>
-                        <div class="user-name" id="myProfileName">Memuat...</div>
-                        <div class="user-role" id="myProfileRole">Warga RW 09</div>
+    <div class="app-container">
+        <!-- HALAMAN UTAMA / DAFTAR GRUP -->
+        <div class="view-screen" id="mainDashboardView">
+            <header class="main-header">
+                <div class="header-top-row">
+                    <div class="header-left-group">
+                        <div class="profile-avatar-clickable" id="myAvatarBox" onclick="openProfileModal()">👤</div>
+                        <div class="brand-frame-3d">
+                            <span class="brand-line-top">Sc</span>
+                            <span class="brand-line-sub">ProJack12-2026</span>
+                            <span class="brand-line-bottom">SansChat</span>
+                        </div>
+                    </div>
+                    <div class="header-right-group">
+                        <button class="btn-webaps" onclick="openPortalWeb()">🌐 WebApps</button>
+                        <button class="btn-chat-privat btn-privat-green" id="btnPrivatNav" onclick="openPrivateChatList()">
+                            <span class="lbl-top">💬 CHAT</span>
+                            <span class="lbl-bot">PRIVAT</span>
+                        </button>
+                        <button class="btn-logout" onclick="logoutApp()">🚪 Keluar</button>
                     </div>
                 </div>
-                <button class="btn-header" onclick="openPrivateChatList()">💬 Privat</button>
-            </div>
-            <div class="rooms-list" id="roomsListContainer">
-                <!-- Daftar Grup dimuat dinamis -->
+                <div class="user-info-section">
+                    <div class="user-info-name" id="profileNameDisplay">MEMUAT PROFIL...</div>
+                    <div class="user-info-address" id="profileAddressDisplay">RT -- / RW 09 SANSIVIERA</div>
+                </div>
+            </header>
+
+            <div class="chat-list-wrapper">
+                <div class="chat-list" id="chatGroupsContainer">
+                    <!-- Daftar grup dimuat secara dinamis -->
+                </div>
             </div>
         </div>
 
-        <!-- CHAT PANE -->
-        <div class="chat-pane" id="chatPane">
-            <div class="chat-header">
-                <div class="chat-header-left">
-                    <button class="btn-back-mobile" onclick="closeChatMobile()">⬅️</button>
-                    <div class="chat-header-info" onclick="openGroupInfo()">
-                        <div class="chat-header-title" id="activeChatTitle">Pilih Grup Chat</div>
-                        <div class="chat-header-status" id="activeChatStatus">Ketuk untuk info grup</div>
+        <!-- RUANG CHAT AKTIF -->
+        <div class="view-screen chat-body-wrapper" id="activeChatRoomView">
+            <div class="chat-room-header">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <button style="background:none; border:none; color:#fff; font-size:42px; cursor:pointer;" onclick="closeActiveChat()">⬅️</button>
+                    <div style="display:flex; flex-direction:column; cursor:pointer;" onclick="openGroupMembersModal()">
+                        <div style="font-size:var(--font-xl); font-weight:900; color:#fff;" id="activeRoomTitle">RUANG CHAT</div>
+                        <div style="font-size:var(--font-md); font-weight:700; color:var(--wa-green-light);" id="activeRoomStatus">Ketuk untuk info anggota</div>
                     </div>
                 </div>
-                <div class="chat-header-actions">
-                    <button class="btn-action-icon" onclick="initiateVoiceCall()">📞</button>
-                    <button class="btn-action-icon" onclick="initiateVideoCall()">📹</button>
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <button style="background:none; border:none; font-size:42px; cursor:pointer;" onclick="initiateVoiceCall()">📞</button>
+                    <button style="background:none; border:none; font-size:42px; cursor:pointer;" onclick="initiateVideoCall()">📹</button>
                 </div>
             </div>
 
-            <div class="chat-messages-container" id="chatMessagesContainer">
-                <!-- Pesan obrolan -->
+            <div class="messages-scroll-area" id="messagesScrollArea">
+                <!-- Pesan chat dimuat secara dinamis -->
             </div>
 
-            <!-- MENU LAMPIRAN WA (POLLING, GAMBAR AI, ACARA, DLL) -->
-            <div class="wa-attach-menu" id="waAttachMenu" style="display:none;">
+            <!-- MENU LAMPIRAN POP-UP (POLLING, GAMBAR AI, ACARA, KAMERA, GALERI, LOKASI, KONTAK, DOKUMEN) -->
+            <div class="wa-attach-menu hidden" id="waAttachMenu">
                 <div class="wa-attach-item" onclick="openPollModal()"><div class="wa-attach-circle">📊</div><div class="wa-attach-label">Polling</div></div>
                 <div class="wa-attach-item" onclick="openAiImageModal()"><div class="wa-attach-circle">✨</div><div class="wa-attach-label">Gambar AI</div></div>
                 <div class="wa-attach-item" onclick="openEventModal()"><div class="wa-attach-circle">📅</div><div class="wa-attach-label">Acara</div></div>
@@ -175,24 +195,43 @@
     </div>
 
     <!-- MODAL POLLING -->
-    <div class="modal-overlay" id="pollModal" style="display:none;">
+    <div class="modal-overlay hidden" id="pollModal">
         <div class="modal-card">
             <div class="modal-title">📊 Buat Polling Warga</div>
             <input type="text" class="modal-input" id="pollQuestion" placeholder="Pertanyaan polling...">
             <input type="text" class="modal-input" id="pollOpt1" placeholder="Pilihan A...">
             <input type="text" class="modal-input" id="pollOpt2" placeholder="Pilihan B...">
-            <button class="btn-modal" onclick="submitPoll()">Kirim Polling</button>
-            <button class="btn-header" onclick="document.getElementById('pollModal').style.display='none'">Batal</button>
+            <button class="btn-modal-action" onclick="submitPoll()">Kirim Polling</button>
+            <button class="btn-modal-action" style="background:#202c33; color:#fff;" onclick="document.getElementById('pollModal').classList.add('hidden')">Batal</button>
         </div>
     </div>
 
     <!-- MODAL GAMBAR AI -->
-    <div class="modal-overlay" id="aiImageModal" style="display:none;">
+    <div class="modal-overlay hidden" id="aiImageModal">
         <div class="modal-card">
             <div class="modal-title">✨ Generator Gambar AI</div>
             <input type="text" class="modal-input" id="aiPrompt" placeholder="Deskripsikan gambar (contoh: Gotong royong warga RT 38)">
-            <button class="btn-modal" onclick="submitAiImage()">Buat & Kirim Gambar</button>
-            <button class="btn-header" onclick="document.getElementById('aiImageModal').style.display='none'">Batal</button>
+            <button class="btn-modal-action" onclick="submitAiImage()">Buat & Kirim Gambar</button>
+            <button class="btn-modal-action" style="background:#202c33; color:#fff;" onclick="document.getElementById('aiImageModal').classList.add('hidden')">Batal</button>
+        </div>
+    </div>
+
+    <!-- MODAL LAYAR PANGGILAN SUARA & VIDEO (JITSI) -->
+    <div class="call-overlay hidden" id="callScreen">
+        <div style="text-align:center; z-index:5;">
+            <div style="font-size:var(--font-xl); font-weight:900; color:#fff;" id="callTargetName">NAMA WARGA</div>
+            <div style="font-size:var(--font-lg); color:var(--wa-green-light); margin-top:6px; font-weight:800;" id="callStatusText">Memanggil...</div>
+        </div>
+
+        <div style="flex:1; width:100%; display:flex; align-items:center; justify-content:center; position:relative; margin:12px 0;" id="callVideoStage">
+            <div id="voiceAvatarStage" style="width:220px; height:220px; border-radius:50%; background:#202c33; border:5px solid var(--wa-green); display:flex; align-items:center; justify-content:center; font-size:100px;">📞</div>
+            <iframe id="jitsiCallFrame" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:20px;" class="hidden"></iframe>
+        </div>
+
+        <div class="call-dock-panel">
+            <button class="btn-call-action" style="background:#374151; color:#fff;" onclick="toggleCallMute()">🎤</button>
+            <button class="btn-call-action" style="background:#ea4335; color:#fff;" onclick="endCall()">📞</button>
+            <button class="btn-call-action" style="background:#374151; color:#fff;" onclick="toggleCallSpeaker()">🔊</button>
         </div>
     </div>
 
@@ -212,58 +251,59 @@
             }
             currentUser = JSON.parse(userStr);
             currentBundle = JSON.parse(bundleStr);
-            
-            document.getElementById('myProfileName').textContent = currentUser.nama;
-            document.getElementById('myProfileRole').textContent = currentUser.role || 'Warga RW 09';
-            if(currentUser.foto) {
+
+            document.getElementById('profileNameDisplay').textContent = currentUser.nama;
+            document.getElementById('profileAddressDisplay').textContent = currentUser.alamat || 'RT 38 / RW 09 SANSIVIERA';
+            if (currentUser.foto) {
                 document.getElementById('myAvatarBox').innerHTML = `<img src="${currentUser.foto}">`;
             }
 
-            renderGroups(currentBundle.groups || []);
-            startPolling();
+            renderGroupList(currentBundle.groups || []);
+            startBackgroundPolling();
         });
 
-        function renderGroups(groups) {
-            const container = document.getElementById('roomsListContainer');
+        function renderGroupList(groups) {
+            const container = document.getElementById('chatGroupsContainer');
             container.innerHTML = '';
-            if(!groups.length) {
-                container.innerHTML = '<div style="padding:20px; text-align:center; color:#8696a0;">Tidak ada grup aktif.</div>';
+            if (!groups.length) {
+                container.innerHTML = '<div style="padding:30px; text-align:center; color:#8696a0; font-size:var(--font-lg);">Tidak ada grup chat aktif.</div>';
                 return;
             }
+
             groups.forEach(g => {
-                const div = document.createElement('div');
-                div.className = 'room-item';
-                div.innerHTML = `
-                    <div class="room-avatar">👥</div>
-                    <div class="room-details">
-                        <div class="room-name-row">
-                            <div class="room-name">${g.name}</div>
-                            <div class="room-time">${g.lastTime ? new Date(g.lastTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</div>
+                const item = document.createElement('div');
+                item.className = 'chat-item';
+                item.innerHTML = `
+                    <div class="avatar">${g.foto ? `<img src="${g.foto}">` : '👥'}</div>
+                    <div class="chat-details">
+                        <div class="chat-title-row">
+                            <div class="chat-name">${g.name}</div>
+                            <div class="chat-time">${g.lastTime ? new Date(g.lastTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</div>
                         </div>
-                        <div class="room-last-msg">${g.lastMessage || 'Belum ada pesan'}</div>
+                        <div class="chat-last-msg">${g.lastMessage || 'Ketuk untuk mulai mengobrol...'}</div>
                     </div>
                 `;
-                div.onclick = () => selectRoom(g);
-                container.appendChild(div);
+                item.onclick = () => selectChatRoom(g);
+                container.appendChild(item);
             });
         }
 
-        function selectRoom(room) {
+        function selectChatRoom(room) {
             activeRoom = room;
-            document.getElementById('activeChatTitle').textContent = room.name;
-            document.getElementById('activeChatStatus').textContent = room.sheetName;
-            document.getElementById('chatPane').classList.add('active');
-            document.getElementById('sidebarPane').classList.add('hidden-mobile');
-            loadMessages();
+            document.getElementById('activeRoomTitle').textContent = room.name;
+            document.getElementById('activeRoomStatus').textContent = room.sheetName;
+            document.getElementById('mainDashboardView').classList.add('hidden');
+            document.getElementById('activeChatRoomView').classList.add('active');
+            loadRoomMessages();
         }
 
-        function closeChatMobile() {
-            document.getElementById('chatPane').classList.remove('active');
-            document.getElementById('sidebarPane').classList.remove('hidden-mobile');
+        function closeActiveChat() {
+            document.getElementById('activeChatRoomView').classList.remove('active');
+            document.getElementById('mainDashboardView').classList.remove('hidden');
             activeRoom = null;
         }
 
-        async function loadMessages() {
+        async function loadRoomMessages() {
             if (!activeRoom) return;
             try {
                 const resp = await fetch(SCRIPT_URL, {
@@ -273,23 +313,23 @@
                 });
                 const json = await resp.json();
                 const msgs = json.data || [];
-                const container = document.getElementById('chatMessagesContainer');
-                container.innerHTML = '';
+                const area = document.getElementById('messagesScrollArea');
+                area.innerHTML = '';
+
                 msgs.forEach(m => {
                     const isMe = m.senderUsername === currentUser.username;
-                    const div = document.createElement('div');
-                    div.className = `message-bubble ${isMe ? 'outgoing' : 'incoming'}`;
-                    div.innerHTML = `
+                    const bubble = document.createElement('div');
+                    bubble.className = `message-bubble ${isMe ? 'outgoing' : 'incoming'}`;
+                    bubble.innerHTML = `
                         <div class="msg-sender-name">${m.senderNama || m.senderUsername}</div>
                         <div class="msg-text-content">${escapeHtml(m.pesan)}</div>
-                        <div class="msg-meta">
-                            <span>${new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                            ${isMe ? '<span class="tick-blue">✓✓</span>' : ''}
+                        <div style="font-size:12px; color:#8696a0; text-align:right; margin-top:4px; font-weight:700;">
+                            ${new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} ${isMe ? '✓✓' : ''}
                         </div>
                     `;
-                    container.appendChild(div);
+                    area.appendChild(bubble);
                 });
-                container.scrollTop = container.scrollHeight;
+                area.scrollTop = area.scrollHeight;
             } catch (e) {}
         }
 
@@ -298,7 +338,7 @@
             const val = input.value.trim();
             if (!val || !activeRoom) return;
             input.value = '';
-            
+
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -312,19 +352,19 @@
                         type: 'text'
                     })
                 });
-                loadMessages();
+                loadRoomMessages();
             } catch (e) {}
         }
 
         function toggleAttachMenu() {
             const menu = document.getElementById('waAttachMenu');
-            menu.style.display = menu.style.display === 'none' ? 'grid' : 'none';
+            menu.classList.toggle('hidden');
         }
 
-        function startPolling() {
-            if(pollInterval) clearInterval(pollInterval);
+        function startBackgroundPolling() {
+            if (pollInterval) clearInterval(pollInterval);
             pollInterval = setInterval(() => {
-                if(activeRoom) loadMessages();
+                if (activeRoom) loadRoomMessages();
             }, 4000);
         }
 
@@ -333,32 +373,61 @@
             window.location.href = './index.html';
         }
 
-        function openPollModal() { document.getElementById('pollModal').style.display = 'flex'; toggleAttachMenu(); }
-        function openAiImageModal() { document.getElementById('aiImageModal').style.display = 'flex'; toggleAttachMenu(); }
-        function openEventModal() { alert('Fitur Acara Warga RW 09'); toggleAttachMenu(); }
-        function openCameraModal() { alert('Kamera langsung diaktifkan'); toggleAttachMenu(); }
-        function triggerFilePicker(accept) { alert('Pilih file: ' + accept); toggleAttachMenu(); }
-        function sendLocationMessage() { alert('Lokasi GPS warga dibagikan'); toggleAttachMenu(); }
-        function openContactModal() { alert('Kontak warga RW 09'); toggleAttachMenu(); }
-        
+        function openPollModal() { document.getElementById('pollModal').classList.remove('hidden'); toggleAttachMenu(); }
+        function openAiImageModal() { document.getElementById('aiImageModal').classList.remove('hidden'); toggleAttachMenu(); }
+        function openEventModal() { alert('📅 Fitur Acara / Agenda Warga RW 09'); toggleAttachMenu(); }
+        function openCameraModal() { alert('📷 Kamera Langsung diaktifkan'); toggleAttachMenu(); }
+        function triggerFilePicker(accept) { alert('📂 Pilih file / media: ' + accept); toggleAttachMenu(); }
+        function sendLocationMessage() { alert('📍 Lokasi GPS Anda dibagikan ke grup'); toggleAttachMenu(); }
+        function openContactModal() { alert('👤 Kontak Warga RW 09'); toggleAttachMenu(); }
+
         function submitPoll() {
-            const q = document.getElementById('pollQuestion').value;
-            if(!q) return;
-            document.getElementById('pollModal').style.display = 'none';
-            alert('Polling berhasil dibuat: ' + q);
+            const q = document.getElementById('pollQuestion').value.trim();
+            if (!q) return;
+            document.getElementById('pollModal').classList.add('hidden');
+            alert('📊 Polling berhasil dibuat: ' + q);
         }
 
         function submitAiImage() {
-            const prompt = document.getElementById('aiPrompt').value;
-            if(!prompt) return;
-            document.getElementById('aiImageModal').style.display = 'none';
-            alert('Membuat gambar AI untuk: ' + prompt);
+            const prompt = document.getElementById('aiPrompt').value.trim();
+            if (!prompt) return;
+            document.getElementById('aiImageModal').classList.add('hidden');
+            alert('✨ Menghasilkan gambar AI untuk: ' + prompt);
         }
 
-        function initiateVoiceCall() { alert('Memulai Panggilan Suara dengan Warga...'); }
-        function initiateVideoCall() { alert('Memulai Video Call Ruang Warga RW 09...'); }
-        function openPrivateChatList() { alert('Membuka Chat Privat Warga'); }
-        function openGroupInfo() { alert('Informasi & Anggota Grup Warga RW 09'); }
+        function initiateVoiceCall() {
+            const roomSlug = "SansChatRW09_" + Date.now();
+            const roomUrl = `https://meet.jit.si/${roomSlug}#config.prejoinPageEnabled=false`;
+            document.getElementById('callTargetName').textContent = activeRoom ? activeRoom.name : "Panggilan Warga";
+            document.getElementById('callStatusText').textContent = "📞 Memanggil Suara...";
+            document.getElementById('voiceAvatarStage').classList.remove('hidden');
+            document.getElementById('jitsiCallFrame').classList.add('hidden');
+            document.getElementById('callScreen').classList.remove('hidden');
+        }
+
+        function initiateVideoCall() {
+            const roomSlug = "SansChatRW09_" + Date.now();
+            const roomUrl = `https://meet.jit.si/${roomSlug}#config.prejoinPageEnabled=false`;
+            document.getElementById('callTargetName').textContent = activeRoom ? activeRoom.name : "Video Call Warga";
+            document.getElementById('callStatusText').textContent = "📹 Menghubungkan Video Call...";
+            document.getElementById('voiceAvatarStage').classList.add('hidden');
+            const iframe = document.getElementById('jitsiCallFrame');
+            iframe.src = roomUrl;
+            iframe.classList.remove('hidden');
+            document.getElementById('callScreen').classList.remove('hidden');
+        }
+
+        function endCall() {
+            document.getElementById('jitsiCallFrame').src = "";
+            document.getElementById('callScreen').classList.add('hidden');
+        }
+
+        function toggleCallMute() { alert('Mikrofon diubah'); }
+        function toggleCallSpeaker() { alert('Speaker diubah'); }
+        function openPortalWeb() { window.open('https://script.google.com', '_blank'); }
+        function openPrivateChatList() { alert('💬 Membuka Chat Privat Warga'); }
+        function openProfileModal() { alert('👤 Profil Warga: ' + currentUser.nama); }
+        function openGroupMembersModal() { alert('👥 Anggota Grup Warga RW 09'); }
 
         function escapeHtml(text) {
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };

@@ -2,7 +2,6 @@
  * ============================================================================
  * SPREADSHEET ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI
  * Sc-SansChat Backend Script (Realtime Chat History & Warga Management)
- * Dioptimalkan untuk Integrasi PWA Android & Sinkronisasi Spreadsheet RW 09
  * ============================================================================
  */
 const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
@@ -163,7 +162,7 @@ function ensureDefaultSheets() {
       sheet = ss.insertSheet(sheetName);
       sheet.appendRow(required[sheetName]);
       if (sheetName === "Warga" && sheet.getLastRow() < 2) {
-        sheet.appendRow(["ADMINPUSAT", "admin123", "Administrator Pusat", "01", "09", "ADMINPUSAT,PENGURUS", "08123456789", ""]);
+        sheet.appendRow(["ADMINPUSAT", "admin123", "Administrator Pusat", "01", "09", "ADMINPUSAT,PENGURUS", "+628123456789", ""]);
       }
       if (sheetName === "NamaGrup" && sheet.getLastRow() < 2) {
         sheet.appendRow(["Grup Umum", "ChatUmum", "G", ""]);

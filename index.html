@@ -2,65 +2,96 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sc-SansChat - Portal Warga RW 09</title>
     <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     <meta name="theme-color" content="#111b21">
     <style>
         :root {
             --bg-dark: #0b141a;
-            --panel-bg: rgba(17, 27, 33, 0.85);
+            --panel-bg: rgba(17, 27, 33, 0.95);
             --accent-green: #00a884;
-            --accent-glow: rgba(0, 168, 132, 0.4);
+            --accent-green-light: #25d366;
+            --accent-glow: rgba(0, 168, 132, 0.45);
             --text-main: #e9edef;
             --text-muted: #8696a0;
-            --border-glass: rgba(255, 255, 255, 0.1);
+            --border-glass: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body {
             background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 20%, #1f2c34 0%, var(--bg-dark) 80%);
+            background-image: radial-gradient(circle at 50% 20%, #1f2c34 0%, var(--bg-dark) 85%);
             color: var(--text-main);
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
         .container {
             background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-glass);
-            border-radius: 24px;
-            padding: 30px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 2px solid var(--border-glass);
+            border-radius: 26px;
+            padding: 28px 22px;
             width: 100%;
             max-width: 440px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
             text-align: center;
         }
         .logo-box {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, #00a884, #005c4b);
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(135deg, #00a884, #004d40);
             border-radius: 50%;
-            margin: 0 auto 20px;
+            margin: 0 auto 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 25px var(--accent-glow);
-            font-size: 40px;
+            box-shadow: 0 0 30px var(--accent-glow);
+            font-size: 44px;
+            border: 3px solid #34d399;
         }
-        h1 { font-size: 24px; margin-bottom: 8px; color: #fff; }
-        p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+        h1 { font-size: 24px; margin-bottom: 8px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        p { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        
+        .pwa-notice-box {
+            background: rgba(0, 168, 132, 0.12);
+            border: 2px dashed var(--accent-green);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .pwa-notice-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--accent-green-light);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pwa-steps {
+            font-size: 13px;
+            color: var(--text-main);
+            padding-left: 18px;
+            line-height: 1.4;
+        }
+        .pwa-steps li { margin-bottom: 4px; }
+
         .btn {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 12px;
@@ -69,21 +100,46 @@
             justify-content: center;
             gap: 10px;
         }
-        .btn-primary { background: linear-gradient(135deg, #00a884, #008069); color: #fff; box-shadow: 0 4px 15px var(--accent-glow); }
-        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-glass); }
-        .footer-tag { margin-top: 20px; font-size: 12px; color: var(--text-muted); }
+        .btn-primary {
+            background: linear-gradient(135deg, #00a884, #00796b);
+            color: #fff;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-main);
+            border: 1px solid var(--border-glass);
+        }
+        .footer-tag { margin-top: 14px; font-size: 12px; color: var(--text-muted); font-weight: 700; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo-box">🛡️</div>
         <h1>Sc-SansChat RW 09</h1>
-        <p>Aplikasi Komunikasi Resmi Warga Perumahan Griya Taman Asri Cluster Sansiviera Tawangsari Sidoarjo.</p>
+        <p>Portal Komunikasi & Administrasi Warga Perumahan Griya Taman Asri Cluster Sansiviera Tawangsari Sidoarjo.</p>
         
-        <button class="btn btn-primary" onclick="window.location.href='./login.html'">🔑 Masuk Portal Warga</button>
-        <button class="btn btn-secondary" id="installBtn" style="display:none;" onclick="installPWA()">📱 Pasang Aplikasi (PWA)</button>
+        <div class="pwa-notice-box">
+            <div class="pwa-notice-title">📱 Wajib Instal Aplikasi di HP Android</div>
+            <ol class="pwa-steps">
+                <li>Ketuk menu browser (ikon titik tiga <b>⋮</b> di pojok kanan atas).</li>
+                <li>Pilih <b>"Tambahkan ke Layar Utama"</b> atau <b>"Instal Aplikasi"</b>.</li>
+                <li>Buka kembali aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP agar verifikasi login terbuka lancar.</li>
+            </ol>
+        </div>
+
+        <button class="btn btn-primary" onclick="window.location.href='./login.html'">
+            🔑 Masuk Portal Warga
+        </button>
+        <button class="btn btn-secondary" id="installBtn" style="display:none;" onclick="installPWA()">
+            📱 Pasang Aplikasi Sekarang
+        </button>
+        <button class="btn btn-secondary" onclick="resetAppCache()">
+            🔄 Reset & Bersihkan Cache
+        </button>
         
-        <div class="footer-tag">ProJack12-2026 • Secure PWA Environment</div>
+        <div class="footer-tag">ProJack12-2026 • RW 09 SANSIVERA</div>
     </div>
 
     <script>
@@ -103,6 +159,18 @@
                     }
                     deferredPrompt = null;
                 });
+            }
+        }
+
+        async function resetAppCache() {
+            if (confirm("Bersihkan cache dan data lama aplikasi?")) {
+                if ('caches' in window) {
+                    const keys = await caches.keys();
+                    await Promise.all(keys.map(k => caches.delete(k)));
+                }
+                localStorage.clear();
+                alert("Cache & data lama telah dibersihkan. Silakan buka kembali aplikasi.");
+                location.reload();
             }
         }
 
