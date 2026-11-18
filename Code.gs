@@ -1,7 +1,7 @@
 /**
  * ============================================================================
- * 1. KONFIGURASI UTAMA & ROUTING (doGet & doPost)
  * SPREADSHEET ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI
+ * Sc-SansChat Backend Script (Realtime Chat History & Warga Management)
  * ============================================================================
  */
 const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
@@ -12,9 +12,9 @@ function doGet(e) {
 
   if (params.action === 'getConfig') {
     const config = {
-      helpSystemUrl: getHelpSystemUrl(), // Kolom S1
-      portalWebUrl: getWebAppsUrl(),     // Kolom S2
-      sansChatUrl: getSansChatUrl()      // Kolom S3
+      helpSystemUrl: getHelpSystemUrl(),
+      portalWebUrl: getWebAppsUrl(),
+      sansChatUrl: getSansChatUrl()
     };
     return ContentService.createTextOutput(JSON.stringify({ success: true, config: config }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -43,7 +43,6 @@ function doGet(e) {
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
 
-  // Default: Halaman Selamat Datang (index.html)
   const idxTmpl = HtmlService.createTemplateFromFile('index');
   idxTmpl.s3Url = getSansChatUrl();
   return idxTmpl.evaluate()
@@ -145,11 +144,13 @@ function ensureDefaultSheets() {
     const ng = ss.insertSheet("NamaGrup");
     ng.appendRow(["Nama Grup", "Sheet Chat", "Kolom", "Foto Grup"]);
     ng.appendRow(["Grup RT37", "ChatRT37", "G", ""]);
+    ng.appendRow(["Grup RT38", "ChatRT38", "G", ""]);
+    ng.appendRow(["Grup RT39", "ChatRT39", "G", ""]);
   }
   if (!ss.getSheetByName("Informasi")) {
     const inf = ss.insertSheet("Informasi");
     inf.appendRow(["Isi Pengumuman"]);
-    inf.appendRow(["Selamat datang di aplikasi Sc-SansChat Warga!"]);
+    inf.appendRow(["Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga."]);
   }
   if (!ss.getSheetByName("ChatPrivat")) {
     const cp = ss.insertSheet("ChatPrivat");
@@ -279,7 +280,7 @@ function getUserAssignedGroups(username) {
     if (gName !== "" && userRoles.includes(gName.toUpperCase())) {
       let lastMessage = "";
       let lastTime = "";
-      const chatSheet = ss.getSheetByName(sName);
+      const chatSheet = resolveChatSheet(ss, sName || gName);
       if (chatSheet && chatSheet.getLastRow() >= 2) {
         const lastRowVals = chatSheet.getRange(chatSheet.getLastRow(), 1, 1, 4).getValues()[0];
         lastTime = (lastRowVals[0] instanceof Date) ? lastRowVals[0].toISOString() : String(lastRowVals[0] || "");
@@ -287,7 +288,7 @@ function getUserAssignedGroups(username) {
       }
       assignedRooms.push({
         name: gName,
-        sheetName: sName,
+        sheetName: sName || gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, ""),
         foto: gFoto,
         lastMessage: lastMessage,
         lastTime: lastTime
@@ -326,8 +327,11 @@ function updateGroupProfilePicture(sheetName, base64Data) {
   const sheet = getSpreadsheet().getSheetByName("NamaGrup");
   if (!sheet) return { success: false };
   const data = sheet.getDataRange().getValues();
+  const target = String(sheetName || "").trim().toUpperCase();
   for (let i = 1; i < data.length; i++) {
-    if (String(data[i][1] || "").trim() === String(sheetName || "").trim()) {
+    const colA = String(data[i][0] || "").trim().toUpperCase();
+    const colB = String(data[i][1] || "").trim().toUpperCase();
+    if (colB === target || colA === target) {
       sheet.getRange(i + 1, 4).setValue(base64Data);
       return { success: true };
     }
@@ -365,22 +369,64 @@ function getGroupMembersByRole(groupName) {
   return members;
 }
 
-function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, replyTo) {
-  const ss = getSpreadsheet();
-  const targetRoom = chatSheetName || "ChatRT37";
-  let sheet = ss.getSheetByName(targetRoom);
-  if (!sheet) {
-    sheet = ss.insertSheet(targetRoom);
-    sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+function resolveChatSheet(ss, chatSheetName) {
+  const raw = String(chatSheetName || "ChatRT37").trim();
+  let sheet = ss.getSheetByName(raw);
+  if (sheet) return sheet;
+
+  // Fallback 1: Jika dikirim "Grup RT38", coba "ChatRT38"
+  const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+  sheet = ss.getSheetByName(altChat);
+  if (sheet) return sheet;
+
+  // Fallback 2: Cek tabel NamaGrup kolom A (Nama Grup) -> kolom B (Sheet Chat)
+  const ng = ss.getSheetByName("NamaGrup");
+  if (ng && ng.getLastRow() >= 2) {
+    const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
+    for (let i = 0; i < ngData.length; i++) {
+      const gName = String(ngData[i][0] || "").trim();
+      const sName = String(ngData[i][1] || "").trim();
+      if (gName.toUpperCase() === raw.toUpperCase() || sName.toUpperCase() === raw.toUpperCase()) {
+        if (sName && ss.getSheetByName(sName)) return ss.getSheetByName(sName);
+        if (gName && ss.getSheetByName(gName)) return ss.getSheetByName(gName);
+      }
+    }
   }
-  const cleanUser = String(username || "").trim().toUpperCase();
-  sheet.appendRow([new Date(), cleanUser, nama, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
-  return { success: true };
+
+  // Fallback 3: Pencarian case-insensitive di seluruh tab sheet
+  const allSheets = ss.getSheets();
+  for (let j = 0; j < allSheets.length; j++) {
+    if (allSheets[j].getName().trim().toUpperCase() === raw.toUpperCase()) {
+      return allSheets[j];
+    }
+  }
+  return null;
+}
+
+function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, replyTo) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const ss = getSpreadsheet();
+    const targetRoom = String(chatSheetName || "ChatRT37").trim();
+    let sheet = resolveChatSheet(ss, targetRoom);
+    if (!sheet) {
+      const safeName = targetRoom.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+      sheet = ss.insertSheet(safeName);
+      sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+    }
+    const cleanUser = String(username || "").trim().toUpperCase();
+    sheet.appendRow([new Date(), cleanUser, nama || cleanUser, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
+    SpreadsheetApp.flush();
+    return { success: true };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function getMessages(chatSheetName, readerUsername) {
   const ss = getSpreadsheet();
-  const sheet = ss.getSheetByName(chatSheetName || "ChatRT37");
+  const sheet = resolveChatSheet(ss, chatSheetName);
   if (!sheet || sheet.getLastRow() < 2) return [];
 
   const lastRow = sheet.getLastRow();
@@ -416,13 +462,14 @@ function getMessages(chatSheetName, readerUsername) {
 }
 
 function votePollOption(chatSheetName, rowNumber, optionindex, voterUsername) {
-  const sheet = getSpreadsheet().getSheetByName(chatSheetName);
+  const ss = getSpreadsheet();
+  const sheet = resolveChatSheet(ss, chatSheetName);
   if (!sheet || rowNumber < 2) return { success: false };
   const cell = sheet.getRange(rowNumber, 6);
   try {
     const pollData = JSON.parse(String(cell.getValue() || ""));
     if (!pollData.votes) pollData.votes = {};
-    pollData.votes[voterUsername] = optionindex;
+    pollData.votes[String(voterUsername || "").trim().toUpperCase()] = optionindex;
     cell.setValue(JSON.stringify(pollData));
     return { success: true };
   } catch (e) {
@@ -431,16 +478,23 @@ function votePollOption(chatSheetName, rowNumber, optionindex, voterUsername) {
 }
 
 function sendPrivateMessage(username, nama, pesan, tipe, mediaUrl, targetUsername, replyTo) {
-  const ss = getSpreadsheet();
-  let sheet = ss.getSheetByName("ChatPrivat");
-  if (!sheet) {
-    sheet = ss.insertSheet("ChatPrivat");
-    sheet.appendRow(["Timestamp", "Username", "Nama", "Pesan", "Tipe", "MediaUrl", "StatusPesan", "TujuanUsername", "ReplyTo"]);
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const ss = getSpreadsheet();
+    let sheet = ss.getSheetByName("ChatPrivat");
+    if (!sheet) {
+      sheet = ss.insertSheet("ChatPrivat");
+      sheet.appendRow(["Timestamp", "Username", "Nama", "Pesan", "Tipe", "MediaUrl", "StatusPesan", "TujuanUsername", "ReplyTo"]);
+    }
+    const cleanSender = String(username || "").trim().toUpperCase();
+    const cleanTarget = String(targetUsername || cleanSender).trim().toUpperCase();
+    sheet.appendRow([new Date(), cleanSender, nama || cleanSender, pesan, tipe || "text", mediaUrl || "", "BELUM", cleanTarget, replyTo || ""]);
+    SpreadsheetApp.flush();
+    return { success: true };
+  } finally {
+    lock.releaseLock();
   }
-  const cleanSender = String(username || "").trim().toUpperCase();
-  const cleanTarget = String(targetUsername || cleanSender).trim().toUpperCase();
-  sheet.appendRow([new Date(), cleanSender, nama, pesan, tipe || "text", mediaUrl || "", "BELUM", cleanTarget, replyTo || ""]);
-  return { success: true };
 }
 
 function getPrivateChatSheetRecords(username) {
@@ -489,7 +543,7 @@ function hasUnreadPrivateMessages(username) {
     const rowSender = String(data[i][1] || "").trim().toUpperCase();
     const rowTarget = String(data[i][7] || rowSender).trim().toUpperCase();
     const status = String(data[i][6] || "").trim().toUpperCase();
-    if (rowTarget === uName && status !== "SUDAH") {
+    if (rowTarget === uName && rowSender !== uName && status !== "SUDAH") {
       return true;
     }
   }
@@ -527,6 +581,7 @@ function initiateCall(targetUsername, callerUsername, callerName, type, roomUrl)
     roomUrl || "",
     new Date()
   ]);
+  SpreadsheetApp.flush();
   return { success: true };
 }
 
@@ -547,6 +602,7 @@ function checkIncomingCall(username) {
 
     if ((target === uName || (target === "ALL" && caller !== uName)) && status === "RINGING" && (now - callTime) < 60000) {
       return {
+        callerUsername: caller,
         callerName: String(data[i][2] || "Warga"),
         type: String(data[i][3] || "voice"),
         roomUrl: String(data[i][5] || "")
@@ -563,7 +619,8 @@ function updateCallStatus(username, newStatus) {
   const uName = String(username || "").trim().toUpperCase();
   for (let i = data.length - 1; i >= 1; i--) {
     const target = String(data[i][0] || "").trim().toUpperCase();
-    if (target === uName || target === "ALL") {
+    const caller = String(data[i][1] || "").trim().toUpperCase();
+    if (target === uName || caller === uName || target === "ALL") {
       sheet.getRange(i + 1, 5).setValue(newStatus);
       break;
     }
