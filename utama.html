@@ -469,28 +469,32 @@
  ============================================================ */
  .room-header {
  background: #202c33;
- padding: 12px 10px;
+ padding: 10px 8px;
  display: flex;
+ flex-direction: row;
+ flex-wrap: nowrap;
  align-items: center;
- gap: 12px;
+ justify-content: space-between;
+ gap: 8px;
  position: relative;
  z-index: 30;
  flex-shrink: 0;
  border-bottom: 2px solid var(--wa-border);
  box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+ width: 100%;
  }
- /* Tombol Kembali (Panah Hijau Menyala persis seperti Gambar 2) */
+ /* Tombol Kembali di paling kiri, lalu ke kanan Logo & Nama Grup (sesuai gambar) */
  .back-btn {
- width: 120px;
- height: 120px;
- min-width: 120px;
- min-height: 120px;
- font-size: 80px;
+ width: 96px;
+ height: 96px;
+ min-width: 96px;
+ min-height: 96px;
+ font-size: 64px;
  line-height: 1;
  color: #0b141a;
  background: var(--wa-green);
- border: 3.5px solid var(--wa-green-light);
- border-radius: 24px;
+ border: 3px solid var(--wa-green-light);
+ border-radius: 20px;
  cursor: pointer;
  padding: 0;
  flex-shrink: 0;
@@ -498,7 +502,7 @@
  align-items: center;
  justify-content: center;
  font-weight: 900;
- box-shadow: 0 6px 18px rgba(0, 168, 132, 0.55);
+ box-shadow: 0 4px 14px rgba(0, 168, 132, 0.55);
  }
  .back-btn:active {
  transform: scale(0.94);
@@ -506,32 +510,71 @@
  }
 
  .room-header .profile-avatar-clickable {
- width: 105px;
- height: 105px;
- font-size: 50px;
+ width: 92px;
+ height: 92px;
+ min-width: 92px;
+ font-size: 44px;
+ flex-shrink: 0;
  }
  .room-user-info {
  flex: 1;
- margin-left: 4px;
- min-width: 100px;
+ min-width: 0;
  cursor: pointer;
  display: flex;
- flex-direction: column;
- justify-content: center;
+ align-items: center;
+ overflow: hidden;
  }
  .room-title {
- font-size: var(--font-xl);
+ font-size: clamp(28px, 7.2vw, 42px);
  font-weight: 900;
- color: var(--wa-text);
+ color: #ffffff;
  white-space: nowrap;
  overflow: hidden;
  text-overflow: ellipsis;
- line-height: 1.25;
+ line-height: 1.2;
  background: #d97706;
- padding: 6px 12px;
- border-radius: 12px;
- display: inline-block;
- width: fit-content;
+ border: 2px solid #f59e0b;
+ padding: 10px 14px;
+ border-radius: 14px;
+ display: block;
+ width: 100%;
+ }
+ .room-header .btn-combo-call {
+ padding: 12px 14px;
+ min-height: 96px;
+ font-size: 40px;
+ border-radius: 18px;
+ }
+ .room-header .btn-grup-plus {
+ padding: 12px 16px;
+ min-height: 96px;
+ font-size: clamp(24px, 6.2vw, 34px);
+ border-radius: 18px;
+ }
+ /* Popup Menu Telpon / Video Call saat Nama di Chat diklik (sama dengan menu tombol Telpon/VC) */
+ .sender-inline-call-menu {
+ position: fixed;
+ background: #233138;
+ border: 3.5px solid var(--wa-green);
+ border-radius: 22px;
+ padding: 14px;
+ display: flex;
+ flex-direction: column;
+ gap: 12px;
+ width: min(86vw, 420px);
+ box-shadow: 0 18px 50px rgba(0,0,0,0.92);
+ z-index: 98;
+ }
+ .sender-inline-header {
+ font-size: var(--font-md);
+ font-weight: 900;
+ color: var(--wa-green-light);
+ text-align: center;
+ padding-bottom: 6px;
+ border-bottom: 1.5px solid var(--wa-border);
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
  }
  /* Subtitle di bawah nama grup dibuang/disesuaikan */
  .room-subtitle {
@@ -1454,15 +1497,11 @@
     <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
   </div>
 
-  <!-- MODAL PILIHAN AKSI SAAT NAMA PENGIRIM DI CHAT DIKLIK (TELPON / VC) -->
-  <div id="senderActionModal" class="modal-overlay hidden" onclick="closeWaModal('senderActionModal')">
-    <div class="modal-card" onclick="event.stopPropagation()">
-      <div class="modal-title" id="senderActionTitle">HUBUNGI WARGA</div>
-      <div style="text-align:center; color:var(--wa-green-light); font-size:var(--font-md); font-weight:700;" id="senderActionSubtitle">Pilih jenis panggilan</div>
-      <button class="btn-grup-plus" style="width:100%;" onclick="executeDirectCallFromSender('voice')">📞 Telpon Suara</button>
-      <button class="btn-grup-plus" style="width:100%; background:#0284c7; color:#ffffff;" onclick="executeDirectCallFromSender('video')">📹 Video Call</button>
-      <button class="btn-grup-plus" style="background:#202c33; color:#e9edef; width:100%;" onclick="closeWaModal('senderActionModal')">Batal</button>
-    </div>
+  <!-- POPUP PILIHAN TELPON / VIDEO CALL SAAT NAMA DI AREA CHAT DIKLIK (DISAMAKAN DENGAN MENU TELPON/VC) -->
+  <div id="senderInlineCallPopup" class="sender-inline-call-menu hidden" onclick="event.stopPropagation()">
+    <div class="sender-inline-header" id="senderInlineHeaderTitle">📞 Hubungi Warga</div>
+    <button type="button" class="combo-menu-item" onclick="executeDirectCallFromSender('voice')">📞 Telpon</button>
+    <button type="button" class="combo-menu-item" onclick="executeDirectCallFromSender('video')">📹 Video Call</button>
   </div>
 
   <!-- MODAL KAMERA LANGSUNG -->
@@ -1763,6 +1802,9 @@
       if (!e.target.closest('#chatInputWrapper')) {
         document.getElementById('emojiPickerPanel').classList.add('hidden');
         document.getElementById('waAttachMenuPanel').classList.add('hidden');
+      }
+      if (!e.target.closest('.msg-sender-name') && !e.target.closest('#senderInlineCallPopup')) {
+        document.getElementById('senderInlineCallPopup').classList.add('hidden');
       }
     });
   };
@@ -2438,22 +2480,40 @@
     document.getElementById('replyPreviewText').innerText = "";
   }
 
-  function openSenderActionMenu(senderUsername, senderNama) {
-    const targetU = String(senderUsername || "").trim().toUpperCase();
+  function openSenderActionMenu(event, senderUsername, senderNama) {
+    if (event) event.stopPropagation();
+    const targetU = String(senderUsername || senderNama || "").trim().toUpperCase();
     const targetN = String(senderNama || senderUsername || "Warga").trim();
-    if (!targetU || targetU === currentUser.username.toUpperCase()) {
-      alert("Ini adalah pesan Anda sendiri (" + targetN + "). Ketuk nama warga lain untuk menelepon.");
-      return;
-    }
     selectedSenderForCall = { username: targetU, nama: targetN };
-    document.getElementById('senderActionTitle').innerText = targetN;
-    document.getElementById('senderActionSubtitle').innerText = "ID: " + targetU + " • Pilih Panggilan";
-    document.getElementById('senderActionModal').classList.remove('hidden');
+
+    const popup = document.getElementById('senderInlineCallPopup');
+    document.getElementById('senderInlineHeaderTitle').innerText = targetN;
+    popup.classList.remove('hidden');
+
+    if (event && event.target) {
+      const rect = event.target.getBoundingClientRect();
+      const popupW = Math.min(window.innerWidth * 0.86, 420);
+      let leftPos = rect.left;
+      if (leftPos + popupW > window.innerWidth - 12) {
+        leftPos = window.innerWidth - popupW - 12;
+      }
+      if (leftPos < 12) leftPos = 12;
+
+      let topPos = rect.bottom + 8;
+      if (topPos + 280 > window.innerHeight - 25) {
+        topPos = Math.max(40, rect.top - 285);
+      }
+      popup.style.left = leftPos + 'px';
+      popup.style.top = topPos + 'px';
+    }
   }
 
   function executeDirectCallFromSender(type) {
-    closeWaModal('senderActionModal');
-    if (!selectedSenderForCall.username) return;
+    document.getElementById('senderInlineCallPopup').classList.add('hidden');
+    if (!selectedSenderForCall.username) {
+      openCallDialog(type);
+      return;
+    }
     startOutgoingCall(selectedSenderForCall.username, selectedSenderForCall.nama, type);
   }
 
@@ -2618,7 +2678,7 @@
 
       div.innerHTML = `
         <div class="msg-header-row">
-          <span class="msg-sender-name" onclick="openSenderActionMenu('${safeSenderUser}', '${safeReplySender}')" title="Ketuk untuk Telpon / Video Call">${m.nama || m.pengirimUsername}</span>
+          <span class="msg-sender-name" onclick="openSenderActionMenu(event, '${safeSenderUser}', '${safeReplySender}')" title="Ketuk untuk Telpon / Video Call">${m.nama || m.pengirimUsername}</span>
           <button class="btn-reply-msg" onclick="setReplyQuote('${safeReplySender}', '${safeReplyMsg}')" title="Balas pesan">↩️</button>
         </div>
         ${quoteHtml}
@@ -2669,7 +2729,7 @@
 
       div.innerHTML = `
         <div class="msg-header-row">
-          <span class="msg-sender-name" style="color:${dynamicColor};" onclick="openSenderActionMenu('${safeSenderUser}', '${safeReplySender}')" title="Ketuk untuk Telpon / Video Call">${m.senderNama || m.senderUsername}</span>
+          <span class="msg-sender-name" style="color:${dynamicColor};" onclick="openSenderActionMenu(event, '${safeSenderUser}', '${safeReplySender}')" title="Ketuk untuk Telpon / Video Call">${m.senderNama || m.senderUsername}</span>
           <button class="btn-reply-msg" onclick="setReplyQuote('${safeReplySender}', '${safeReplyMsg}')" title="Balas pesan">↩️</button>
         </div>
         ${quoteHtml}
@@ -2698,7 +2758,7 @@
     const nowStr = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     div.innerHTML = `
       <div class="msg-header-row">
-        <span class="msg-sender-name">${currentUser.nama || currentUser.username}</span>
+        <span class="msg-sender-name" onclick="openSenderActionMenu(event, '${currentUser.username}', '${(currentUser.nama || currentUser.username).replace(/'/g, "\'")}')">${currentUser.nama || currentUser.username}</span>
         <span style="font-size:24px; color:#667781;">⏳</span>
       </div>
       ${quoteHtml}

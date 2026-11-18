@@ -280,7 +280,7 @@ function getUserAssignedGroups(username) {
  if (gName !== "" && userRoles.includes(gName.toUpperCase())) {
  let lastMessage = "";
  let lastTime = "";
- const chatSheet = ss.getSheetByName(sName);
+ const chatSheet = resolveChatSheet(ss, sName || gName);
  if (chatSheet && chatSheet.getLastRow() >= 2) {
  const lastRowVals = chatSheet.getRange(chatSheet.getLastRow(), 1, 1, 4).getValues()[0];
  lastTime = (lastRowVals[0] instanceof Date) ? lastRowVals[0].toISOString() : String(lastRowVals[0] || "");
@@ -369,7 +369,7 @@ function getGroupMembersByRole(groupName) {
 function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, replyTo) {
  const ss = getSpreadsheet();
  const targetRoom = chatSheetName || "ChatRT37";
- let sheet = ss.getSheetByName(targetRoom);
+ let sheet = resolveChatSheet(ss, targetRoom);
  if (!sheet) {
  sheet = ss.insertSheet(targetRoom);
  sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
@@ -379,9 +379,40 @@ function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, reply
  return { success: true };
 }
 
+function resolveChatSheet(ss, chatSheetName) {
+ const raw = String(chatSheetName || "ChatRT37").trim();
+ let sheet = ss.getSheetByName(raw);
+ if (sheet) return sheet;
+ // Fallback 1: Jika dikirim "Grup RT38", coba "ChatRT38"
+ const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+ sheet = ss.getSheetByName(altChat);
+ if (sheet) return sheet;
+ // Fallback 2: Cek tabel NamaGrup kolom A (Nama Grup) -> kolom B (Sheet Chat)
+ const ng = ss.getSheetByName("NamaGrup");
+ if (ng && ng.getLastRow() >= 2) {
+  const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
+  for (let i = 0; i < ngData.length; i++) {
+   const gName = String(ngData[i][0] || "").trim();
+   const sName = String(ngData[i][1] || "").trim();
+   if (gName.toUpperCase() === raw.toUpperCase() || sName.toUpperCase() === raw.toUpperCase()) {
+    if (sName && ss.getSheetByName(sName)) return ss.getSheetByName(sName);
+    if (gName && ss.getSheetByName(gName)) return ss.getSheetByName(gName);
+   }
+  }
+ }
+ // Fallback 3: Pencarian case-insensitive di seluruh tab sheet
+ const allSheets = ss.getSheets();
+ for (let j = 0; j < allSheets.length; j++) {
+  if (allSheets[j].getName().trim().toUpperCase() === raw.toUpperCase()) {
+   return allSheets[j];
+  }
+ }
+ return null;
+}
+
 function getMessages(chatSheetName, readerUsername) {
  const ss = getSpreadsheet();
- const sheet = ss.getSheetByName(chatSheetName || "ChatRT37");
+ const sheet = resolveChatSheet(ss, chatSheetName);
  if (!sheet || sheet.getLastRow() < 2) return [];
 
  const lastRow = sheet.getLastRow();
