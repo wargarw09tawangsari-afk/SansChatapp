@@ -1664,26 +1664,22 @@
   const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
   const S1_HELP_URL = "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec";
   const S2_PORTAL_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec";
+function escapeJsStr(str) {
+  return String(str || "")
+    .replace(/\\/g, "\\\\")      // Escape backslash
+    .replace(/'/g, "\\'")         // Escape single quote
+    .replace(/"/g, "&quot;")      // Ubah double quote ke HTML entity
+    .replace(/\r?\n/g, " ");      // Ganti baris baru (newline) dengan spasi dengan aman
+}
 
-  function escapeJsStr(str) {
-    return String(str || "")
-      .replace(/\/g, "\\")
-      .replace(/'/g, "\'")
-      .replace(/"/g, "&quot;")
-      .replace(/
-/g, " ")
-      .replace(//g, "");
-  }
-
-  function escapeHtml(str) {
-    return String(str || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
   function callServerAPI(action, payload = {}) {
     payload.action = action;
     return fetch(S3_API_BASE, {
