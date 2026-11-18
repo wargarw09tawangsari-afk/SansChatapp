@@ -13,8 +13,8 @@ function doGet(e) {
   if (params.action === 'getConfig') {
     const config = {
       helpSystemUrl: getHelpSystemUrl(), // Kolom S1
-      portalWebUrl: getWebAppsUrl(),     // Kolom S2
-      sansChatUrl: getSansChatUrl()      // Kolom S3
+      portalWebUrl: getWebAppsUrl(),   // Kolom S2
+      sansChatUrl: getSansChatUrl()    // Kolom S3
     };
     return ContentService.createTextOutput(JSON.stringify({ success: true, config: config }))
       .setMimeType(ContentService.MimeType.JSON);
