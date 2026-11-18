@@ -164,17 +164,34 @@
   }
 
   .btn-webaps {
-    background: #202c33;
-    color: var(--wa-green);
-    border: 3px solid var(--wa-green);
-    padding: 18px 16px;
+    background: linear-gradient(180deg, #ff9f1c 0%, #f97316 55%, #ea580c 100%);
+    color: #ffffff;
+    border: 3px solid #fed7aa;
+    padding: 18px 18px;
     min-height: var(--btn-touch);
-    border-radius: 20px;
+    border-radius: 22px;
     font-weight: 900;
     font-size: clamp(25.5px, 6.75vw, 36px);
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    text-shadow: 0 2px 3px rgba(124, 45, 18, 0.85);
+    box-shadow:
+      0 8px 0 #9a3412,
+      0 14px 24px rgba(249, 115, 22, 0.55),
+      inset 0 3px 5px rgba(255, 255, 255, 0.55),
+      inset 0 -3px 6px rgba(154, 52, 18, 0.45);
+    transform: translateY(-2px);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+  }
+  .btn-webaps:hover {
+    filter: brightness(1.06);
+  }
+  .btn-webaps:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 2px 0 #9a3412,
+      0 5px 12px rgba(249, 115, 22, 0.4),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .btn-chat-privat {
@@ -1489,11 +1506,13 @@
     <input type="file" id="profilePicInput" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
   </div>
 
-  <!-- POPUP PILIHAN TELPON / VIDEO CALL SAAT NAMA DI AREA CHAT DIKLIK -->
+  <!-- POPUP PILIHAN TELPON / VIDEO CALL SAAT NAMA SENDER DIKLIK (DISAMAKAN DENGAN TOMBOL TELPON/VC) -->
   <div id="senderInlineCallPopup" class="sender-inline-call-menu hidden" onclick="event.stopPropagation()">
     <div class="sender-inline-header" id="senderInlineHeaderTitle">📞 Hubungi Warga</div>
     <button type="button" class="combo-menu-item" onclick="executeDirectCallFromSender('voice')">📞 Telpon</button>
     <button type="button" class="combo-menu-item" onclick="executeDirectCallFromSender('video')">📹 Video Call</button>
+    <button type="button" class="combo-menu-item" onclick="openCallDialogFromSender('voice')">👥 Pilih Target Telpon</button>
+    <button type="button" class="combo-menu-item" onclick="openRingtoneSettingsFromSender()">⚙️ Nada Dering</button>
   </div>
 
   <!-- MODAL KAMERA LANGSUNG -->
@@ -1756,11 +1775,15 @@
   let lastAlertedUnreadState = false;
 
   const announcementThemes = [
-    { bg: "#182229", border: "#00a884", text: "#e9edef", icon: "#00a884" },
-    { bg: "#202c33", border: "#34d399", text: "#ecfdf5", icon: "#34d399" },
-    { bg: "#1b2832", border: "#38bdf8", text: "#e0f2fe", icon: "#38bdf8" },
-    { bg: "#26221b", border: "#fbbf24", text: "#fef3c7", icon: "#fbbf24" }
+    { bg: "#182229", border: "#25d366", text: "#4ade80", icon: "#25d366" },
+    { bg: "#172536", border: "#38bdf8", text: "#38bdf8", icon: "#7dd3fc" },
+    { bg: "#291d14", border: "#fb923c", text: "#fb923c", icon: "#fdba74" },
+    { bg: "#261830", border: "#e879f9", text: "#f0abfc", icon: "#e879f9" },
+    { bg: "#292312", border: "#facc15", text: "#fde047", icon: "#facc15" },
+    { bg: "#2b161d", border: "#fb7185", text: "#fda4af", icon: "#fb7185" },
+    { bg: "#132929", border: "#2dd4bf", text: "#5eead4", icon: "#2dd4bf" }
   ];
+  let announcementColorStep = 0;
 
   const chatTextColors = [
     "#008069", "#0284c7", "#7c3aed", "#b45309", "#be123c",
@@ -2064,9 +2087,13 @@
           document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${currentUser.foto}" />`;
         }
       }
+      if (bundle.groupMappings) {
+        localStorage.setItem('sanschat_group_mappings', JSON.stringify(bundle.groupMappings));
+      }
       if (bundle.groups) {
         localStorage.setItem('sanschat_groups_' + currentUser.username, JSON.stringify(bundle.groups));
         renderChatRoomList(bundle.groups);
+        prefetchAllAssignedGroupSheets(bundle.groups);
       }
       if (bundle.announcements && bundle.announcements.length > 0) {
         announcements = bundle.announcements;
@@ -2311,7 +2338,10 @@
   function playNextAnnouncementCell(animate = true) {
     if (!announcements || announcements.length === 0) return;
     const currentText = announcements[announcementIndex];
-    const theme = announcementThemes[announcementIndex % announcementThemes.length];
+    // Selalu ganti warna tulisan & bingkai setiap kali pengumuman tampil (meski hanya ada 1 pengumuman)
+    const theme = announcementThemes[announcementColorStep % announcementThemes.length];
+    announcementColorStep++;
+
     const card = document.getElementById('announcementCard');
     const box = document.getElementById('announcementBox');
     const icon = document.getElementById('announcementIcon');
@@ -2320,6 +2350,7 @@
       card.style.backgroundColor = theme.bg;
       card.style.borderColor = theme.border;
       box.style.color = theme.text;
+      box.style.transition = "color 0.35s ease";
       icon.style.color = theme.icon;
       box.innerText = currentText;
     };
@@ -2336,10 +2367,50 @@
       }, 380);
     }
 
-    let displayDuration = Math.max(5000, currentText.length * 65);
+    let displayDuration = Math.max(4200, Math.min(7500, currentText.length * 60));
     announcementIndex = (announcementIndex + 1) % announcements.length;
     if (announcementTimer) clearTimeout(announcementTimer);
     announcementTimer = setTimeout(() => playNextAnnouncementCell(true), displayDuration);
+  }
+
+  function resolveTargetSheetFromNamaGrup(rawSheetName, groupName) {
+    const qSheet = String(rawSheetName || "").trim();
+    const qGroup = String(groupName || "").trim();
+    try {
+      const mappings = JSON.parse(localStorage.getItem('sanschat_group_mappings') || '[]');
+      for (let i = 0; i < mappings.length; i++) {
+        const mGroup = String(mappings[i].groupName || "").trim();
+        const mSheet = String(mappings[i].sheetName || "").trim();
+        if ((qGroup && mGroup.toUpperCase() === qGroup.toUpperCase()) ||
+            (qSheet && (mGroup.toUpperCase() === qSheet.toUpperCase() || mSheet.toUpperCase() === qSheet.toUpperCase()))) {
+          if (mSheet) return mSheet;
+        }
+      }
+      const userGroups = JSON.parse(localStorage.getItem('sanschat_groups_' + currentUser.username) || '[]');
+      for (let j = 0; j < userGroups.length; j++) {
+        const ugName = String(userGroups[j].name || "").trim();
+        const ugSheet = String(userGroups[j].sheetName || "").trim();
+        if ((qGroup && ugName.toUpperCase() === qGroup.toUpperCase()) ||
+            (qSheet && (ugName.toUpperCase() === qSheet.toUpperCase() || ugSheet.toUpperCase() === qSheet.toUpperCase()))) {
+          if (ugSheet) return ugSheet;
+        }
+      }
+    } catch (e) {}
+    return qSheet || qGroup.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+  }
+
+  function prefetchAllAssignedGroupSheets(rooms) {
+    if (!rooms || !rooms.length || !navigator.onLine) return;
+    rooms.forEach((r, idx) => {
+      const targetSheet = resolveTargetSheetFromNamaGrup(r.sheetName, r.name);
+      setTimeout(() => {
+        callServerAPI('getMessages', { chatSheetName: targetSheet, username: currentUser.username }).then((msgs) => {
+          if (msgs) {
+            localStorage.setItem('sanschat_msgs_' + targetSheet, JSON.stringify(msgs));
+          }
+        }).catch(() => {});
+      }, idx * 250);
+    });
   }
 
   function renderChatRoomList(rooms) {
@@ -2351,9 +2422,10 @@
       return;
     }
     rooms.forEach(r => {
+      const resolvedSheet = resolveTargetSheetFromNamaGrup(r.sheetName, r.name);
       const item = document.createElement('div');
       item.className = 'chat-item';
-      item.onclick = () => openChatRoom(r.sheetName, r.name, r.foto);
+      item.onclick = () => openChatRoom(resolvedSheet, r.name, r.foto);
       const timeLabel = r.lastTime ? new Date(r.lastTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
       item.innerHTML = `
         <div class="avatar">${r.foto ? `<img src="${r.foto}" />` : '👥'}</div>
@@ -2362,7 +2434,7 @@
             <div class="chat-name">${escapeHtml(r.name)}</div>
             <div class="chat-time">${timeLabel}</div>
           </div>
-          <div class="chat-last-msg">${escapeHtml(r.lastMessage || ('Sheet Sinkron: ' + r.sheetName))}</div>
+          <div class="chat-last-msg">${escapeHtml(r.lastMessage || ('Sheet: ' + resolvedSheet))}</div>
         </div>
       `;
       container.appendChild(item);
@@ -2372,7 +2444,8 @@
 
   function openChatRoom(sheetName, name, foto) {
     isPrivateChatMode = false;
-    activeChatSheet = sheetName || name.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+    // Sesuaikan dengan pengaturan sheet "NamaGrup" kolom A (name) -> kolom B (activeChatSheet)
+    activeChatSheet = resolveTargetSheetFromNamaGrup(sheetName, name);
     activeGroupName = name;
     cancelReplyQuote();
 
@@ -2386,7 +2459,12 @@
     document.getElementById('roomView').classList.remove('hidden');
 
     const cachedMsgs = JSON.parse(localStorage.getItem('sanschat_msgs_' + activeChatSheet) || 'null');
-    if (cachedMsgs) renderMessageList(cachedMsgs, false);
+    if (cachedMsgs && cachedMsgs.length > 0) {
+      renderMessageList(cachedMsgs, false);
+    } else {
+      document.getElementById('chatMessages').innerHTML =
+        `<div style="text-align:center; color:#008069; background:rgba(255,255,255,0.96); padding:18px 20px; border-radius:18px; font-size:var(--font-lg); font-weight:800; margin:18px auto; max-width:94%;">⚡ Memuat data ${escapeHtml(activeChatSheet)}...</div>`;
+    }
 
     loadMessages(false);
     startActiveRoomAutoRefresh();
@@ -2487,12 +2565,12 @@
     selectedSenderForCall = { username: targetU, nama: targetN };
 
     const popup = document.getElementById('senderInlineCallPopup');
-    document.getElementById('senderInlineHeaderTitle').innerText = targetN;
+    document.getElementById('senderInlineHeaderTitle').innerText = "📞 " + targetN;
     popup.classList.remove('hidden');
 
     if (event && event.target) {
       const rect = event.target.getBoundingClientRect();
-      const popupW = Math.min(window.innerWidth * 0.86, 420);
+      const popupW = Math.min(window.innerWidth * 0.88, 440);
       let leftPos = rect.left;
       if (leftPos + popupW > window.innerWidth - 12) {
         leftPos = window.innerWidth - popupW - 12;
@@ -2500,8 +2578,8 @@
       if (leftPos < 12) leftPos = 12;
 
       let topPos = rect.bottom + 8;
-      if (topPos + 280 > window.innerHeight - 25) {
-        topPos = Math.max(40, rect.top - 285);
+      if (topPos + 460 > window.innerHeight - 25) {
+        topPos = Math.max(40, rect.top - 465);
       }
       popup.style.left = leftPos + 'px';
       popup.style.top = topPos + 'px';
@@ -2515,6 +2593,16 @@
       return;
     }
     startOutgoingCall(selectedSenderForCall.username, selectedSenderForCall.nama, type);
+  }
+
+  function openCallDialogFromSender(type) {
+    document.getElementById('senderInlineCallPopup').classList.add('hidden');
+    openCallDialog(type);
+  }
+
+  function openRingtoneSettingsFromSender() {
+    document.getElementById('senderInlineCallPopup').classList.add('hidden');
+    openRingtoneSettings();
   }
 
   function isImageUrl(url) {
@@ -3330,6 +3418,14 @@
         startCallDurationTimer();
       }
     }, 3000);
+
+    // Catat log panggilan Telpon / Video Call secara real-time di sheet grup (kolom C = Sender, kolom D = Log Panggilan) & tampilkan di halaman kedua
+    if (!isPrivateChatMode && activeChatSheet) {
+      const logLabel = type === 'video'
+        ? `📹 Video Call ke ${targetName} (${roomUrl})`
+        : `📞 Telpon Suara ke ${targetName} (${roomUrl})`;
+      dispatchChatPayload(logLabel, "call", roomUrl);
+    }
 
     callServerAPI('initiateCall', {
       targetUsername: targetUsername,
