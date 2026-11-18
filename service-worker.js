@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sanschat-v35';
+const CACHE_NAME = 'sanschat-v34';
 const USER_META_CACHE = 'sanschat-user-meta-v1';
 const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 const ASSETS_TO_CACHE = [
