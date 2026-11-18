@@ -353,7 +353,8 @@ function getUserAssignedGroups(username) {
       break;
     }
   }
-  if (userRoles.length === 0) return [];
+
+  const isSuperAdmin = (cleanUser === "ADMINPUSAT" || userRoles.includes("ADMINPUSAT") || userRoles.includes("PENGURUS"));
 
   const groupData = groupSheet.getDataRange().getValues();
   let assignedRooms = [];
@@ -363,11 +364,12 @@ function getUserAssignedGroups(username) {
     const gColSetting = String(groupData[j][2] || "").trim();
     const gFoto = String(groupData[j][3] || "").trim();
 
-    if (gName !== "" && (userRoles.includes(gName.toUpperCase()) || (sName && userRoles.includes(sName.toUpperCase())))) {
+    if (gName !== "" && (isSuperAdmin || userRoles.includes(gName.toUpperCase()) || (sName && userRoles.includes(sName.toUpperCase())))) {
       let lastMessage = "";
       let lastTime = "";
-      const targetSheetName = sName || gName;
-      const chatSheet = resolveChatSheet(ss, targetSheetName, gName);
+      const targetSheetName = lookupTargetSheetNameFromNamaGrup(ss, sName, gName);
+      const chatSheet = ss.getSheetByName(targetSheetName);
+
       if (chatSheet && chatSheet.getLastRow() >= 2) {
         const lastRowVals = chatSheet.getRange(chatSheet.getLastRow(), 1, 1, 4).getValues()[0];
         lastTime = (lastRowVals[0] instanceof Date) ? lastRowVals[0].toISOString() : String(lastRowVals[0] || "");
@@ -375,7 +377,7 @@ function getUserAssignedGroups(username) {
       }
       assignedRooms.push({
         name: gName,
-        sheetName: chatSheet ? chatSheet.getName() : targetSheetName,
+        sheetName: targetSheetName,
         colSetting: gColSetting,
         foto: gFoto,
         lastMessage: lastMessage,
@@ -424,7 +426,7 @@ function getGroupMembersByRole(groupName) {
     const roleCell = String(userData[r][5] || "").trim();
     if (usernameUser && namaUser && roleCell) {
       const rolesArray = roleCell.split(",").map(item => item.trim().toUpperCase());
-      if (rolesArray.includes(targetRole)) {
+      if (rolesArray.includes(targetRole) || targetRole === "ADMINPUSAT") {
         members.push({ username: usernameUser, nama: namaUser, alamat: alamatUser });
       }
     }
@@ -441,33 +443,34 @@ function lookupTargetSheetNameFromNamaGrup(ss, rawSheetOrGroup, fallbackGroupNam
   const q1 = String(rawSheetOrGroup || "").trim();
   const q2 = String(fallbackGroupName || "").trim();
   const ng = ss.getSheetByName("NamaGrup");
+
   if (ng && ng.getLastRow() >= 2) {
-    const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
+    const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, ng.getLastColumn()).getValues();
     for (let i = 0; i < ngData.length; i++) {
-      const colA = String(ngData[i][0] || "").trim();
-      const colB = String(ngData[i][1] || "").trim();
+      const colA = String(ngData[i][0] || "").trim(); // Nama Grup
+      const colB = String(ngData[i][1] || "").trim(); // Sheet Chat
+
       if ((q1 && (colA.toUpperCase() === q1.toUpperCase() || colB.toUpperCase() === q1.toUpperCase())) ||
           (q2 && (colA.toUpperCase() === q2.toUpperCase() || colB.toUpperCase() === q2.toUpperCase()))) {
-        if (colB) return colB;
+        if (colB && ss.getSheetByName(colB)) return colB;
+        if (colA && ss.getSheetByName(colA)) return colA;
       }
     }
   }
-  return q1 || q2.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+
+  const directCandidate = q1 || q2;
+  if (directCandidate && ss.getSheetByName(directCandidate)) return directCandidate;
+
+  const altName = directCandidate.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+  if (ss.getSheetByName(altName)) return altName;
+
+  return directCandidate || "ChatRT37";
 }
 
 function resolveChatSheet(ss, chatSheetName, groupName) {
   const mappedSheetName = lookupTargetSheetNameFromNamaGrup(ss, chatSheetName, groupName);
   let sheet = ss.getSheetByName(mappedSheetName);
   if (sheet) return sheet;
-
-  const raw = String(chatSheetName || "").trim();
-  if (raw) {
-    sheet = ss.getSheetByName(raw);
-    if (sheet) return sheet;
-    const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
-    sheet = ss.getSheetByName(altChat);
-    if (sheet) return sheet;
-  }
 
   const allSheets = ss.getSheets();
   const targetUpper = mappedSheetName.toUpperCase();
@@ -476,7 +479,11 @@ function resolveChatSheet(ss, chatSheetName, groupName) {
       return allSheets[j];
     }
   }
-  return null;
+
+  const safeName = mappedSheetName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+  sheet = ss.insertSheet(safeName);
+  sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+  return sheet;
 }
 
 function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, replyTo) {
