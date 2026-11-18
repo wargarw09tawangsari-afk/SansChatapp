@@ -62,10 +62,9 @@ function doPost(e) {
         result = loginUser(payload.username, payload.password);
         break;
       case 'loginUserWithBundle':
-        result = loginUserWithBundle(payload.username, payload.password);
-        break;
-      case 'getGroupMappings':
-        result = getGroupMappings();
+        result = typeof loginUserWithBundle === 'function' 
+          ? loginUserWithBundle(payload.username, payload.password) 
+          : (typeof getInitialDashboardBundle === 'function' ? getInitialDashboardBundle(payload.username) : loginUser(payload.username, payload.password));
         break;
       case 'getInitialDashboardBundle':
         result = getInitialDashboardBundle(payload.username);
