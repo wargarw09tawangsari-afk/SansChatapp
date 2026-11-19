@@ -163,10 +163,11 @@
     color: #d1fae5;
   }
 
+  /* NO. 2: TOMBOL WEBAPS WARNA EMAS 3 DIMENSI */
   .btn-webaps {
-    background: #202c33;
-    color: var(--wa-green);
-    border: 3px solid var(--wa-green);
+    background: linear-gradient(145deg, #fde047 0%, #eab308 52%, #a16207 100%);
+    color: #1c1917;
+    border: 3px solid #fef08a;
     padding: 18px 16px;
     min-height: var(--btn-touch);
     border-radius: 20px;
@@ -174,11 +175,23 @@
     font-size: clamp(25.5px, 6.75vw, 36px);
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+    box-shadow:
+      0 6px 0 #713f12,
+      0 10px 20px rgba(234, 179, 8, 0.45),
+      inset 0 2px 3px rgba(255, 255, 255, 0.75);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .btn-webaps:active {
+    transform: translateY(4px);
+    box-shadow:
+      0 2px 0 #713f12,
+      0 5px 12px rgba(234, 179, 8, 0.35),
+      inset 0 1px 2px rgba(255, 255, 255, 0.55);
   }
 
+  /* NO. 3: TOMBOL CHAT PRIVAT WARNA BIRU 3 DIMENSI */
   .btn-chat-privat {
-    border: none;
     padding: 14px 18px;
     min-height: var(--btn-touch);
     border-radius: 20px;
@@ -190,18 +203,47 @@
     align-items: center;
     justify-content: center;
     line-height: 1.1;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .btn-chat-privat:active {
+    transform: translateY(4px);
   }
   .btn-chat-privat .lbl-top { font-size: clamp(24px, 6.3vw, 33px); display: block; }
   .btn-chat-privat .lbl-bot { font-size: clamp(24px, 6.3vw, 33px); display: block; }
-  .btn-privat-green { background: var(--wa-green); color: var(--wa-panel); }
-  .btn-privat-red { background: #ea4335; color: #ffffff; animation: pulseRed 1.2s infinite; }
-  @keyframes pulseRed { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
+  .btn-privat-blue {
+    background: linear-gradient(145deg, #38bdf8 0%, #0284c7 52%, #0369a1 100%);
+    color: #ffffff;
+    border: 3px solid #7dd3fc;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+    box-shadow:
+      0 6px 0 #075985,
+      0 10px 20px rgba(2, 132, 199, 0.48),
+      inset 0 2px 3px rgba(255, 255, 255, 0.65);
+  }
+  .btn-privat-blue:active {
+    box-shadow:
+      0 2px 0 #075985,
+      0 5px 12px rgba(2, 132, 199, 0.38),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+  .btn-privat-red {
+    background: linear-gradient(145deg, #f87171 0%, #dc2626 52%, #991b1b 100%);
+    color: #ffffff;
+    border: 3px solid #fca5a5;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+    box-shadow:
+      0 6px 0 #7f1d1d,
+      0 10px 20px rgba(220, 38, 38, 0.55),
+      inset 0 2px 3px rgba(255, 255, 255, 0.6);
+    animation: pulseRed 1.2s infinite;
+  }
+  @keyframes pulseRed { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
 
+  /* NO. 4: TOMBOL LOGOUT WARNA MERAH 3 DIMENSI */
   .btn-logout {
-    background: #202c33;
-    color: #f87171;
-    border: 3px solid #4b5563;
+    background: linear-gradient(145deg, #f87171 0%, #dc2626 52%, #991b1b 100%);
+    color: #ffffff;
+    border: 3px solid #fca5a5;
     padding: 18px 16px;
     min-height: var(--btn-touch);
     border-radius: 20px;
@@ -209,7 +251,19 @@
     font-size: clamp(25.5px, 6.75vw, 36px);
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+    box-shadow:
+      0 6px 0 #7f1d1d,
+      0 10px 20px rgba(220, 38, 38, 0.48),
+      inset 0 2px 3px rgba(255, 255, 255, 0.65);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .btn-logout:active {
+    transform: translateY(4px);
+    box-shadow:
+      0 2px 0 #7f1d1d,
+      0 5px 12px rgba(220, 38, 38, 0.38),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45);
   }
 
   .btn-grup-plus {
@@ -289,6 +343,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   }
 
+  /* NO. 1: PENGUMUMAN DENGAN WARNA TULISAN BERUBAH TIAP TAMPIL */
   .announcement-perspective {
     perspective: 1000px;
     margin: 8px 10px;
@@ -308,13 +363,22 @@
     transform-origin: top center;
     backface-visibility: hidden;
     box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    transition: background-color 0.35s ease, border-color 0.35s ease;
   }
   .fold-up-out { animation: foldUpOut 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
   .fold-up-in { animation: foldUpIn 0.38s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
   @keyframes foldUpOut { 0% { transform: rotateX(0deg); opacity: 1; } 100% { transform: rotateX(90deg); opacity: 0; } }
   @keyframes foldUpIn { 0% { transform: rotateX(-90deg); opacity: 0; } 100% { transform: rotateX(0deg); opacity: 1; } }
-  .announcement-icon { font-size: 44px; flex-shrink: 0; margin-top: 2px; }
-  .announcement-text { flex: 1; word-break: break-word; white-space: normal; font-weight: 700; line-height: 1.35; font-size: var(--font-md); }
+  .announcement-icon { font-size: 44px; flex-shrink: 0; margin-top: 2px; transition: color 0.35s ease; }
+  .announcement-text {
+    flex: 1;
+    word-break: break-word;
+    white-space: normal;
+    font-weight: 900;
+    line-height: 1.35;
+    font-size: var(--font-md);
+    transition: color 0.35s ease;
+  }
 
   .chat-list-wrapper {
     flex: 1;
@@ -517,7 +581,8 @@
     min-width: 0;
     cursor: pointer;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     overflow: hidden;
   }
   .room-title {
@@ -530,10 +595,20 @@
     line-height: 1.2;
     background: #d97706;
     border: 2px solid #f59e0b;
-    padding: 10px 14px;
+    padding: 8px 14px;
     border-radius: 14px;
     display: block;
     width: 100%;
+  }
+  .room-subtitle {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fde68a;
+    margin-top: 3px;
+    padding-left: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .room-header .btn-combo-call {
     padding: 12px 14px;
@@ -570,9 +645,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .room-subtitle {
-    display: none;
   }
 
   .room-header-right {
@@ -1364,7 +1436,7 @@
 
         <div class="header-right-group">
           <button id="btnWebApsHeader" class="btn-webaps" onclick="openWebApsUrl()">WebAps</button>
-          <button id="btnChatPrivatHeader" class="btn-chat-privat btn-privat-green" onclick="openPrivateChatPage()">
+          <button id="btnChatPrivatHeader" class="btn-chat-privat btn-privat-blue" onclick="openPrivateChatPage()">
             <span class="lbl-top">Chat</span>
             <span class="lbl-bot">Privat</span>
           </button>
@@ -1402,7 +1474,7 @@
   </div>
 
   <!-- ==========================================================
-       2. RUANG CHAT (HALAMAN KEDUA)
+       2. RUANG CHAT (HALAMAN KEDUA - TERSINKRON KE NAMA GRUP KOLOM A -> KOLOM B)
        ========================================================== -->
   <div id="roomView" class="view-screen hidden">
     <div class="room-header">
@@ -1763,12 +1835,16 @@
   let callSeconds = 0;
   let wakeLockSentinel = null;
   let lastAlertedUnreadState = false;
+  let namaGrupSheetMap = {}; // Pemetaan Kolom A (Nama Grup) -> Kolom B (Sheet Chat)
 
+  // NO. 1: PALET WARNA TULISAN PENGUMUMAN BERUBAH TIAP TAMPIL
   const announcementThemes = [
-    { bg: "#182229", border: "#00a884", text: "#e9edef", icon: "#00a884" },
-    { bg: "#202c33", border: "#34d399", text: "#ecfdf5", icon: "#34d399" },
-    { bg: "#1b2832", border: "#38bdf8", text: "#e0f2fe", icon: "#38bdf8" },
-    { bg: "#26221b", border: "#fbbf24", text: "#fef3c7", icon: "#fbbf24" }
+    { bg: "#182229", border: "#facc15", text: "#fde047", icon: "#facc15" }, // Kuning Emas Terang
+    { bg: "#142621", border: "#34d399", text: "#6ee7b7", icon: "#34d399" }, // Hijau Zamrud Terang
+    { bg: "#132332", border: "#38bdf8", text: "#7dd3fc", icon: "#38bdf8" }, // Biru Cyan Terang
+    { bg: "#291d16", border: "#fb923c", text: "#fdba74", icon: "#fb923c" }, // Jingga Terang
+    { bg: "#23192e", border: "#c084fc", text: "#e9d5ff", icon: "#c084fc" }, // Ungu Lavender Terang
+    { bg: "#1f2937", border: "#f472b6", text: "#fbcfe8", icon: "#f472b6" }  // Merah Muda Cerah
   ];
 
   const chatTextColors = [
@@ -2032,12 +2108,42 @@
     window.location.replace(target);
   }
 
+  function updateNamaGrupCache(mappings) {
+    if (!Array.isArray(mappings)) return;
+    mappings.forEach(m => {
+      if (m.groupName && m.sheetName) {
+        namaGrupSheetMap[m.groupName.trim().toUpperCase()] = m.sheetName.trim();
+      }
+    });
+    try {
+      localStorage.setItem('sanschat_namagrup_map', JSON.stringify(namaGrupSheetMap));
+    } catch (e) {}
+  }
+
+  function resolveMappedSheetName(groupName, fallbackSheetName) {
+    const key = String(groupName || "").trim().toUpperCase();
+    if (key && namaGrupSheetMap[key]) {
+      return namaGrupSheetMap[key];
+    }
+    if (fallbackSheetName) {
+      return String(fallbackSheetName).trim();
+    }
+    return String(groupName || "ChatRT37").trim().replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+  }
+
   function renderCachedDashboard() {
     document.getElementById('headerUserName').innerText = currentUser.nama || currentUser.username;
     document.getElementById('headerUserAddress').innerText = currentUser.alamat || "-";
     if (currentUser.foto) {
       document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${currentUser.foto}" />`;
     }
+
+    try {
+      const savedMap = JSON.parse(localStorage.getItem('sanschat_namagrup_map') || '{}');
+      if (savedMap && typeof savedMap === 'object') {
+        namaGrupSheetMap = Object.assign(namaGrupSheetMap, savedMap);
+      }
+    } catch (e) {}
 
     const cachedGroups = JSON.parse(localStorage.getItem('sanschat_groups_' + currentUser.username) || 'null');
     if (cachedGroups) {
@@ -2073,7 +2179,16 @@
           document.getElementById('mainHeaderAvatar').innerHTML = `<img src="${currentUser.foto}" />`;
         }
       }
+      if (bundle.groupMapping) {
+        updateNamaGrupCache(bundle.groupMapping);
+      }
       if (bundle.groups) {
+        bundle.groups.forEach(g => {
+          if (g.name && g.sheetName) {
+            namaGrupSheetMap[g.name.trim().toUpperCase()] = g.sheetName.trim();
+          }
+        });
+        localStorage.setItem('sanschat_namagrup_map', JSON.stringify(namaGrupSheetMap));
         localStorage.setItem('sanschat_groups_' + currentUser.username, JSON.stringify(bundle.groups));
         renderChatRoomList(bundle.groups);
       }
@@ -2317,6 +2432,7 @@
     reader.readAsDataURL(file);
   }
 
+  // NO. 1: WARNA TULISAN DI PENGUMUMAN BERUBAH TIAP TAMPIL
   function playNextAnnouncementCell(animate = true) {
     if (!announcements || announcements.length === 0) return;
     const currentText = announcements[announcementIndex];
@@ -2360,9 +2476,10 @@
       return;
     }
     rooms.forEach(r => {
+      const mappedSheet = resolveMappedSheetName(r.name, r.sheetName);
       const item = document.createElement('div');
       item.className = 'chat-item';
-      item.onclick = () => openChatRoom(r.sheetName, r.name, r.foto);
+      item.onclick = () => openChatRoom(mappedSheet, r.name, r.foto);
       const timeLabel = r.lastTime ? new Date(r.lastTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
       item.innerHTML = `
         <div class="avatar">${r.foto ? `<img src="${r.foto}" />` : '👥'}</div>
@@ -2371,7 +2488,7 @@
             <div class="chat-name">${escapeHtml(r.name)}</div>
             <div class="chat-time">${timeLabel}</div>
           </div>
-          <div class="chat-last-msg">${escapeHtml(r.lastMessage || ('Sheet Sinkron: ' + r.sheetName))}</div>
+          <div class="chat-last-msg">${escapeHtml(r.lastMessage || ('Sheet: ' + mappedSheet))}</div>
         </div>
       `;
       container.appendChild(item);
@@ -2379,13 +2496,15 @@
     setTimeout(updateGroupScrollButtons, 80);
   }
 
+  // NO. 5 & 6: BUKA HALAMAN KEDUA SESUAI PEMETAAN NAMA GRUP KOLOM A -> KOLOM B
   function openChatRoom(sheetName, name, foto) {
     isPrivateChatMode = false;
-    activeChatSheet = sheetName || name.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
-    activeGroupName = name;
+    activeGroupName = String(name || "").trim();
+    activeChatSheet = resolveMappedSheetName(activeGroupName, sheetName);
     cancelReplyQuote();
 
-    document.getElementById('roomTitle').innerText = name;
+    document.getElementById('roomTitle').innerText = activeGroupName;
+    document.getElementById('roomSub').innerText = "Sheet: " + activeChatSheet;
     document.getElementById('btnGroupMembersAction').classList.remove('hidden');
     document.getElementById('btnSelectPrivateTarget').classList.add('hidden');
     closeAllInputPopups();
@@ -2395,19 +2514,47 @@
     document.getElementById('roomView').classList.remove('hidden');
 
     const cachedMsgs = JSON.parse(localStorage.getItem('sanschat_msgs_' + activeChatSheet) || 'null');
-    if (cachedMsgs) renderMessageList(cachedMsgs, false);
+    if (cachedMsgs) {
+      renderMessageList(cachedMsgs, false);
+    } else {
+      document.getElementById('chatMessages').innerHTML =
+        '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:20px 22px; border-radius:18px; font-size:var(--font-lg); font-weight:700; margin:18px auto; max-width:96%;">Menyinkronkan sheet <b>' + escapeHtml(activeChatSheet) + '</b>...</div>';
+    }
 
-    loadMessages(false);
+    // Verifikasi & sinkronisasi dengan sheet NamaGrup Kolom A -> Kolom B di Spreadsheet
+    callServerAPI('resolveGroupRoom', {
+      groupName: activeGroupName,
+      sheetName: activeChatSheet
+    }).then((resolved) => {
+      if (resolved && resolved.sheetName) {
+        activeChatSheet = resolved.sheetName;
+        if (activeGroupName) {
+          namaGrupSheetMap[activeGroupName.toUpperCase()] = activeChatSheet;
+          try {
+            localStorage.setItem('sanschat_namagrup_map', JSON.stringify(namaGrupSheetMap));
+          } catch (e) {}
+        }
+        document.getElementById('roomSub').innerText = "Sheet: " + activeChatSheet;
+        if (resolved.foto && !foto) {
+          document.getElementById('roomGroupAvatar').innerHTML = `<img src="${resolved.foto}" />`;
+        }
+      }
+      loadMessages(false);
+    }).catch(() => {
+      loadMessages(false);
+    });
+
     startActiveRoomAutoRefresh();
   }
 
+  // NO. 3: BADGE TOMBOL CHAT PRIVAT BIRU 3D / MERAH 3D
   function updatePrivateButtonBadge(hasUnread) {
     const btn = document.getElementById('btnChatPrivatHeader');
     if (hasUnread) {
       btn.className = "btn-chat-privat btn-privat-red";
       btn.innerHTML = `<span class="lbl-top">Terima</span><span class="lbl-bot">Chat!</span>`;
     } else {
-      btn.className = "btn-chat-privat btn-privat-green";
+      btn.className = "btn-chat-privat btn-privat-blue";
       btn.innerHTML = `<span class="lbl-top">Chat</span><span class="lbl-bot">Privat</span>`;
     }
   }
@@ -2419,6 +2566,7 @@
     cancelReplyQuote();
 
     document.getElementById('roomTitle').innerText = "Chat Privat";
+    document.getElementById('roomSub').innerText = "Sheet: ChatPrivat";
     document.getElementById('roomGroupAvatar').innerHTML = '🔒';
     document.getElementById('btnGroupMembersAction').classList.add('hidden');
     document.getElementById('btnSelectPrivateTarget').classList.remove('hidden');
@@ -2641,8 +2789,14 @@
         renderPrivateMessageList(msgs, isSilentPoll);
       });
     } else {
-      callServerAPI('getMessages', { chatSheetName: activeChatSheet, username: currentUser.username }).then((msgs) => {
-        localStorage.setItem('sanschat_msgs_' + activeChatSheet, JSON.stringify(msgs || []));
+      const targetSheet = resolveMappedSheetName(activeGroupName, activeChatSheet);
+      activeChatSheet = targetSheet;
+      callServerAPI('getMessages', {
+        chatSheetName: targetSheet,
+        groupName: activeGroupName,
+        username: currentUser.username
+      }).then((msgs) => {
+        localStorage.setItem('sanschat_msgs_' + targetSheet, JSON.stringify(msgs || []));
         renderMessageList(msgs, isSilentPoll);
       });
     }
@@ -2716,7 +2870,7 @@
 
     area.innerHTML = '';
     if (!msgs || msgs.length === 0) {
-      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:20px 22px; border-radius:18px; font-size:var(--font-lg); font-weight:700; margin:18px auto; max-width:96%;">Belum ada riwayat pesan di grup ini.</div>';
+      area.innerHTML = '<div style="text-align:center; color:#54656f; background:rgba(255,255,255,0.95); padding:20px 22px; border-radius:18px; font-size:var(--font-lg); font-weight:700; margin:18px auto; max-width:96%;">Belum ada riwayat pesan di sheet <b>' + escapeHtml(activeChatSheet) + '</b>.</div>';
       updateChatScrollButtons();
       return;
     }
@@ -2757,7 +2911,7 @@
   function appendOptimisticMessage(pesanText, tipe, mediaUrl, replyPayload) {
     const area = document.getElementById('chatMessages');
     if (!area) return;
-    if (area.innerText.includes("Belum ada riwayat pesan")) {
+    if (area.innerText.includes("Belum ada riwayat pesan") || area.innerText.includes("Menyinkronkan sheet")) {
       area.innerHTML = '';
     }
     const div = document.createElement('div');
@@ -2798,15 +2952,24 @@
         replyTo: replyPayload
       }).then(() => loadMessages(false)).catch(() => {});
     } else {
+      const targetSheet = resolveMappedSheetName(activeGroupName, activeChatSheet);
+      activeChatSheet = targetSheet;
       callServerAPI('sendMessage', {
-        chatSheetName: activeChatSheet,
+        chatSheetName: targetSheet,
+        groupName: activeGroupName,
         username: currentUser.username,
         nama: currentUser.nama,
         pesan: pesanText,
         tipe: tipe,
         mediaUrl: mediaUrl,
         replyTo: replyPayload
-      }).then(() => loadMessages(false)).catch(() => {});
+      }).then((res) => {
+        if (res && res.sheetName) {
+          activeChatSheet = res.sheetName;
+          document.getElementById('roomSub').innerText = "Sheet: " + activeChatSheet;
+        }
+        loadMessages(false);
+      }).catch(() => {});
     }
   }
 
@@ -3071,6 +3234,7 @@
     }
     callServerAPI('votePollOption', {
       chatSheetName: activeChatSheet,
+      groupName: activeGroupName,
       rowNumber: rowNumber,
       optionindex: optionindex,
       voterUsername: currentUser.username

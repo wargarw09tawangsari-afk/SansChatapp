@@ -82,17 +82,23 @@ function doPost(e) {
       case 'getUserAssignedGroups':
         result = getUserAssignedGroups(payload.username);
         break;
+      case 'getNamaGrupMapping':
+        result = getNamaGrupMapping();
+        break;
+      case 'resolveGroupRoom':
+        result = resolveGroupRoom(payload.groupName, payload.sheetName);
+        break;
       case 'getGroupMembersByRole':
         result = getGroupMembersByRole(payload.groupName);
         break;
       case 'sendMessage':
-        result = sendMessage(payload.chatSheetName, payload.username, payload.nama, payload.pesan, payload.tipe, payload.mediaUrl, payload.replyTo);
+        result = sendMessage(payload.chatSheetName, payload.username, payload.nama, payload.pesan, payload.tipe, payload.mediaUrl, payload.replyTo, payload.groupName);
         break;
       case 'getMessages':
-        result = getMessages(payload.chatSheetName, payload.username);
+        result = getMessages(payload.chatSheetName, payload.username, payload.groupName);
         break;
       case 'votePollOption':
-        result = votePollOption(payload.chatSheetName, payload.rowNumber, payload.optionindex, payload.voterUsername);
+        result = votePollOption(payload.chatSheetName, payload.rowNumber, payload.optionindex, payload.voterUsername, payload.groupName);
         break;
       case 'sendPrivateMessage':
         result = sendPrivateMessage(payload.username, payload.nama, payload.pesan, payload.tipe, payload.mediaUrl, payload.targetUsername, payload.replyTo);
@@ -140,12 +146,25 @@ function ensureDefaultSheets() {
     const u = ss.insertSheet("Users");
     u.appendRow(["Username", "Nama", "Alamat", "Password", "Foto", "Role"]);
   }
-  if (!ss.getSheetByName("NamaGrup")) {
-    const ng = ss.insertSheet("NamaGrup");
+  let ng = ss.getSheetByName("NamaGrup");
+  if (!ng) {
+    ng = ss.insertSheet("NamaGrup");
     ng.appendRow(["Nama Grup", "Sheet Chat", "Kolom", "Foto Grup"]);
     ng.appendRow(["Grup RT37", "ChatRT37", "G", ""]);
     ng.appendRow(["Grup RT38", "ChatRT38", "G", ""]);
     ng.appendRow(["Grup RT39", "ChatRT39", "G", ""]);
+  }
+  // Sinkronisasi otomatis: Pastikan setiap baris Kolom B di NamaGrup memiliki tab sheet yang siap dipakai
+  if (ng.getLastRow() >= 2) {
+    const rows = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
+    for (let i = 0; i < rows.length; i++) {
+      const colA = String(rows[i][0] || "").trim();
+      const colB = String(rows[i][1] || "").trim();
+      if (colA && colB && !ss.getSheetByName(colB)) {
+        const created = ss.insertSheet(colB);
+        created.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+      }
+    }
   }
   if (!ss.getSheetByName("Informasi")) {
     const inf = ss.insertSheet("Informasi");
@@ -220,6 +239,7 @@ function getInitialDashboardBundle(username) {
   return {
     profile: getUserProfileDetail(cleanUser),
     groups: getUserAssignedGroups(cleanUser),
+    groupMapping: getNamaGrupMapping(),
     announcements: getAnnouncements(),
     hasUnreadPrivate: hasUnreadPrivateMessages(cleanUser),
     incomingCall: checkIncomingCall(cleanUser)
@@ -250,6 +270,87 @@ function getUserProfileDetail(username) {
   return null;
 }
 
+/**
+ * Membaca seluruh pemetaan Kolom A (Nama Grup) -> Kolom B (Sheet Chat) di sheet NamaGrup
+ */
+function getNamaGrupMapping() {
+  const ss = getSpreadsheet();
+  const groupSheet = ss.getSheetByName("NamaGrup");
+  if (!groupSheet || groupSheet.getLastRow() < 2) return [];
+
+  const numCols = Math.max(4, groupSheet.getLastColumn());
+  const data = groupSheet.getRange(2, 1, groupSheet.getLastRow() - 1, numCols).getValues();
+  let mappings = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const colA = String(data[i][0] || "").trim();
+    const colB = String(data[i][1] || "").trim();
+    const colC = String(data[i][2] || "").trim();
+    const colD = String(data[i][3] || "").trim();
+    if (colA !== "") {
+      const targetSheet = colB || colA.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+      mappings.push({
+        rowIndex: i + 2,
+        groupName: colA,
+        sheetName: targetSheet,
+        kolomConfig: colC,
+        foto: colD
+      });
+    }
+  }
+  return mappings;
+}
+
+/**
+ * Menyelesaikan nama sheet tujuan berdasarkan NamaGrup Kolom A -> Kolom B dan memastikan sheet tersedia
+ */
+function resolveGroupRoom(groupName, fallbackSheetName) {
+  const ss = getSpreadsheet();
+  const cleanGroup = String(groupName || "").trim();
+  const cleanFallback = String(fallbackSheetName || "").trim();
+  let resolvedSheetName = cleanFallback;
+  let resolvedFoto = "";
+
+  const ng = ss.getSheetByName("NamaGrup");
+  if (ng && ng.getLastRow() >= 2) {
+    const numCols = Math.max(4, ng.getLastColumn());
+    const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, numCols).getValues();
+    for (let i = 0; i < ngData.length; i++) {
+      const colA = String(ngData[i][0] || "").trim();
+      const colB = String(ngData[i][1] || "").trim();
+      const colD = String(ngData[i][3] || "").trim();
+      if (
+        (cleanGroup && colA.toUpperCase() === cleanGroup.toUpperCase()) ||
+        (cleanFallback && colB.toUpperCase() === cleanFallback.toUpperCase())
+      ) {
+        if (colB !== "") {
+          resolvedSheetName = colB;
+        }
+        resolvedFoto = colD;
+        break;
+      }
+    }
+  }
+
+  if (!resolvedSheetName) {
+    resolvedSheetName = cleanGroup.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+  }
+
+  let sheet = resolveChatSheet(ss, resolvedSheetName, cleanGroup);
+  if (!sheet) {
+    sheet = ss.insertSheet(resolvedSheetName);
+    sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+    SpreadsheetApp.flush();
+  }
+
+  return {
+    success: true,
+    groupName: cleanGroup || resolvedSheetName,
+    sheetName: sheet.getName(),
+    foto: resolvedFoto
+  };
+}
+
 function getUserAssignedGroups(username) {
   const ss = getSpreadsheet();
   const userSheet = ss.getSheetByName("Users");
@@ -274,13 +375,14 @@ function getUserAssignedGroups(username) {
   const groupData = groupSheet.getDataRange().getValues();
   let assignedRooms = [];
   for (let j = 1; j < groupData.length; j++) {
-    const gName = String(groupData[j][0] || "").trim();
-    const sName = String(groupData[j][1] || "").trim();
-    const gFoto = String(groupData[j][3] || "").trim();
+    const gName = String(groupData[j][0] || "").trim(); // Kolom A: Nama Grup (misal: Grup RT37)
+    const sName = String(groupData[j][1] || "").trim(); // Kolom B: Nama Sheet (misal: ChatRT37)
+    const gFoto = String(groupData[j][3] || "").trim(); // Kolom D: Foto Grup
     if (gName !== "" && userRoles.includes(gName.toUpperCase())) {
+      const targetSheetName = sName || gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
       let lastMessage = "";
       let lastTime = "";
-      const chatSheet = resolveChatSheet(ss, sName || gName);
+      const chatSheet = resolveChatSheet(ss, targetSheetName, gName);
       if (chatSheet && chatSheet.getLastRow() >= 2) {
         const lastRowVals = chatSheet.getRange(chatSheet.getLastRow(), 1, 1, 4).getValues()[0];
         lastTime = (lastRowVals[0] instanceof Date) ? lastRowVals[0].toISOString() : String(lastRowVals[0] || "");
@@ -288,7 +390,7 @@ function getUserAssignedGroups(username) {
       }
       assignedRooms.push({
         name: gName,
-        sheetName: sName || gName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, ""),
+        sheetName: chatSheet ? chatSheet.getName() : targetSheetName,
         foto: gFoto,
         lastMessage: lastMessage,
         lastTime: lastTime
@@ -369,64 +471,88 @@ function getGroupMembersByRole(groupName) {
   return members;
 }
 
-function resolveChatSheet(ss, chatSheetName) {
-  const raw = String(chatSheetName || "ChatRT37").trim();
-  let sheet = ss.getSheetByName(raw);
-  if (sheet) return sheet;
+/**
+ * Mencari sheet berdasarkan pemetaan NamaGrup Kolom A -> Kolom B secara presisi
+ */
+function resolveChatSheet(ss, chatSheetName, groupNameHint) {
+  const raw = String(chatSheetName || "").trim();
+  const hint = String(groupNameHint || "").trim();
 
-  // Fallback 1: Jika dikirim "Grup RT38", coba "ChatRT38"
-  const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
-  sheet = ss.getSheetByName(altChat);
-  if (sheet) return sheet;
-
-  // Fallback 2: Cek tabel NamaGrup kolom A (Nama Grup) -> kolom B (Sheet Chat)
+  // 1. Cek langsung pemetaan NamaGrup Kolom A -> Kolom B terlebih dahulu
   const ng = ss.getSheetByName("NamaGrup");
   if (ng && ng.getLastRow() >= 2) {
     const ngData = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
     for (let i = 0; i < ngData.length; i++) {
-      const gName = String(ngData[i][0] || "").trim();
-      const sName = String(ngData[i][1] || "").trim();
-      if (gName.toUpperCase() === raw.toUpperCase() || sName.toUpperCase() === raw.toUpperCase()) {
-        if (sName && ss.getSheetByName(sName)) return ss.getSheetByName(sName);
-        if (gName && ss.getSheetByName(gName)) return ss.getSheetByName(gName);
+      const colA = String(ngData[i][0] || "").trim();
+      const colB = String(ngData[i][1] || "").trim();
+      if (
+        (hint && colA.toUpperCase() === hint.toUpperCase()) ||
+        (raw && colA.toUpperCase() === raw.toUpperCase()) ||
+        (raw && colB.toUpperCase() === raw.toUpperCase())
+      ) {
+        if (colB) {
+          const exactByColB = ss.getSheetByName(colB);
+          if (exactByColB) return exactByColB;
+          const allSheets = ss.getSheets();
+          for (let k = 0; k < allSheets.length; k++) {
+            if (allSheets[k].getName().trim().toUpperCase() === colB.toUpperCase()) {
+              return allSheets[k];
+            }
+          }
+        }
       }
     }
   }
 
-  // Fallback 3: Pencarian case-insensitive di seluruh tab sheet
-  const allSheets = ss.getSheets();
-  for (let j = 0; j < allSheets.length; j++) {
-    if (allSheets[j].getName().trim().toUpperCase() === raw.toUpperCase()) {
-      return allSheets[j];
+  // 2. Cek nama sheet langsung jika sudah sesuai Kolom B
+  if (raw) {
+    let sheet = ss.getSheetByName(raw);
+    if (sheet) return sheet;
+
+    const altChat = raw.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
+    sheet = ss.getSheetByName(altChat);
+    if (sheet) return sheet;
+
+    const allSheets = ss.getSheets();
+    for (let j = 0; j < allSheets.length; j++) {
+      if (allSheets[j].getName().trim().toUpperCase() === raw.toUpperCase()) {
+        return allSheets[j];
+      }
     }
   }
+
   return null;
 }
 
-function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, replyTo) {
+function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, replyTo, groupName) {
   const lock = LockService.getScriptLock();
   lock.tryLock(10000);
   try {
     const ss = getSpreadsheet();
-    const targetRoom = String(chatSheetName || "ChatRT37").trim();
-    let sheet = resolveChatSheet(ss, targetRoom);
+    const resolved = resolveGroupRoom(groupName, chatSheetName);
+    const targetSheetName = resolved.sheetName || String(chatSheetName || "ChatRT37").trim();
+    let sheet = resolveChatSheet(ss, targetSheetName, groupName);
+
     if (!sheet) {
-      const safeName = targetRoom.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
+      const safeName = targetSheetName.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "") || "ChatRT37";
       sheet = ss.insertSheet(safeName);
       sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+    } else if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
     }
+
     const cleanUser = String(username || "").trim().toUpperCase();
     sheet.appendRow([new Date(), cleanUser, nama || cleanUser, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
     SpreadsheetApp.flush();
-    return { success: true };
+    return { success: true, sheetName: sheet.getName() };
   } finally {
     lock.releaseLock();
   }
 }
 
-function getMessages(chatSheetName, readerUsername) {
+function getMessages(chatSheetName, readerUsername, groupName) {
   const ss = getSpreadsheet();
-  const sheet = resolveChatSheet(ss, chatSheetName);
+  const sheet = resolveChatSheet(ss, chatSheetName, groupName);
   if (!sheet || sheet.getLastRow() < 2) return [];
 
   const lastRow = sheet.getLastRow();
@@ -461,9 +587,9 @@ function getMessages(chatSheetName, readerUsername) {
   return msgs;
 }
 
-function votePollOption(chatSheetName, rowNumber, optionindex, voterUsername) {
+function votePollOption(chatSheetName, rowNumber, optionindex, voterUsername, groupName) {
   const ss = getSpreadsheet();
-  const sheet = resolveChatSheet(ss, chatSheetName);
+  const sheet = resolveChatSheet(ss, chatSheetName, groupName);
   if (!sheet || rowNumber < 2) return { success: false };
   const cell = sheet.getRange(rowNumber, 6);
   try {
@@ -471,6 +597,7 @@ function votePollOption(chatSheetName, rowNumber, optionindex, voterUsername) {
     if (!pollData.votes) pollData.votes = {};
     pollData.votes[String(voterUsername || "").trim().toUpperCase()] = optionindex;
     cell.setValue(JSON.stringify(pollData));
+    SpreadsheetApp.flush();
     return { success: true };
   } catch (e) {
     return { success: false };
