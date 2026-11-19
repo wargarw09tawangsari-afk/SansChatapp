@@ -1112,7 +1112,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 35px 14px 25px 14px;
+    padding: 28px 14px 24px 14px;
   }
   .call-header-top {
     width: 100%;
@@ -1147,24 +1147,24 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    margin: 14px 0;
+    margin: 12px 0;
   }
   .call-user-avatar {
-    width: 280px;
-    height: 280px;
+    width: 240px;
+    height: 240px;
     border-radius: 50%;
     background: #202c33;
-    border: 6px solid var(--wa-green);
+    border: 5px solid var(--wa-green);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 120px;
+    font-size: 108px;
     animation: pulseRing 1.5s infinite;
     box-shadow: 0 12px 32px rgba(0,0,0,0.65);
   }
   @keyframes pulseRing {
     0% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7); }
-    70% { box-shadow: 0 0 0 42px rgba(0, 168, 132, 0); }
+    70% { box-shadow: 0 0 0 38px rgba(0, 168, 132, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0); }
   }
   .video-stage-wrapper {
@@ -1172,15 +1172,23 @@
     height: 100%;
     position: relative;
     background: #000000;
-    border-radius: 26px;
+    border-radius: 22px;
     overflow: hidden;
     border: 3px solid var(--wa-green);
   }
   #localCameraPreview {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    width: 130px;
+    height: 180px;
     object-fit: cover;
     transform: scaleX(-1);
+    border-radius: 16px;
+    border: 2.5px solid var(--wa-green-light);
+    z-index: 4;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.75);
+    background: #111b21;
   }
   #jitsiCallFrame {
     position: absolute;
@@ -1188,18 +1196,19 @@
     width: 100%;
     height: 100%;
     border: none;
+    border-radius: 20px;
     z-index: 2;
   }
   .call-dock-panel {
     width: 100%;
-    max-width: 680px;
+    max-width: 580px;
     background: #182229;
-    border: 2.5px solid var(--wa-border);
-    border-radius: 36px;
-    padding: 20px 16px;
+    border: 2px solid var(--wa-border);
+    border-radius: 30px;
+    padding: 18px 14px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px 12px;
+    gap: 16px 10px;
     z-index: 10;
     box-shadow: 0 12px 35px rgba(0,0,0,0.8);
   }
@@ -1210,18 +1219,18 @@
     gap: 8px;
   }
   .btn-call-action {
-    width: 115px;
-    height: 115px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
     border: none;
-    font-size: 52px;
+    font-size: 44px;
     color: #ffffff;
-    background: #2a3942;
+    background: #374151;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
   }
   .btn-call-action.active-toggle {
     background: #ffffff;
@@ -1230,7 +1239,7 @@
   .btn-accept { background: #25d366; color: #111b21; animation: pulseRed 1.2s infinite; }
   .btn-reject { background: #ea4335; color: #ffffff; }
   .call-ctrl-lbl {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 900;
     color: var(--wa-text);
   }
@@ -1406,17 +1415,17 @@
       </div>
 
       <div class="room-header-right">
-        <button type="button" class="btn-combo-call" id="btnComboCallMenu" title="Telpon, Video Call & Setting" onclick="toggleComboCallMenu(event)">
-          📞📹
-        </button>
+        <button type="button" class="btn-combo-call" title="Telpon Langsung / Pilih Kontak" onclick="initiateVoiceCall()" style="padding:12px 14px; min-height:96px; font-size:40px;">📞</button>
+        <button type="button" class="btn-combo-call" title="Video Call Langsung / Pilih Kontak" onclick="initiateVideoCall()" style="padding:12px 14px; min-height:96px; font-size:40px;">📹</button>
+        <button type="button" class="btn-combo-call" id="btnComboCallMenu" title="Opsi Panggilan & Nada Dering" onclick="toggleComboCallMenu(event)" style="padding:12px 12px; min-height:96px; font-size:34px;">⚙️</button>
         <button class="btn-grup-plus" id="btnGroupMembersAction" onclick="openGroupMembersModal()">Grup +</button>
         <button class="btn-grup-plus hidden" id="btnSelectPrivateTarget" onclick="openPrivateRecipientPicker()">👤 Tujuan</button>
 
         <div id="comboCallDropdown" class="combo-dropdown-menu hidden" onclick="event.stopPropagation()">
           <input type="text" id="searchComboCallInput" class="dropdown-search-input" placeholder="🔍 Cari menu / panggilan..." oninput="filterDropdownItems('searchComboCallInput', '#comboCallDropdown .combo-menu-item')">
-          <button type="button" class="combo-menu-item" onclick="openCallDialog('voice')">📞 Telpon</button>
-          <button type="button" class="combo-menu-item" onclick="openCallDialog('video')">📹 Video Call</button>
-          <button type="button" class="combo-menu-item" onclick="openRingtoneSettings()">⚙️ Nada Dering</button>
+          <button type="button" class="combo-menu-item" onclick="openCallDialog('voice')">📞 Telpon Warga / Grup</button>
+          <button type="button" class="combo-menu-item" onclick="openCallDialog('video')">📹 Video Call Warga / Grup</button>
+          <button type="button" class="combo-menu-item" onclick="openRingtoneSettings()">🔔 Nada Dering</button>
         </div>
       </div>
     </div>
@@ -1567,15 +1576,15 @@
     </div>
   </div>
 
-  <!-- LAYAR PANGGILAN SUARA & VIDEO CALL -->
+  <!-- LAYAR PANGGILAN SUARA & VIDEO CALL (JITSI) -->
   <div id="callScreen" class="call-overlay hidden">
     <div class="call-header-top">
-      <div class="call-target-title" id="callTargetName">Nama Kontak</div>
+      <div class="call-target-title" id="callTargetName">NAMA WARGA</div>
       <div class="call-encrypted-sub">🔒 Terenkripsi secara end-to-end</div>
       <div class="call-status" id="callStatusText">Memanggil...</div>
     </div>
 
-    <div class="call-center-stage">
+    <div class="call-center-stage" id="callVideoStage">
       <div id="voiceAvatarStage" class="call-user-avatar">📞</div>
 
       <div id="videoContainer" class="video-stage-wrapper hidden">
@@ -3291,16 +3300,44 @@
     }
   }
 
+  function initiateVoiceCall() {
+    if (isPrivateChatMode && privateTargetUsername) {
+      const cleanName = document.getElementById('roomTitle').innerText.replace(/^Privat:\s*/i, '') || privateTargetUsername;
+      startOutgoingCall(privateTargetUsername, cleanName, 'voice');
+    } else if (!isPrivateChatMode && activeGroupName) {
+      openCallDialog('voice');
+    } else {
+      openCallDialog('voice');
+    }
+  }
+
+  function initiateVideoCall() {
+    if (isPrivateChatMode && privateTargetUsername) {
+      const cleanName = document.getElementById('roomTitle').innerText.replace(/^Privat:\s*/i, '') || privateTargetUsername;
+      startOutgoingCall(privateTargetUsername, cleanName, 'video');
+    } else if (!isPrivateChatMode && activeGroupName) {
+      openCallDialog('video');
+    } else {
+      openCallDialog('video');
+    }
+  }
+
+  function buildJitsiRoomUrl(roomSlug, isVideo) {
+    return `https://meet.jit.si/${roomSlug}#config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=${!isVideo}`;
+  }
+
   function startOutgoingCall(targetUsername, targetName, type) {
     closeGroupMembersModal();
     currentCallType = type;
     isCallMuted = false;
     isCallSpeakerOn = true;
     document.getElementById('btnToggleMute').classList.remove('active-toggle');
+    document.getElementById('btnToggleMute').innerText = '🎙️';
     document.getElementById('btnToggleSpeaker').classList.add('active-toggle');
 
-    const roomSlug = "SansChatRW09_" + activeChatSheet.replace(/[^a-zA-Z0-9]/g, '') + "_" + Date.now();
-    const roomUrl = `https://meet.jit.si/${roomSlug}#config.prejoinPageEnabled=false&config.startWithVideoMuted=${type !== 'video'}`;
+    const safeRoomPart = (activeChatSheet || "RW09").replace(/[^a-zA-Z0-9]/g, '');
+    const roomSlug = "SansChatRW09_" + safeRoomPart + "_" + Date.now();
+    const roomUrl = buildJitsiRoomUrl(roomSlug, type === 'video');
     activeCallRoomUrl = roomUrl;
     activeIncomingCaller = "";
 
@@ -3309,15 +3346,17 @@
     document.getElementById('acceptCallSlot').style.display = 'none';
     document.getElementById('flipCamSlot').style.display = type === 'video' ? 'flex' : 'none';
 
+    const jitsiFrame = document.getElementById('jitsiCallFrame');
     if (type === 'video') {
       document.getElementById('voiceAvatarStage').classList.add('hidden');
       document.getElementById('videoContainer').classList.remove('hidden');
-      document.getElementById('jitsiCallFrame').src = roomUrl;
+      jitsiFrame.classList.remove('hidden');
+      jitsiFrame.src = roomUrl;
       activateLocalCallMedia(true);
     } else {
       document.getElementById('videoContainer').classList.add('hidden');
       document.getElementById('voiceAvatarStage').classList.remove('hidden');
-      document.getElementById('jitsiCallFrame').src = roomUrl;
+      jitsiFrame.src = roomUrl;
       activateLocalCallMedia(false);
     }
 
@@ -3345,7 +3384,7 @@
     if (!callScreen.classList.contains('hidden')) return;
 
     currentCallType = incoming.type || 'voice';
-    activeCallRoomUrl = incoming.roomUrl || ("https://meet.jit.si/SansChatRW09_" + Date.now() + "#config.prejoinPageEnabled=false");
+    activeCallRoomUrl = incoming.roomUrl || buildJitsiRoomUrl("SansChatRW09_" + Date.now(), currentCallType === 'video');
     activeIncomingCaller = incoming.callerName || "Warga";
 
     document.getElementById('callTargetName').innerText = activeIncomingCaller;
@@ -3372,9 +3411,11 @@
     document.getElementById('acceptCallSlot').style.display = 'none';
     document.getElementById('flipCamSlot').style.display = currentCallType === 'video' ? 'flex' : 'none';
 
+    const jitsiFrame = document.getElementById('jitsiCallFrame');
     if (currentCallType === 'video') {
       document.getElementById('voiceAvatarStage').classList.add('hidden');
       document.getElementById('videoContainer').classList.remove('hidden');
+      jitsiFrame.classList.remove('hidden');
       activateLocalCallMedia(true);
     } else {
       document.getElementById('videoContainer').classList.add('hidden');
@@ -3382,7 +3423,7 @@
       activateLocalCallMedia(false);
     }
 
-    document.getElementById('jitsiCallFrame').src = activeCallRoomUrl;
+    jitsiFrame.src = activeCallRoomUrl;
     startCallDurationTimer();
 
     callServerAPI('updateCallStatus', { username: currentUser.username, status: "ANSWERED" }).catch(() => {});
@@ -3393,6 +3434,12 @@
     document.getElementById('flipCamSlot').style.display = 'flex';
     document.getElementById('voiceAvatarStage').classList.add('hidden');
     document.getElementById('videoContainer').classList.remove('hidden');
+    const jitsiFrame = document.getElementById('jitsiCallFrame');
+    jitsiFrame.classList.remove('hidden');
+    if (activeCallRoomUrl && activeCallRoomUrl.includes('startWithVideoMuted=true')) {
+      activeCallRoomUrl = activeCallRoomUrl.replace('startWithVideoMuted=true', 'startWithVideoMuted=false');
+      jitsiFrame.src = activeCallRoomUrl;
+    }
     activateLocalCallMedia(true);
   }
 
@@ -3432,7 +3479,11 @@
     stopRingtone();
     stopCallDurationTimer();
     stopLocalCallMedia();
-    document.getElementById('jitsiCallFrame').src = "";
+    const jitsiFrame = document.getElementById('jitsiCallFrame');
+    jitsiFrame.src = "";
+    jitsiFrame.classList.add('hidden');
+    document.getElementById('videoContainer').classList.add('hidden');
+    document.getElementById('voiceAvatarStage').classList.remove('hidden');
     document.getElementById('callScreen').classList.add('hidden');
     callServerAPI('updateCallStatus', { username: currentUser.username, status: "ENDED" }).catch(() => {});
   }
