@@ -237,8 +237,6 @@
   }
   .hidden { display: none !important; }
 </style>
-<link rel="prefetch" href="login.html" as="document">
-<link rel="preload" href="login.html" as="fetch" crossorigin="anonymous">
 </head>
 <body>
 
@@ -332,25 +330,17 @@
     });
   }
 
-  (function warmUpPagesInBackground() {
-    try {
-      fetch('./login.html', { cache: 'force-cache' }).catch(() => {});
-      fetch('./utama.html', { cache: 'force-cache' }).catch(() => {});
-    } catch (e) {}
-  })();
-
   function proceedToLogin() {
     const btn = document.getElementById('btnOkWelcome');
     btn.innerText = "MEMBUKA LOGIN...";
     btn.disabled = true;
 
     if ('Notification' in window && Notification.permission === 'default') {
-      try { Notification.requestPermission().catch(() => {}); } catch (e) {}
+      Notification.requestPermission().catch(() => {});
     }
 
     const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
-    const loginUrl = (base.endsWith('/') ? base : base + '/') + "login.html?bypass=1";
-    window.location.replace(loginUrl);
+    window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
   }
 </script>
 </body>
