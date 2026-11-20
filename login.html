@@ -329,12 +329,6 @@
     window.location.href = finalUtamaUrl;
   }
 
-  function getClientDeviceId(username) {
-    const ua = navigator.userAgent || "PWA";
-    const platform = navigator.platform || "Android";
-    return "PWA-" + username + "-" + platform.replace(/\s+/g, '') + "-" + ua.slice(-8).replace(/[^a-zA-Z0-9]/g, '');
-  }
-
   function doLogin() {
     const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -355,7 +349,7 @@
     fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'loginUser', username: u, password: p, deviceId: getClientDeviceId(u) })
+      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
     })
     .then(r => r.json())
     .then(resObj => {

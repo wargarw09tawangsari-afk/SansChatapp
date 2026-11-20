@@ -138,45 +138,6 @@ async function checkBackgroundAlertsForUser(username) {
       }
     }
 
-    const qResp = await fetch(S3_API_BASE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'getPendingNotifications', username: username })
-    });
-    const qJson = await qResp.json();
-    const queueList = (qJson && Array.isArray(qJson.data)) ? qJson.data : [];
-
-    if (queueList.length > 0) {
-      const latest = queueList[queueList.length - 1];
-      const now = Date.now();
-      if (now - lastNotifiedChatTime > 8000) {
-        lastNotifiedChatTime = now;
-        await self.registration.showNotification(
-          `💬 ${latest.roomName || 'SANSCHAT'}: ${latest.senderNama || latest.senderUsername}`,
-          {
-            body: latest.ringkasanPesan || ('Ketuk untuk membuka pesan bagi ' + username),
-            icon: './icon-192.png',
-            badge: './icon-192.png',
-            tag: 'sanschat-queue-' + (latest.notifId || now),
-            renotify: true,
-            requireInteraction: false,
-            vibrate: [400, 150, 400, 150, 400],
-            data: {
-              actionType: latest.tipeNotif === 'PRIVATE_CHAT' ? 'open_private_chat' : 'open_queue',
-              notifId: latest.notifId || '',
-              sheetSource: latest.sheetSource || '',
-              roomName: latest.roomName || '',
-              username: username
-            },
-            actions: [
-              { action: 'open_chat', title: '💬 BUKA' }
-            ]
-          }
-        );
-      }
-      return;
-    }
-
     const chatResp = await fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -234,24 +195,15 @@ self.addEventListener('notificationclick', (event) => {
 
   event.waitUntil((async () => {
     const savedU = await restoreSwUserMeta();
-    const resolvedUser = notifData.username || savedU || '';
-    const targetUser = encodeURIComponent(resolvedUser);
+    const targetUser = encodeURIComponent(notifData.username || savedU || '');
     let targetUrl = `./utama.html?user=${targetUser}`;
-
-    if (notifData.notifId && resolvedUser) {
-      await fetch(S3_API_BASE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'ackNotification', notifId: notifData.notifId, username: resolvedUser, statusBaca: 'SUDAH' })
-      }).catch(() => {});
-    }
 
     if (notifData.actionType === 'incoming_call') {
       if (clickedAction === 'reject_call') {
         await fetch(S3_API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'updateCallStatus', username: resolvedUser, status: 'ENDED' })
+          body: JSON.stringify({ action: 'updateCallStatus', username: notifData.username || savedU, status: 'ENDED' })
         }).catch(() => {});
         return;
       }
@@ -262,8 +214,6 @@ self.addEventListener('notificationclick', (event) => {
       targetUrl = `./utama.html?user=${targetUser}&incomingCall=1&autoAnswer=${autoAns}&callType=${cType}&callerName=${cName}&roomUrl=${cUrl}`;
     } else if (notifData.actionType === 'open_private_chat') {
       targetUrl = `./utama.html?user=${targetUser}&openPrivate=1`;
-    } else if (notifData.sheetSource || notifData.roomName) {
-      targetUrl = `./utama.html?user=${targetUser}&roomSheet=${encodeURIComponent(notifData.sheetSource || '')}&roomName=${encodeURIComponent(notifData.roomName || '')}`;
     }
 
     const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
