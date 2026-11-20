@@ -138,40 +138,38 @@ async function checkBackgroundAlertsForUser(username) {
       }
     }
 
-    const queueResp = await fetch(S3_API_BASE, {
+    const qResp = await fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'getQueuedNotifications', username: username, unreadOnly: true })
+      body: JSON.stringify({ action: 'getPendingNotifications', username: username })
     });
-    const queueJson = await queueResp.json();
-    const queuedItems = (queueJson && Array.isArray(queueJson.data)) ? queueJson.data : [];
+    const qJson = await qResp.json();
+    const queueList = (qJson && Array.isArray(qJson.data)) ? qJson.data : [];
 
-    if (queuedItems.length > 0) {
+    if (queueList.length > 0) {
+      const latest = queueList[queueList.length - 1];
       const now = Date.now();
-      if (now - lastNotifiedChatTime > 10000) {
+      if (now - lastNotifiedChatTime > 8000) {
         lastNotifiedChatTime = now;
-        const topItem = queuedItems[0];
-        const senderLabel = topItem.senderNama || topItem.senderUsername || "Warga";
-        const roomLabel = topItem.roomName || "SansChat";
-        const summaryText = topItem.ringkasanPesan || "Ada pesan baru masuk.";
         await self.registration.showNotification(
-          `💬 ${senderLabel} (${roomLabel})`,
+          `💬 ${latest.roomName || 'SANSCHAT'}: ${latest.senderNama || latest.senderUsername}`,
           {
-            body: `${summaryText} [${queuedItems.length} antrean]`,
+            body: latest.ringkasanPesan || ('Ketuk untuk membuka pesan bagi ' + username),
             icon: './icon-192.png',
             badge: './icon-192.png',
-            tag: 'sanschat-unread-queue',
+            tag: 'sanschat-queue-' + (latest.notifId || now),
             renotify: true,
-            requireInteraction: true,
+            requireInteraction: false,
             vibrate: [400, 150, 400, 150, 400],
             data: {
-              actionType: 'open_private_chat',
-              username: username,
-              notifId: topItem.notifId || '',
-              roomName: roomLabel
+              actionType: latest.tipeNotif === 'PRIVATE_CHAT' ? 'open_private_chat' : 'open_queue',
+              notifId: latest.notifId || '',
+              sheetSource: latest.sheetSource || '',
+              roomName: latest.roomName || '',
+              username: username
             },
             actions: [
-              { action: 'open_chat', title: '💬 TERIMA CHAT' }
+              { action: 'open_chat', title: '💬 BUKA' }
             ]
           }
         );
@@ -236,19 +234,15 @@ self.addEventListener('notificationclick', (event) => {
 
   event.waitUntil((async () => {
     const savedU = await restoreSwUserMeta();
-    const rawUser = notifData.username || savedU || '';
-    const targetUser = encodeURIComponent(rawUser);
+    const resolvedUser = notifData.username || savedU || '';
+    const targetUser = encodeURIComponent(resolvedUser);
     let targetUrl = `./utama.html?user=${targetUser}`;
 
-    if (rawUser) {
+    if (notifData.notifId && resolvedUser) {
       await fetch(S3_API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'markQueuedNotificationsRead',
-          username: rawUser,
-          notifIds: notifData.notifId ? [notifData.notifId] : []
-        })
+        body: JSON.stringify({ action: 'ackNotification', notifId: notifData.notifId, username: resolvedUser, statusBaca: 'SUDAH' })
       }).catch(() => {});
     }
 
@@ -257,7 +251,7 @@ self.addEventListener('notificationclick', (event) => {
         await fetch(S3_API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'updateCallStatus', username: rawUser, status: 'ENDED' })
+          body: JSON.stringify({ action: 'updateCallStatus', username: resolvedUser, status: 'ENDED' })
         }).catch(() => {});
         return;
       }
@@ -268,6 +262,8 @@ self.addEventListener('notificationclick', (event) => {
       targetUrl = `./utama.html?user=${targetUser}&incomingCall=1&autoAnswer=${autoAns}&callType=${cType}&callerName=${cName}&roomUrl=${cUrl}`;
     } else if (notifData.actionType === 'open_private_chat') {
       targetUrl = `./utama.html?user=${targetUser}&openPrivate=1`;
+    } else if (notifData.sheetSource || notifData.roomName) {
+      targetUrl = `./utama.html?user=${targetUser}&roomSheet=${encodeURIComponent(notifData.sheetSource || '')}&roomName=${encodeURIComponent(notifData.roomName || '')}`;
     }
 
     const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });

@@ -1746,20 +1746,6 @@
   const S1_HELP_URL = "https://script.google.com/macros/s/AKfycbxCGcMURVNNwUjwS78xD4k7_RYNdG5Thp76AWGw0zXNMq3M4XViVBoP97hA7EI70THH/exec";
   const S2_PORTAL_URL = "https://script.google.com/macros/s/AKfycbx0sWsVVIZftyTKwAR0YtHDzPCPGeNIrtlu5juNlK9XsKyTevpoAH1a8Jszbf6HCSiWXg/exec";
 
-  function getOrCreateDeviceId() {
-    let devId = "";
-    try {
-      devId = localStorage.getItem('sanschat_device_id') || "";
-      if (!devId) {
-        devId = "DEV-" + Math.random().toString(36).substring(2, 8).toUpperCase() + "-" + Date.now().toString().slice(-4);
-        localStorage.setItem('sanschat_device_id', devId);
-      }
-    } catch (e) {
-      devId = "DEV-WEB-" + Date.now().toString().slice(-4);
-    }
-    return devId;
-  }
-
   function escapeJsStr(str) {
     return String(str || "")
       .replace(/\\/g, "\\\\")
@@ -1780,7 +1766,6 @@
 
   function callServerAPI(action, payload = {}) {
     payload.action = action;
-    if (!payload.deviceId) payload.deviceId = getOrCreateDeviceId();
     return fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1850,8 +1835,11 @@
   let callSeconds = 0;
   let wakeLockSentinel = null;
   let lastAlertedUnreadState = false;
+  let lastAlertedQueueKey = "";
+  let pendingQueueItems = [];
   let namaGrupSheetMap = {};
 
+  // NO. 1: PALET WARNA TULISAN PENGUMUMAN BERUBAH TIAP TAMPIL
   const announcementThemes = [
     { bg: "#182229", border: "#facc15", text: "#fde047", icon: "#facc15" },
     { bg: "#142621", border: "#34d399", text: "#6ee7b7", icon: "#34d399" },
@@ -1867,7 +1855,6 @@
   ];
 
   window.onload = function() {
-    getOrCreateDeviceId();
     if (!currentUser || !currentUser.username) {
       redirectToIndexWelcome(false);
       return;
@@ -1890,18 +1877,18 @@
     setInterval(backgroundSyncWatcher, 3500);
     setInterval(() => {
       if (currentUser && currentUser.username && navigator.onLine) {
-        callServerAPI('heartbeatSession', { username: currentUser.username }).catch(() => {});
+        callServerAPI('heartbeatSession', {
+          username: currentUser.username,
+          deviceId: "PWA-" + currentUser.username
+        }).catch(() => {});
       }
-    }, 45000);
+    }, 60000);
 
     document.addEventListener('touchstart', unlockAudioAndWakeLock, { passive: true });
     document.addEventListener('click', unlockAudioAndWakeLock, { passive: true });
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         requestScreenWakeLock();
-        if (currentUser && currentUser.username && navigator.onLine) {
-          callServerAPI('heartbeatSession', { username: currentUser.username }).catch(() => {});
-        }
         backgroundSyncWatcher();
       } else {
         notifyServiceWorkerUser();
@@ -2069,6 +2056,10 @@
       }
     } else if (params.get('openPrivate') === '1') {
       setTimeout(() => acceptIncomingPrivateChat(), 300);
+    } else if (params.get('roomSheet') || params.get('roomName')) {
+      const rSheet = params.get('roomSheet') || '';
+      const rName = params.get('roomName') || rSheet;
+      setTimeout(() => openChatRoom(rSheet, rName, ''), 350);
     }
   }
 
@@ -2185,7 +2176,7 @@
   }
 
   function syncInitialDashboardBundle() {
-    callServerAPI('getInitialDashboardBundle', { username: currentUser.username, deviceId: getOrCreateDeviceId() }).then((bundle) => {
+    callServerAPI('getInitialDashboardBundle', { username: currentUser.username }).then((bundle) => {
       if (!bundle) return;
       if (bundle.profile) {
         currentUser = Object.assign({}, currentUser, bundle.profile);
@@ -2216,16 +2207,50 @@
         renderChatRoomList(bundle.groups);
       }
       if (bundle.announcements && bundle.announcements.length > 0) {
+        const prevFirst = announcements[0] || "";
         announcements = bundle.announcements;
         localStorage.setItem('sanschat_announcements', JSON.stringify(announcements));
-        announcementIndex = 0;
-        playNextAnnouncementCell(false);
+        if (announcements[0] !== prevFirst) {
+          announcementIndex = 0;
+          playNextAnnouncementCell(true);
+        } else if (!document.getElementById('announcementBox').innerText || document.getElementById('announcementBox').innerText === "Memuat pengumuman...") {
+          announcementIndex = 0;
+          playNextAnnouncementCell(false);
+        }
+      }
+      if (Array.isArray(bundle.pendingNotifications)) {
+        applyQueueBannerState(bundle.pendingNotifications);
       }
       updatePrivateButtonBadge(bundle.hasUnreadPrivate);
       if (bundle.incomingCall) {
         startIncomingCallUI(bundle.incomingCall);
       }
     }).catch(() => {});
+  }
+
+  function applyQueueBannerState(queueList) {
+    pendingQueueItems = Array.isArray(queueList) ? queueList : [];
+    const banner = document.getElementById('incomingChatBanner');
+    if (!banner) return;
+    if (pendingQueueItems.length > 0 && !isPrivateChatMode) {
+      const latest = pendingQueueItems[pendingQueueItems.length - 1];
+      const countTxt = pendingQueueItems.length > 1 ? ` (${pendingQueueItems.length} antrean)` : '';
+      banner.classList.remove('hidden');
+      document.getElementById('incomingChatBannerText').innerText =
+        `🔔 ${latest.senderNama || latest.senderUsername} • ${latest.roomName || 'Notifikasi'}${countTxt}`;
+      const qKey = latest.notifId || (latest.senderUsername + "_" + latest.timestamp);
+      if (lastAlertedQueueKey !== qKey) {
+        lastAlertedQueueKey = qKey;
+        triggerBackgroundAlert(
+          `🔔 ${latest.roomName || 'Sc-SansChat'}`,
+          `${latest.senderNama || latest.senderUsername}: ${latest.ringkasanPesan || 'Ada notifikasi baru'}`,
+          latest.tipeNotif === 'PRIVATE_CHAT' ? 'open_private_chat' : 'open_queue',
+          { notifId: latest.notifId || '', sheetSource: latest.sheetSource || '', roomName: latest.roomName || '' }
+        );
+      }
+    } else if (!lastAlertedUnreadState) {
+      banner.classList.add('hidden');
+    }
   }
 
   function backgroundSyncWatcher() {
@@ -2238,33 +2263,32 @@
       }
     }).catch(() => {});
 
-    callServerAPI('getQueuedNotifications', { username: currentUser.username, unreadOnly: true }).then((queuedItems) => {
-      const queueCount = Array.isArray(queuedItems) ? queuedItems.length : 0;
-      callServerAPI('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnreadPriv) => {
-        const hasAnyUnread = Boolean(hasUnreadPriv) || queueCount > 0;
-        updatePrivateButtonBadge(hasAnyUnread);
-        const banner = document.getElementById('incomingChatBanner');
-        if (hasAnyUnread && !isPrivateChatMode) {
-          banner.classList.remove('hidden');
-          const topNotif = queueCount > 0 ? queuedItems[0] : null;
-          const labelTxt = topNotif
-            ? `💬 ${topNotif.senderNama || topNotif.senderUsername} (${topNotif.roomName}): ${topNotif.ringkasanPesan}`
-            : `💬 Pesan Privat Masuk untuk ${currentUser.username}`;
-          document.getElementById('incomingChatBannerText').innerText = labelTxt;
-          if (!lastAlertedUnreadState) {
-            lastAlertedUnreadState = true;
-            triggerBackgroundAlert(
-              topNotif ? `💬 ${topNotif.senderNama || topNotif.senderUsername} (${topNotif.roomName})` : "💬 Pesan Privat Baru di Sc-SansChat",
-              topNotif ? topNotif.ringkasanPesan : ("Ada pesan privat masuk untuk " + currentUser.username + ". Ketuk TERIMA CHAT!"),
-              "open_private_chat",
-              { notifId: topNotif ? topNotif.notifId : "" }
-            );
-          }
-        } else {
-          banner.classList.add('hidden');
-          lastAlertedUnreadState = false;
+    callServerAPI('getPendingNotifications', { username: currentUser.username }).then((queueList) => {
+      if (Array.isArray(queueList)) {
+        applyQueueBannerState(queueList);
+      }
+    }).catch(() => {});
+
+    callServerAPI('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnread) => {
+      updatePrivateButtonBadge(hasUnread);
+      const banner = document.getElementById('incomingChatBanner');
+      if (hasUnread && !isPrivateChatMode) {
+        banner.classList.remove('hidden');
+        if (pendingQueueItems.length === 0) {
+          document.getElementById('incomingChatBannerText').innerText = `💬 Pesan Privat Masuk untuk ${currentUser.username}`;
         }
-      }).catch(() => {});
+        if (!lastAlertedUnreadState) {
+          lastAlertedUnreadState = true;
+          triggerBackgroundAlert(
+            "💬 Pesan Privat Baru di Sc-SansChat",
+            "Ada pesan privat masuk untuk " + currentUser.username + ". Ketuk TERIMA CHAT!",
+            "open_private_chat"
+          );
+        }
+      } else if (pendingQueueItems.length === 0) {
+        banner.classList.add('hidden');
+        lastAlertedUnreadState = false;
+      }
     }).catch(() => {});
   }
 
@@ -2325,6 +2349,21 @@
     const banner = document.getElementById('incomingChatBanner');
     if (banner) banner.classList.add('hidden');
     lastAlertedUnreadState = false;
+    lastAlertedQueueKey = "";
+
+    const latestQueue = pendingQueueItems.length > 0 ? pendingQueueItems[pendingQueueItems.length - 1] : null;
+    pendingQueueItems = [];
+
+    if (currentUser && currentUser.username) {
+      callServerAPI('markAllNotificationsRead', { username: currentUser.username }).catch(() => {});
+    }
+
+    if (latestQueue && latestQueue.tipeNotif === 'GROUP_CHAT' && (latestQueue.sheetSource || latestQueue.roomName)) {
+      const mappedSheet = resolveMappedSheetName(latestQueue.roomName, latestQueue.sheetSource);
+      openChatRoom(mappedSheet, latestQueue.roomName || mappedSheet, '');
+      return;
+    }
+
     openPrivateChatPage();
     callServerAPI('markPrivateMessagesAsRead', { username: currentUser.username }).then(() => {
       updatePrivateButtonBadge(false);
@@ -2349,9 +2388,9 @@
     stopRingtone();
     document.getElementById('logoutModalButtons').classList.add('hidden');
 
-    if (currentUser && currentUser.username) {
+    if (currentUser && currentUser.username && navigator.onLine) {
       try {
-        await callServerAPI('logoutUserSession', { username: currentUser.username, deviceId: getOrCreateDeviceId() });
+        await callServerAPI('logoutUser', { username: currentUser.username });
       } catch (e) {}
     }
 
@@ -2470,6 +2509,7 @@
     reader.readAsDataURL(file);
   }
 
+  // NO. 1: WARNA TULISAN DI PENGUMUMAN BERUBAH TIAP TAMPIL
   function playNextAnnouncementCell(animate = true) {
     if (!announcements || announcements.length === 0) return;
     const currentText = announcements[announcementIndex];
@@ -2533,6 +2573,7 @@
     setTimeout(updateGroupScrollButtons, 80);
   }
 
+  // NO. 5 & 6: BUKA HALAMAN KEDUA SESUAI PEMETAAN NAMA GRUP KOLOM A -> KOLOM B
   function openChatRoom(sheetName, name, foto) {
     isPrivateChatMode = false;
     activeGroupName = String(name || "").trim();
@@ -2582,6 +2623,7 @@
     startActiveRoomAutoRefresh();
   }
 
+  // NO. 3: BADGE TOMBOL CHAT PRIVAT BIRU 3D / MERAH 3D
   function updatePrivateButtonBadge(hasUnread) {
     const btn = document.getElementById('btnChatPrivatHeader');
     if (hasUnread) {
@@ -2612,7 +2654,6 @@
     const cachedPriv = JSON.parse(localStorage.getItem('sanschat_priv_' + currentUser.username) || 'null');
     if (cachedPriv) renderPrivateMessageList(cachedPriv, false);
 
-    callServerAPI('markQueuedNotificationsRead', { username: currentUser.username, notifIds: [] }).catch(() => {});
     loadMessages(false);
     startActiveRoomAutoRefresh();
   }
@@ -3244,34 +3285,20 @@
     const o1 = document.getElementById('pollOpt1').value.trim();
     const o2 = document.getElementById('pollOpt2').value.trim();
     const o3 = document.getElementById('pollOpt3').value.trim();
-
-    if (!q || !o1 || !o2) {
-      alert("Isi pertanyaan dan minimal 2 pilihan polling!");
-      return;
-    }
+    if (!q || !o1 || !o2) { alert("Isi pertanyaan dan minimal 2 pilihan polling!"); return; }
     const options = [o1, o2];
     if (o3) options.push(o3);
-
-    const payload = JSON.stringify({ question: q, options: options, votes: {} });
+    const pollPayload = JSON.stringify({ question: q, options: options, votes: {} });
     closeWaModal('waPollModal');
-    dispatchChatPayload("📊 Polling: " + q, "poll", payload);
+    dispatchChatPayload(`📊 Polling: ${q}`, "poll", pollPayload);
   }
 
-  function castPollVote(rowNumber, optionindex) {
-    if (isPrivateChatMode) {
-      alert("Voting polling hanya tersedia di ruang chat grup.");
-      return;
-    }
-    if (!rowNumber || rowNumber <= 0) {
-      alert("Polling baru saja dikirim. Tunggu beberapa detik hingga sinkron dengan server sebelum memilih.");
-      loadMessages(false);
-      return;
-    }
+  function castPollVote(rowNumber, optionIndex) {
     callServerAPI('votePollOption', {
       chatSheetName: activeChatSheet,
       groupName: activeGroupName,
       rowNumber: rowNumber,
-      optionindex: optionindex,
+      optionindex: optionIndex,
       voterUsername: currentUser.username
     }).then(() => loadMessages(false));
   }
@@ -3279,8 +3306,6 @@
   function openWhatsAppEventModal() {
     closeAllInputPopups();
     document.getElementById('eventTitle').value = '';
-    document.getElementById('eventDate').value = '';
-    document.getElementById('eventTime').value = '';
     document.getElementById('eventLoc').value = '';
     document.getElementById('waEventModal').classList.remove('hidden');
   }
@@ -3289,15 +3314,11 @@
     const title = document.getElementById('eventTitle').value.trim();
     const date = document.getElementById('eventDate').value;
     const time = document.getElementById('eventTime').value;
-    const loc = document.getElementById('eventLoc').value.trim() || "Balai Warga";
-
-    if (!title || !date) {
-      alert("Judul acara dan tanggal wajib diisi!");
-      return;
-    }
-    const evPayload = JSON.stringify({ title: title, date: date, time: time || "08:00", location: loc });
+    const loc = document.getElementById('eventLoc').value.trim();
+    if (!title) { alert("Isi nama acara warga!"); return; }
+    const evPayload = JSON.stringify({ title: title, date: date || "Segera", time: time || "08:00 WIB", location: loc || "Balai RW 09" });
     closeWaModal('waEventModal');
-    dispatchChatPayload(`📅 Acara: ${title} (${date} ${time}) di ${loc}`, "event", evPayload);
+    dispatchChatPayload(`📅 Acara: ${title}`, "event", evPayload);
   }
 
   function openWhatsAppAiImageModal() {
@@ -3307,81 +3328,76 @@
   }
 
   function submitWhatsAppAiImage() {
-    const prompt = document.getElementById('aiImagePrompt').value.trim();
+    const promptTxt = document.getElementById('aiImagePrompt').value.trim();
     const theme = document.getElementById('aiImageTheme').value;
-    if (!prompt) {
-      alert("Masukkan teks atau deskripsi poster AI!");
-      return;
-    }
+    if (!promptTxt) { alert("Masukkan deskripsi gambar/poster AI!"); return; }
 
     const canvas = document.createElement('canvas');
-    canvas.width = 720;
-    canvas.height = 420;
+    canvas.width = 768; canvas.height = 512;
     const ctx = canvas.getContext('2d');
 
-    const grad = ctx.createLinearGradient(0, 0, 720, 420);
+    const grad = ctx.createLinearGradient(0, 0, 768, 512);
     if (theme === 'emerald') {
-      grad.addColorStop(0, '#064e3b'); grad.addColorStop(1, '#10b981');
+      grad.addColorStop(0, '#064e3b'); grad.addColorStop(1, '#00a884');
     } else if (theme === 'gold') {
-      grad.addColorStop(0, '#78350f'); grad.addColorStop(1, '#f59e0b');
+      grad.addColorStop(0, '#451a03'); grad.addColorStop(1, '#d97706');
     } else {
-      grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#0284c7');
+      grad.addColorStop(0, '#0b141a'); grad.addColorStop(1, '#0284c7');
     }
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 720, 420);
+    ctx.fillRect(0, 0, 768, 512);
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.45)';
-    ctx.lineWidth = 6;
-    ctx.strokeRect(20, 20, 680, 380);
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(24, 24, 720, 464);
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 26px Arial';
-    ctx.fillText('✨ SANSCHAT AI POSTER', 45, 72);
+    ctx.font = 'bold 34px sans-serif';
+    ctx.fillText('SC-SANSCHAT AI VISUAL', 56, 95);
 
-    ctx.font = 'bold 34px Arial';
-    const words = prompt.split(' ');
+    ctx.font = 'bold 28px sans-serif';
+    const words = promptTxt.split(' ');
     let line = '';
-    let y = 145;
+    let y = 180;
     for (let n = 0; n < words.length; n++) {
       const testLine = line + words[n] + ' ';
-      if (ctx.measureText(testLine).width > 620 && n > 0) {
-        ctx.fillText(line, 45, y);
+      if (ctx.measureText(testLine).width > 650 && n > 0) {
+        ctx.fillText(line, 56, y);
         line = words[n] + ' ';
-        y += 46;
+        y += 44;
       } else {
         line = testLine;
       }
     }
-    ctx.fillText(line, 45, y);
+    ctx.fillText(line, 56, y);
 
-    ctx.font = '20px Arial';
+    ctx.font = '22px sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,0.85)';
-    ctx.fillText(`Oleh: ${currentUser.nama || currentUser.username} • RW 09 Sansivera`, 45, 372);
+    ctx.fillText('Warga RW 09 Sansivera • ' + (currentUser.nama || currentUser.username), 56, 455);
 
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
     closeWaModal('waAiImageModal');
-    dispatchChatPayload("✨ Poster AI: " + prompt, "image", dataUrl);
+    dispatchChatPayload(`✨ Gambar AI: ${promptTxt}`, "image", dataUrl);
   }
 
   function buildEmojiPicker() {
     const emojis = [
-      "😊", "😂", "❤️", "👍", "🙏", "🔥", "🎉", "👏",
-      "😍", "🥰", "🤩", "😎", "🤔", "😢", "😭", "😡",
-      "💯", "✅", "⭐", "🚀", "💪", "👌", "🤝", "👋",
-      "📢", "📌", "📅", "⏰", "🏠", "🌳", "🕌", "🍽️"
+      "😊","😂","🤣","😍","🥰","😘","😎","🤩","🥳","😇","🙏","👍","👏","🤝","✌️","👌",
+      "❤️","💚","💙","💛","🔥","✨","🎉","🎊","📢","📌","✅","💯","🏠","🌿","☕","🍲",
+      "😢","😭","😡","🤔","🙄","😴","🤗","🙌","👀","💪","🚗","🛵","📱","📷","📞","📹"
     ];
     const panel = document.getElementById('emojiPickerPanel');
     panel.innerHTML = '';
     emojis.forEach(em => {
-      const span = document.createElement('span');
-      span.className = 'emoji-item';
-      span.innerText = em;
-      span.onclick = () => {
+      const item = document.createElement('div');
+      item.className = 'emoji-item';
+      item.innerText = em;
+      item.onclick = () => {
         const input = document.getElementById('inputPesan');
         input.value += em;
         input.focus();
       };
-      panel.appendChild(span);
+      panel.appendChild(item);
     });
   }
 
@@ -3393,82 +3409,121 @@
 
   function toggleComboCallMenu(e) {
     if (e) e.stopPropagation();
-    const dd = document.getElementById('comboCallDropdown');
-    const isHidden = dd.classList.contains('hidden');
-    closeAllInputPopups();
-    if (isHidden) {
-      const searchBox = document.getElementById('searchComboCallInput');
-      if (searchBox) {
-        searchBox.value = '';
-        filterDropdownItems('searchComboCallInput', '#comboCallDropdown .combo-menu-item');
-      }
-      dd.classList.remove('hidden');
-    }
+    const searchInput = document.getElementById('searchComboCallInput');
+    if (searchInput) searchInput.value = '';
+    filterDropdownItems('searchComboCallInput', '#comboCallDropdown .combo-menu-item');
+    document.getElementById('comboCallDropdown').classList.toggle('hidden');
   }
 
   function initiateVoiceCall() {
-    closeAllInputPopups();
-    openCallDialog('voice');
+    document.getElementById('comboCallDropdown').classList.add('hidden');
+    if (isPrivateChatMode && privateTargetUsername) {
+      startOutgoingCall(privateTargetUsername, privateTargetUsername, 'voice');
+    } else {
+      openCallDialog('voice');
+    }
   }
 
   function initiateVideoCall() {
-    closeAllInputPopups();
-    openCallDialog('video');
-  }
-
-  function openCallDialog(type) {
-    closeAllInputPopups();
-    currentCallType = type;
-    if (isPrivateChatMode) {
-      if (privateTargetUsername) {
-        startOutgoingCall(privateTargetUsername, document.getElementById('roomTitle').innerText.replace(/^Privat:\s*/i, ''), type);
-      } else {
-        alert("Pilih warga tujuan Chat Privat terlebih dahulu lewat tombol 👤 Tujuan.");
-      }
-      return;
+    document.getElementById('comboCallDropdown').classList.add('hidden');
+    if (isPrivateChatMode && privateTargetUsername) {
+      startOutgoingCall(privateTargetUsername, privateTargetUsername, 'video');
+    } else {
+      openCallDialog('video');
     }
-    openGroupMembersModal();
   }
 
-  function openGroupMembersModal() {
-    closeAllInputPopups();
+  function openCallDialog(callType) {
+    document.getElementById('comboCallDropdown').classList.add('hidden');
+    currentCallType = callType;
     const modal = document.getElementById('groupMembersModal');
     const title = document.getElementById('modalGroupTitle');
     const list = document.getElementById('memberListContent');
+    const searchInput = document.getElementById('searchMemberListInput');
     const btnGroupCall = document.getElementById('btnCallGroupByRole');
-    const searchBox = document.getElementById('searchMemberListInput');
-    if (searchBox) searchBox.value = '';
 
-    title.innerText = isPrivateChatMode ? "INFO KONTAK PRIVAT" : `ANGGOTA ${activeGroupName}`;
-    list.innerHTML = '<div style="text-align:center; color:#8696a0; padding:18px; font-weight:700; font-size:var(--font-lg);">Memuat daftar warga...</div>';
+    if (searchInput) searchInput.value = '';
+    title.innerText = callType === 'video' ? "📹 PILIH TARGET VIDEO CALL" : "📞 PILIH TARGET TELPON";
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:18px; font-weight:700; font-size:var(--font-lg);">Memuat daftar warga...</div>';
 
     if (!isPrivateChatMode && activeGroupName) {
       btnGroupCall.classList.remove('hidden');
-      btnGroupCall.innerText = (currentCallType === 'video' ? "📹 Video Call " : "🔊 Call ") + activeGroupName;
+      btnGroupCall.innerText = `🔊 Call Grup (${activeGroupName})`;
     } else {
       btnGroupCall.classList.add('hidden');
     }
 
     modal.classList.remove('hidden');
 
-    if (isPrivateChatMode) {
-      list.innerHTML = `<div class="member-row"><span>${escapeHtml(document.getElementById('roomTitle').innerText)}</span><span>🔒 Aktif</span></div>`;
-      return;
-    }
+    const renderContactTargets = (contacts) => {
+      list.innerHTML = '';
+      if (!contacts || contacts.length === 0) {
+        list.innerHTML = '<div style="color:#8696a0; text-align:center; font-weight:700; font-size:var(--font-lg);">Tidak ada kontak warga tersedia.</div>';
+        return;
+      }
+      contacts.forEach(c => {
+        if (c.username === currentUser.username) return;
+        const row = document.createElement('div');
+        row.className = 'member-row';
+        const btnIcon = callType === 'video' ? '📹 Panggil' : '📞 Panggil';
+        row.innerHTML = `
+          <div style="min-width:0; flex:1;">
+            <div style="font-weight:900; word-break:break-word;">${escapeHtml(c.nama)}</div>
+            <div style="font-size:var(--font-md); color:#8696a0; font-weight:700;">${escapeHtml(c.username)} • ${escapeHtml(c.alamat || '-')}</div>
+          </div>
+          <button class="btn-grup-plus" style="flex-shrink:0;" onclick="startOutgoingCall('${escapeJsStr(c.username)}', '${escapeJsStr(c.nama)}', '${callType}')">${btnIcon}</button>
+        `;
+        list.appendChild(row);
+      });
+    };
 
-    const mappedSheet = resolveMappedSheetName(activeGroupName, activeChatSheet);
+    if (!isPrivateChatMode && activeGroupName) {
+      callServerAPI('getGroupMembersByKolomC', {
+        groupName: activeGroupName,
+        chatSheetName: activeChatSheet
+      }).then((members) => {
+        if (members && members.length > 0) {
+          renderContactTargets(members);
+        } else {
+          callServerAPI('getAllWargaContacts').then(renderContactTargets);
+        }
+      });
+    } else {
+      callServerAPI('getAllWargaContacts').then(renderContactTargets);
+    }
+  }
+
+  function startGroupCallByRole() {
+    closeGroupMembersModal();
+    if (!activeGroupName) return;
+    startOutgoingCall(activeGroupName, activeGroupName, currentCallType || 'voice');
+  }
+
+  function openGroupMembersModal() {
+    if (isPrivateChatMode) { openPrivateRecipientPicker(); return; }
+    const modal = document.getElementById('groupMembersModal');
+    const title = document.getElementById('modalGroupTitle');
+    const list = document.getElementById('memberListContent');
+    const searchInput = document.getElementById('searchMemberListInput');
+    const btnGroupCall = document.getElementById('btnCallGroupByRole');
+
+    if (searchInput) searchInput.value = '';
+    title.innerText = `ANGGOTA ${activeGroupName}`;
+    list.innerHTML = '<div style="color:#8696a0; text-align:center; padding:18px; font-weight:700; font-size:var(--font-lg);">Memuat anggota sesuai pemetaan Kolom C...</div>';
+    btnGroupCall.classList.remove('hidden');
+    btnGroupCall.innerText = `🔊 Call Grup (${activeGroupName})`;
+    modal.classList.remove('hidden');
+
     callServerAPI('getGroupMembersByKolomC', {
       groupName: activeGroupName,
-      chatSheetName: mappedSheet
+      chatSheetName: activeChatSheet
     }).then((members) => {
       list.innerHTML = '';
       if (!members || members.length === 0) {
-        list.innerHTML = '<div style="text-align:center; color:#8696a0; font-weight:700; font-size:var(--font-lg);">Belum ada anggota terdaftar di kolom konfigurasi grup ini.</div>';
+        list.innerHTML = '<div style="color:#8696a0; text-align:center; font-weight:700; font-size:var(--font-lg);">Belum ada anggota terdaftar untuk grup ini.</div>';
         return;
       }
       members.forEach(m => {
-        const safeUser = escapeJsStr(m.username);
-        const safeNama = escapeJsStr(m.nama);
         const row = document.createElement('div');
         row.className = 'member-row';
         row.innerHTML = `
@@ -3477,8 +3532,8 @@
             <div style="font-size:var(--font-md); color:#8696a0; font-weight:700;">${escapeHtml(m.username)} • ${escapeHtml(m.alamat || '-')}</div>
           </div>
           <div style="display:flex; gap:10px; flex-shrink:0;">
-            <button class="btn-grup-plus" style="padding:14px 18px; min-height:92px;" onclick="closeGroupMembersModal(); startOutgoingCall('${safeUser}', '${safeNama}', 'voice')" title="Telpon">📞</button>
-            <button class="btn-grup-plus" style="padding:14px 18px; min-height:92px;" onclick="closeGroupMembersModal(); startOutgoingCall('${safeUser}', '${safeNama}', 'video')" title="Video Call">📹</button>
+            <button class="btn-grup-plus" style="padding:14px 18px; min-height:84px; font-size:34px;" onclick="startOutgoingCall('${escapeJsStr(m.username)}', '${escapeJsStr(m.nama)}', 'voice')">📞</button>
+            <button class="btn-grup-plus" style="padding:14px 18px; min-height:84px; font-size:34px;" onclick="startOutgoingCall('${escapeJsStr(m.username)}', '${escapeJsStr(m.nama)}', 'video')">📹</button>
           </div>
         `;
         list.appendChild(row);
@@ -3490,92 +3545,28 @@
     document.getElementById('groupMembersModal').classList.add('hidden');
   }
 
-  function startGroupCallByRole() {
+  function startOutgoingCall(targetUsername, targetName, type) {
     closeGroupMembersModal();
-    startOutgoingCall("ALL", `${activeGroupName} (${currentUser.nama || currentUser.username})`, currentCallType);
-  }
-
-  function buildJitsiRoomUrl(roomSuffix, isVideo) {
-    const cleanRoom = "SansChatRW09_" + String(roomSuffix || "Room").replace(/[^a-zA-Z0-9]/g, "") + "_" + Date.now().toString().slice(-5);
-    const configAudioOnly = isVideo ? "false" : "true";
-    return `https://meet.jit.si/${cleanRoom}#config.startWithAudioMuted=false&config.startWithVideoMuted=${isVideo ? 'false' : 'true'}&config.startAudioOnly=${configAudioOnly}&config.prejoinPageEnabled=false&interfaceConfig.TOOLBAR_BUTTONS=["microphone","camera","hangup","chat","tileview","toggle-camera"]`;
-  }
-
-  function startLocalPreviewStream(includeVideo, facingFront) {
-    stopLocalPreviewStream();
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return Promise.resolve(null);
-    const constraints = {
-      audio: true,
-      video: includeVideo ? { facingMode: facingFront ? 'user' : 'environment' } : false
-    };
-    return navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      localMediaStream = stream;
-      if (includeVideo) {
-        const vidEl = document.getElementById('localCameraPreview');
-        if (vidEl) {
-          vidEl.srcObject = stream;
-          vidEl.style.transform = facingFront ? 'scaleX(-1)' : 'scaleX(1)';
-        }
-      }
-      return stream;
-    }).catch(() => null);
-  }
-
-  function stopLocalPreviewStream() {
-    if (localMediaStream) {
-      localMediaStream.getTracks().forEach(t => t.stop());
-      localMediaStream = null;
-    }
-    const vidEl = document.getElementById('localCameraPreview');
-    if (vidEl) vidEl.srcObject = null;
-  }
-
-  function startCallDurationCounter() {
-    stopCallDurationCounter();
-    callSeconds = 0;
-    callDurationTimer = setInterval(() => {
-      callSeconds++;
-      const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
-      const secs = String(callSeconds % 60).padStart(2, '0');
-      const statusEl = document.getElementById('callStatusText');
-      if (statusEl && !statusEl.innerText.includes("Diterima") && !statusEl.innerText.includes("Memanggil")) {
-        statusEl.innerText = `Terhubung • ${mins}:${secs}`;
-      }
-    }, 1000);
-  }
-
-  function stopCallDurationCounter() {
-    if (callDurationTimer) {
-      clearInterval(callDurationTimer);
-      callDurationTimer = null;
-    }
-  }
-
-  function startOutgoingCall(targetUsername, targetDisplayName, type) {
+    closeAllInputPopups();
     currentCallType = type || 'voice';
-    const isVideo = currentCallType === 'video';
-    activeCallRoomUrl = buildJitsiRoomUrl(targetUsername + "_" + currentUser.username, isVideo);
+    isCallMuted = false;
+    isCallSpeakerOn = true;
+    activeIncomingCaller = "";
+    const roomSlug = "SansChatRW09_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+    activeCallRoomUrl = "https://meet.jit.si/" + roomSlug;
 
-    document.getElementById('callTargetName').innerText = targetDisplayName;
-    document.getElementById('callStatusText').innerText = isVideo ? "Memanggil Video Call..." : "Memanggil Suara...";
-    document.getElementById('acceptCallSlot').style.display = 'none';
     document.getElementById('callScreen').classList.remove('hidden');
+    document.getElementById('callTargetName').innerText = targetName || targetUsername;
+    document.getElementById('callStatusText').innerText = currentCallType === 'video' ? "Memulai Video Call..." : "Memanggil...";
+    document.getElementById('acceptCallSlot').style.display = 'none';
 
-    if (isVideo) {
-      document.getElementById('voiceAvatarStage').classList.add('hidden');
-      document.getElementById('videoContainer').classList.remove('hidden');
-      startLocalPreviewStream(true, useFrontCamera);
-      document.getElementById('jitsiCallFrame').src = activeCallRoomUrl;
+    if (currentCallType === 'video') {
+      setupVideoCallStage();
     } else {
-      document.getElementById('voiceAvatarStage').classList.remove('hidden');
-      document.getElementById('videoContainer').classList.add('hidden');
-      document.getElementById('jitsiCallFrame').src = "";
-      startLocalPreviewStream(false, useFrontCamera);
+      setupVoiceCallStage();
     }
 
-    startCallDurationCounter();
-    playRingtone('standard');
-
+    playRingtone();
     callServerAPI('initiateCall', {
       targetUsername: targetUsername,
       callerUsername: currentUser.username,
@@ -3585,62 +3576,82 @@
     });
   }
 
-  function startIncomingCallUI(incoming) {
+  function startIncomingCallUI(incomingData) {
     if (!document.getElementById('callScreen').classList.contains('hidden')) return;
-    currentCallType = incoming.type || 'voice';
-    activeCallRoomUrl = incoming.roomUrl || buildJitsiRoomUrl(incoming.callerName + "_" + currentUser.username, currentCallType === 'video');
-    activeIncomingCaller = incoming.callerName || "Warga";
+    currentCallType = incomingData.type || 'voice';
+    activeIncomingCaller = incomingData.callerUsername || incomingData.callerName || "";
+    activeCallRoomUrl = incomingData.roomUrl || ("https://meet.jit.si/SansChatRW09_" + Date.now());
 
-    document.getElementById('callTargetName').innerText = activeIncomingCaller;
-    document.getElementById('callStatusText').innerText = currentCallType === 'video' ? "📹 Video Call Masuk..." : "📞 Telpon Masuk...";
-    document.getElementById('acceptCallSlot').style.display = 'flex';
-    document.getElementById('voiceAvatarStage').classList.remove('hidden');
-    document.getElementById('videoContainer').classList.add('hidden');
     document.getElementById('callScreen').classList.remove('hidden');
-
-    const savedTone = localStorage.getItem('sanschat_ringtone') || 'standard';
-    playRingtone(savedTone);
-    if (navigator.vibrate) navigator.vibrate([600, 200, 600, 200, 600, 200, 600]);
+    document.getElementById('callTargetName').innerText = incomingData.callerName || "Warga";
+    document.getElementById('callStatusText').innerText = currentCallType === 'video' ? "Panggilan Video Masuk..." : "Panggilan Suara Masuk...";
+    document.getElementById('acceptCallSlot').style.display = 'flex';
+    setupVoiceCallStage();
+    playRingtone();
 
     triggerBackgroundAlert(
-      currentCallType === 'video' ? `📹 Video Call Masuk dari ${activeIncomingCaller}` : `📞 Telpon Masuk dari ${activeIncomingCaller}`,
-      "Ketuk TERIMA untuk menjawab panggilan langsung di Sc-SansChat.",
+      currentCallType === 'video' ? "📹 Video Call Masuk di Sc-SansChat" : "📞 Telpon Masuk di Sc-SansChat",
+      (incomingData.callerName || "Warga") + " sedang memanggil Anda. Ketuk TERIMA untuk menjawab!",
       "incoming_call",
-      { callerName: activeIncomingCaller, callType: currentCallType, roomUrl: activeCallRoomUrl }
+      { callerName: incomingData.callerName || "Warga", callType: currentCallType, roomUrl: activeCallRoomUrl }
     );
   }
 
-  function acceptCall() {
-    stopRingtone();
-    if (navigator.vibrate) navigator.vibrate(0);
-    document.getElementById('acceptCallSlot').style.display = 'none';
-    document.getElementById('callStatusText').innerText = "Panggilan Diterima • Menghubungkan...";
+  function setupVoiceCallStage() {
+    stopLocalCameraPreview();
+    document.getElementById('voiceAvatarStage').classList.remove('hidden');
+    document.getElementById('voiceAvatarStage').innerText = '📞';
+    document.getElementById('videoContainer').classList.add('hidden');
+    document.getElementById('jitsiCallFrame').src = '';
+  }
 
-    const isVideo = currentCallType === 'video';
-    if (isVideo) {
-      document.getElementById('voiceAvatarStage').classList.add('hidden');
-      document.getElementById('videoContainer').classList.remove('hidden');
-      startLocalPreviewStream(true, useFrontCamera);
-    } else {
-      document.getElementById('voiceAvatarStage').classList.remove('hidden');
-      document.getElementById('videoContainer').classList.add('hidden');
-      startLocalPreviewStream(false, useFrontCamera);
+  function setupVideoCallStage() {
+    document.getElementById('voiceAvatarStage').classList.add('hidden');
+    document.getElementById('videoContainer').classList.remove('hidden');
+    startLocalCameraPreview();
+    const frame = document.getElementById('jitsiCallFrame');
+    const roomName = activeCallRoomUrl.split('/').pop() || ("SansChatRW09_" + Date.now());
+    frame.src = `https://meet.jit.si/${roomName}#config.startWithAudioMuted=false&config.startWithVideoMuted=false&config.prejoinPageEnabled=false`;
+  }
+
+  function startLocalCameraPreview() {
+    stopLocalCameraPreview();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: useFrontCamera ? 'user' : 'environment' },
+      audio: true
+    }).then((stream) => {
+      localMediaStream = stream;
+      const vid = document.getElementById('localCameraPreview');
+      if (vid) vid.srcObject = stream;
+    }).catch(() => {});
+  }
+
+  function stopLocalCameraPreview() {
+    if (localMediaStream) {
+      localMediaStream.getTracks().forEach(t => t.stop());
+      localMediaStream = null;
     }
+    const vid = document.getElementById('localCameraPreview');
+    if (vid) vid.srcObject = null;
+  }
 
-    const finalUrl = activeCallRoomUrl || buildJitsiRoomUrl(currentUser.username + "_Call", isVideo);
-    document.getElementById('jitsiCallFrame').src = finalUrl;
-    startCallDurationCounter();
-    callServerAPI('updateCallStatus', { username: currentUser.username, status: 'ACCEPTED' });
+  function flipLocalCamera() {
+    useFrontCamera = !useFrontCamera;
+    const vid = document.getElementById('localCameraPreview');
+    if (vid) {
+      vid.style.transform = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
+    }
+    if (currentCallType === 'video') {
+      startLocalCameraPreview();
+    }
   }
 
   function switchCallModeToVideo() {
     currentCallType = 'video';
-    document.getElementById('voiceAvatarStage').classList.add('hidden');
-    document.getElementById('videoContainer').classList.remove('hidden');
     document.getElementById('btnSwitchCallVideo').classList.add('active-toggle');
-    startLocalPreviewStream(true, useFrontCamera);
-    const baseRoom = (activeCallRoomUrl || buildJitsiRoomUrl(currentUser.username + "_Video", true)).split('#')[0];
-    document.getElementById('jitsiCallFrame').src = baseRoom + "#config.startWithAudioMuted=false&config.startWithVideoMuted=false&config.prejoinPageEnabled=false";
+    setupVideoCallStage();
+    startCallDurationCounter();
   }
 
   function toggleCallMute() {
@@ -3654,7 +3665,7 @@
       btn.innerText = '🎙️';
     }
     if (localMediaStream) {
-      localMediaStream.getAudioTracks().forEach(track => { track.enabled = !isCallMuted; });
+      localMediaStream.getAudioTracks().forEach(t => { t.enabled = !isCallMuted; });
     }
   }
 
@@ -3670,81 +3681,85 @@
     }
   }
 
-  function flipLocalCamera() {
-    useFrontCamera = !useFrontCamera;
-    if (currentCallType !== 'video') {
-      switchCallModeToVideo();
+  function startCallDurationCounter() {
+    if (callDurationTimer) clearInterval(callDurationTimer);
+    callSeconds = 0;
+    const updateLabel = () => {
+      const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+      const secs = String(callSeconds % 60).padStart(2, '0');
+      document.getElementById('callStatusText').innerText = `Terhubung • ${mins}:${secs}`;
+      callSeconds++;
+    };
+    updateLabel();
+    callDurationTimer = setInterval(updateLabel, 1000);
+  }
+
+  function acceptCall() {
+    stopRingtone();
+    document.getElementById('acceptCallSlot').style.display = 'none';
+    callServerAPI('updateCallStatus', { username: currentUser.username, status: 'CONNECTED' });
+
+    if (currentCallType === 'video') {
+      setupVideoCallStage();
     } else {
-      startLocalPreviewStream(true, useFrontCamera);
+      setupVoiceCallStage();
+      const frame = document.getElementById('jitsiCallFrame');
+      const roomName = activeCallRoomUrl.split('/').pop() || ("SansChatRW09_" + Date.now());
+      document.getElementById('videoContainer').classList.remove('hidden');
+      document.getElementById('localCameraPreview').classList.add('hidden');
+      document.getElementById('voiceAvatarStage').classList.remove('hidden');
+      frame.src = `https://meet.jit.si/${roomName}#config.startWithAudioMuted=false&config.startWithVideoMuted=true&config.prejoinPageEnabled=false`;
     }
+    startCallDurationCounter();
   }
 
   function endCall() {
     stopRingtone();
-    stopCallDurationCounter();
-    stopLocalPreviewStream();
-    if (navigator.vibrate) navigator.vibrate(0);
-    document.getElementById('jitsiCallFrame').src = "";
+    if (callDurationTimer) {
+      clearInterval(callDurationTimer);
+      callDurationTimer = null;
+    }
+    stopLocalCameraPreview();
+    document.getElementById('localCameraPreview').classList.remove('hidden');
+    document.getElementById('jitsiCallFrame').src = '';
     document.getElementById('callScreen').classList.add('hidden');
-    document.getElementById('acceptCallSlot').style.display = 'none';
     callServerAPI('updateCallStatus', { username: currentUser.username, status: 'ENDED' });
   }
 
-  function playRingtone(type = 'standard') {
+  function openRingtoneSettings() {
+    document.getElementById('comboCallDropdown').classList.add('hidden');
+    document.getElementById('ringtoneSelect').value = localStorage.getItem('sanschat_ringtone') || 'standard';
+    document.getElementById('ringtoneModal').classList.remove('hidden');
+  }
+  function closeRingtoneModal() { document.getElementById('ringtoneModal').classList.add('hidden'); stopRingtone(); }
+  function saveRingtoneSetting() {
+    localStorage.setItem('sanschat_ringtone', document.getElementById('ringtoneSelect').value);
+    notifyServiceWorkerUser();
+    closeRingtoneModal();
+  }
+  function testPlayRingtone() { playRingtone(); setTimeout(stopRingtone, 2500); }
+
+  function playRingtone() {
     stopRingtone();
     try {
       if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioContext.state === 'suspended') audioContext.resume();
-
-      const ringOnce = () => {
-        const now = audioContext.currentTime;
+      const toneType = localStorage.getItem('sanschat_ringtone') || 'standard';
+      ringtoneInterval = setInterval(() => {
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
-        if (type === 'classic') {
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(480, now);
-          osc.frequency.setValueAtTime(620, now + 0.12);
-          gain.gain.setValueAtTime(0.12, now);
-          osc.connect(gain); gain.connect(audioContext.destination);
-          osc.start(now); osc.stop(now + 0.35);
-        } else if (type === 'soft') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(523.25, now);
-          osc.frequency.setValueAtTime(659.25, now + 0.15);
-          osc.frequency.setValueAtTime(783.99, now + 0.3);
-          gain.gain.setValueAtTime(0.18, now);
-          osc.connect(gain); gain.connect(audioContext.destination);
-          osc.start(now); osc.stop(now + 0.55);
-        } else {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(880, now);
-          osc.frequency.setValueAtTime(1046.5, now + 0.18);
-          gain.gain.setValueAtTime(0.18, now);
-          osc.connect(gain); gain.connect(audioContext.destination);
-          osc.start(now); osc.stop(now + 0.45);
-        }
-      };
-      ringOnce();
-      ringtoneInterval = setInterval(ringOnce, 1600);
+        osc.type = toneType === 'classic' ? 'square' : 'sine';
+        osc.frequency.setValueAtTime(toneType === 'soft' ? 523.25 : 880, audioContext.currentTime);
+        gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+        osc.connect(gain); gain.connect(audioContext.destination);
+        osc.start(); osc.stop(audioContext.currentTime + 0.35);
+      }, 1000);
+      if (navigator.vibrate) navigator.vibrate([500, 300, 500]);
     } catch (e) {}
   }
 
   function stopRingtone() {
     if (ringtoneInterval) { clearInterval(ringtoneInterval); ringtoneInterval = null; }
-  }
-
-  function openRingtoneSettings() {
-    closeAllInputPopups();
-    document.getElementById('ringtoneSelect').value = localStorage.getItem('sanschat_ringtone') || 'standard';
-    document.getElementById('ringtoneModal').classList.remove('hidden');
-  }
-  function closeRingtoneModal() { stopRingtone(); document.getElementById('ringtoneModal').classList.add('hidden'); }
-  function testPlayRingtone() { playRingtone(document.getElementById('ringtoneSelect').value); setTimeout(stopRingtone, 3000); }
-  function saveRingtoneSetting() {
-    const val = document.getElementById('ringtoneSelect').value;
-    localStorage.setItem('sanschat_ringtone', val);
-    notifyServiceWorkerUser();
-    closeRingtoneModal();
+    if (navigator.vibrate) navigator.vibrate(0);
   }
 </script>
 </body>

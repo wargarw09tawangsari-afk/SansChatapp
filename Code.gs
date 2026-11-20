@@ -2,7 +2,7 @@
  * ============================================================================
  * SPREADSHEET ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI
  * Sc-SansChat Backend Script (Realtime Chat History, Penggolongan Kolom C & Warga Management)
- * Upgraded with: Informasi (Prioritas & Tanggal), SesiAktif (Status ONLINE/OFFLINE, Device, Ping), NotifikasiAntrean (Queue Notifikasi & StatusBaca)
+ * Enhanced Support: Sheet Informasi, SesiAktif, NotifikasiAntrean
  * ============================================================================
  */
 const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
@@ -63,17 +63,17 @@ function doPost(e) {
       case 'loginUser':
         result = loginUser(payload.username, payload.password, payload.deviceId);
         break;
-      case 'logoutUserSession':
-        result = logoutUserSession(payload.username, payload.deviceId);
+      case 'logoutUser':
+        result = logoutUser(payload.username);
         break;
       case 'heartbeatSession':
         result = heartbeatSession(payload.username, payload.deviceId);
         break;
       case 'getActiveSessions':
-        result = getActiveSessions();
+        result = getActiveSessions(payload.username);
         break;
       case 'getInitialDashboardBundle':
-        result = getInitialDashboardBundle(payload.username, payload.deviceId);
+        result = getInitialDashboardBundle(payload.username);
         break;
       case 'getUserProfileDetail':
         result = getUserProfileDetail(payload.username);
@@ -88,16 +88,13 @@ function doPost(e) {
         result = updateGroupProfilePicture(payload.sheetName, payload.base64Data);
         break;
       case 'getAnnouncements':
-        result = getAnnouncements(payload.includeMeta);
+        result = getAnnouncements();
         break;
-      case 'addAnnouncement':
-        result = addAnnouncement(payload.isiPengumuman, payload.prioritas, payload.tanggal, payload.actorUsername);
+      case 'getInformasiItems':
+        result = getInformasiItems(payload.username);
         break;
-      case 'getQueuedNotifications':
-        result = getQueuedNotifications(payload.username, payload.unreadOnly);
-        break;
-      case 'markQueuedNotificationsRead':
-        result = markQueuedNotificationsRead(payload.username, payload.notifIds);
+      case 'addInformasiItem':
+        result = addInformasiItem(payload.username, payload.isiPengumuman, payload.prioritas, payload.targetRole);
         break;
       case 'getUserAssignedGroups':
         result = getUserAssignedGroups(payload.username);
@@ -133,6 +130,26 @@ function doPost(e) {
       case 'markPrivateMessagesAsRead':
         markPrivateMessagesAsRead(payload.username);
         result = { success: true };
+        break;
+      case 'enqueueNotification':
+        result = enqueueNotification(
+          payload.targetUsername,
+          payload.senderUsername,
+          payload.senderNama,
+          payload.roomName,
+          payload.sheetSource,
+          payload.tipeNotif,
+          payload.ringkasanPesan
+        );
+        break;
+      case 'getPendingNotifications':
+        result = getPendingNotifications(payload.username);
+        break;
+      case 'ackNotification':
+        result = ackNotification(payload.notifId, payload.username, payload.statusBaca);
+        break;
+      case 'markAllNotificationsRead':
+        result = markAllNotificationsRead(payload.username);
         break;
       case 'initiateCall':
         result = initiateCall(payload.targetUsername, payload.callerUsername, payload.callerName, payload.type, payload.roomUrl);
@@ -213,13 +230,17 @@ function ensureDefaultSheets() {
   let inf = ss.getSheetByName("Informasi");
   if (!inf) {
     inf = ss.insertSheet("Informasi");
-    inf.appendRow(["Isi Pengumuman", "Prioritas", "Tanggal"]);
-    inf.appendRow(["Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga.", "TINGGI", new Date()]);
-    inf.appendRow(["Layanan komunikasi warga Sc-SansChat RW 09 Cluster Sansiviera aktif 24 jam untuk koordinasi RT/RW, informasi darurat, dan pesan warga.", "NORMAL", new Date()]);
+    inf.appendRow(["Isi Pengumuman", "Prioritas", "Tanggal", "Penulis", "TargetRole", "StatusAktif"]);
+    inf.appendRow([
+      "Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga.",
+      "TINGGI",
+      new Date(),
+      "ADMINPUSAT",
+      "SEMUA",
+      "AKTIF"
+    ]);
   } else if (inf.getLastRow() >= 1 && inf.getLastColumn() < 3) {
-    const headers = inf.getRange(1, 1, 1, Math.max(1, inf.getLastColumn())).getValues()[0];
-    if (!headers[1]) inf.getRange(1, 2).setValue("Prioritas");
-    if (!headers[2]) inf.getRange(1, 3).setValue("Tanggal");
+    inf.getRange(1, 1, 1, 3).setValues([["Isi Pengumuman", "Prioritas", "Tanggal"]]);
   }
 
   if (!ss.getSheetByName("ChatPrivat")) {
@@ -241,11 +262,15 @@ function ensureDefaultSheets() {
   if (!sesiS) {
     sesiS = ss.insertSheet("SesiAktif");
     sesiS.appendRow(["Username", "Nama", "Role", "DeviceID", "WaktuLogin", "StatusSesi", "LastActive"]);
+  } else if (sesiS.getLastRow() === 0) {
+    sesiS.appendRow(["Username", "Nama", "Role", "DeviceID", "WaktuLogin", "StatusSesi", "LastActive"]);
   }
 
   let notifS = ss.getSheetByName("NotifikasiAntrean");
   if (!notifS) {
     notifS = ss.insertSheet("NotifikasiAntrean");
+    notifS.appendRow(["NotifID", "TargetUsername", "SenderUsername", "SenderNama", "RoomName", "SheetSource", "TipeNotif", "RingkasanPesan", "StatusBaca", "Timestamp"]);
+  } else if (notifS.getLastRow() === 0) {
     notifS.appendRow(["NotifID", "TargetUsername", "SenderUsername", "SenderNama", "RoomName", "SheetSource", "TipeNotif", "RingkasanPesan", "StatusBaca", "Timestamp"]);
   }
 }
@@ -277,6 +302,8 @@ function appendActivityLog(username, aktivitas, detail) {
 }
 
 function updateUserActiveSession(username, nama, role, statusSesi, deviceId) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(8000);
   try {
     const ss = getSpreadsheet();
     let sesiSheet = ss.getSheetByName("SesiAktif");
@@ -285,31 +312,47 @@ function updateUserActiveSession(username, nama, role, statusSesi, deviceId) {
       sesiSheet.appendRow(["Username", "Nama", "Role", "DeviceID", "WaktuLogin", "StatusSesi", "LastActive"]);
     }
     const cleanUser = String(username || "").trim().toUpperCase();
-    const cleanDevice = String(deviceId || ("PWA-" + cleanUser)).trim();
+    if (!cleanUser) return { success: false };
+
     const now = new Date();
+    const cleanDevice = String(deviceId || ("PWA-" + cleanUser)).trim();
     const lastRow = sesiSheet.getLastRow();
+    const statusUpper = String(statusSesi || "ONLINE").trim().toUpperCase();
+
     if (lastRow >= 2) {
-      const rows = sesiSheet.getRange(2, 1, lastRow - 1, 7).getValues();
+      const numCols = Math.max(7, sesiSheet.getLastColumn());
+      const rows = sesiSheet.getRange(2, 1, lastRow - 1, numCols).getValues();
       for (let i = 0; i < rows.length; i++) {
         const rowUser = String(rows[i][0] || "").trim().toUpperCase();
-        const rowDev = String(rows[i][3] || "").trim();
-        if (rowUser === cleanUser && (!deviceId || rowDev === cleanDevice || i === rows.length - 1)) {
-          if (nama) sesiSheet.getRange(i + 2, 2).setValue(nama);
-          if (role) sesiSheet.getRange(i + 2, 3).setValue(role);
-          sesiSheet.getRange(i + 2, 4).setValue(cleanDevice);
-          if (statusSesi === "ONLINE") {
-            sesiSheet.getRange(i + 2, 5).setValue(rows[i][4] || now);
+        if (rowUser === cleanUser) {
+          const rowNum = i + 2;
+          if (nama) sesiSheet.getRange(rowNum, 2).setValue(nama);
+          if (role) sesiSheet.getRange(rowNum, 3).setValue(role);
+          if (deviceId) sesiSheet.getRange(rowNum, 4).setValue(cleanDevice);
+          if (statusUpper === "ONLINE") {
+            sesiSheet.getRange(rowNum, 5).setValue(now);
           }
-          sesiSheet.getRange(i + 2, 6).setValue(statusSesi || "ONLINE");
-          sesiSheet.getRange(i + 2, 7).setValue(now);
-          return { success: true, username: cleanUser, statusSesi: statusSesi || "ONLINE", lastActive: now.toISOString() };
+          sesiSheet.getRange(rowNum, 6).setValue(statusUpper);
+          sesiSheet.getRange(rowNum, 7).setValue(now);
+          SpreadsheetApp.flush();
+          return { success: true, username: cleanUser, statusSesi: statusUpper };
         }
       }
     }
-    sesiSheet.appendRow([cleanUser, nama || cleanUser, role || "", cleanDevice, now, statusSesi || "ONLINE", now]);
-    return { success: true, username: cleanUser, statusSesi: statusSesi || "ONLINE", lastActive: now.toISOString() };
-  } catch (e) {
-    return { success: false, message: e.toString() };
+
+    sesiSheet.appendRow([
+      cleanUser,
+      nama || cleanUser,
+      role || "WARGA",
+      cleanDevice,
+      now,
+      statusUpper,
+      now
+    ]);
+    SpreadsheetApp.flush();
+    return { success: true, username: cleanUser, statusSesi: statusUpper };
+  } finally {
+    lock.releaseLock();
   }
 }
 
@@ -317,146 +360,60 @@ function heartbeatSession(username, deviceId) {
   const cleanUser = String(username || "").trim().toUpperCase();
   if (!cleanUser) return { success: false };
   const profile = getUserProfileDetail(cleanUser);
-  return updateUserActiveSession(cleanUser, profile ? profile.nama : cleanUser, profile ? profile.role : "", "ONLINE", deviceId);
+  return updateUserActiveSession(
+    cleanUser,
+    profile ? profile.nama : cleanUser,
+    profile ? profile.role : "",
+    "ONLINE",
+    deviceId
+  );
 }
 
-function logoutUserSession(username, deviceId) {
+function logoutUser(username) {
   const cleanUser = String(username || "").trim().toUpperCase();
   if (!cleanUser) return { success: false };
   const profile = getUserProfileDetail(cleanUser);
-  appendActivityLog(cleanUser, "LOGOUT_SESSION", "Sesi ditandai OFFLINE dari perangkat " + (deviceId || "PWA"));
-  return updateUserActiveSession(cleanUser, profile ? profile.nama : cleanUser, profile ? profile.role : "", "OFFLINE", deviceId);
+  updateUserActiveSession(
+    cleanUser,
+    profile ? profile.nama : cleanUser,
+    profile ? profile.role : "",
+    "OFFLINE",
+    null
+  );
+  appendActivityLog(cleanUser, "LOGOUT", "Sesi ditandai OFFLINE pada SesiAktif");
+  return { success: true };
 }
 
-function getActiveSessions() {
-  const sheet = getSpreadsheet().getSheetByName("SesiAktif");
-  if (!sheet || sheet.getLastRow() < 2) return [];
-  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(7, sheet.getLastColumn())).getValues();
+function getActiveSessions(requestingUsername) {
+  const ss = getSpreadsheet();
+  const sesiSheet = ss.getSheetByName("SesiAktif");
+  if (!sesiSheet || sesiSheet.getLastRow() < 2) return [];
+  const numCols = Math.max(7, sesiSheet.getLastColumn());
+  const data = sesiSheet.getRange(2, 1, sesiSheet.getLastRow() - 1, numCols).getValues();
   const nowMs = Date.now();
-  const results = [];
+  const list = [];
 
   for (let i = 0; i < data.length; i++) {
     const u = String(data[i][0] || "").trim().toUpperCase();
     if (!u) continue;
-    const lastAct = data[i][6] instanceof Date ? data[i][6].getTime() : nowMs;
+    const waktuLogin = (data[i][4] instanceof Date) ? data[i][4].toISOString() : String(data[i][4] || "");
     const rawStatus = String(data[i][5] || "OFFLINE").trim().toUpperCase();
-    const isStale = (nowMs - lastAct) > (5 * 60 * 1000);
-    const computedStatus = (rawStatus === "ONLINE" && !isStale) ? "ONLINE" : "OFFLINE";
+    const lastActiveDate = (data[i][6] instanceof Date) ? data[i][6] : null;
+    const lastActiveIso = lastActiveDate ? lastActiveDate.toISOString() : String(data[i][6] || "");
+    const isStale = lastActiveDate ? ((nowMs - lastActiveDate.getTime()) > 10 * 60 * 1000) : false;
+    const effectiveStatus = (rawStatus === "ONLINE" && isStale) ? "IDLE" : rawStatus;
 
-    results.push({
+    list.push({
       username: u,
       nama: String(data[i][1] || u),
       role: String(data[i][2] || ""),
       deviceId: String(data[i][3] || ""),
-      waktuLogin: data[i][4] instanceof Date ? data[i][4].toISOString() : String(data[i][4] || ""),
-      statusSesi: computedStatus,
-      rawStatus: rawStatus,
-      lastActive: data[i][6] instanceof Date ? data[i][6].toISOString() : String(data[i][6] || "")
+      waktuLogin: waktuLogin,
+      statusSesi: effectiveStatus,
+      lastActive: lastActiveIso
     });
   }
-  return results;
-}
-
-function enqueueNotifications(targetUsernames, senderUsername, senderNama, roomName, sheetSource, tipeNotif, ringkasanPesan) {
-  try {
-    const ss = getSpreadsheet();
-    let notifSheet = ss.getSheetByName("NotifikasiAntrean");
-    if (!notifSheet) {
-      notifSheet = ss.insertSheet("NotifikasiAntrean");
-      notifSheet.appendRow(["NotifID", "TargetUsername", "SenderUsername", "SenderNama", "RoomName", "SheetSource", "TipeNotif", "RingkasanPesan", "StatusBaca", "Timestamp"]);
-    }
-
-    const cleanSender = String(senderUsername || "SYSTEM").trim().toUpperCase();
-    const cleanSenderName = String(senderNama || cleanSender).trim();
-    const cleanRoom = String(roomName || sheetSource || "SansChat").trim();
-    const cleanSheet = String(sheetSource || cleanRoom).trim();
-    const cleanTipe = String(tipeNotif || "CHAT").trim().toUpperCase();
-    const cleanSummary = String(ringkasanPesan || "").substring(0, 180);
-    const now = new Date();
-
-    const list = Array.isArray(targetUsernames) ? targetUsernames : [targetUsernames];
-    const uniqueTargets = {};
-    list.forEach(item => {
-      const u = String(item || "").trim().toUpperCase();
-      if (u && u !== cleanSender) {
-        uniqueTargets[u] = true;
-      }
-    });
-
-    const targets = Object.keys(uniqueTargets);
-    for (let i = 0; i < targets.length; i++) {
-      const targetU = targets[i];
-      const notifId = "NTF-" + now.getTime() + "-" + (i + 1) + "-" + targetU;
-      notifSheet.appendRow([
-        notifId,
-        targetU,
-        cleanSender,
-        cleanSenderName,
-        cleanRoom,
-        cleanSheet,
-        cleanTipe,
-        cleanSummary,
-        "BELUM",
-        now
-      ]);
-    }
-    return targets.length;
-  } catch (e) {
-    return 0;
-  }
-}
-
-function getQueuedNotifications(username, unreadOnly) {
-  const sheet = getSpreadsheet().getSheetByName("NotifikasiAntrean");
-  if (!sheet || sheet.getLastRow() < 2) return [];
-  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(10, sheet.getLastColumn())).getValues();
-  const cleanUser = String(username || "").trim().toUpperCase();
-  const onlyUnread = unreadOnly !== false;
-  const items = [];
-
-  for (let i = data.length - 1; i >= 0; i--) {
-    const targetU = String(data[i][1] || "").trim().toUpperCase();
-    const statusBaca = String(data[i][8] || "BELUM").trim().toUpperCase();
-    if (cleanUser && targetU !== cleanUser && targetU !== "ALL") continue;
-    if (onlyUnread && statusBaca === "SUDAH") continue;
-
-    items.push({
-      rowNumber: i + 2,
-      notifId: String(data[i][0] || ""),
-      targetUsername: targetU,
-      senderUsername: String(data[i][2] || ""),
-      senderNama: String(data[i][3] || ""),
-      roomName: String(data[i][4] || ""),
-      sheetSource: String(data[i][5] || ""),
-      tipeNotif: String(data[i][6] || "CHAT"),
-      ringkasanPesan: String(data[i][7] || ""),
-      statusBaca: statusBaca,
-      timestamp: data[i][9] instanceof Date ? data[i][9].toISOString() : String(data[i][9] || "")
-    });
-  }
-  return items;
-}
-
-function markQueuedNotificationsRead(username, notifIds) {
-  const sheet = getSpreadsheet().getSheetByName("NotifikasiAntrean");
-  if (!sheet || sheet.getLastRow() < 2) return { success: true, updated: 0 };
-  const cleanUser = String(username || "").trim().toUpperCase();
-  const idFilter = Array.isArray(notifIds) ? notifIds.map(x => String(x || "").trim()) : null;
-  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(9, sheet.getLastColumn())).getValues();
-  let updated = 0;
-
-  for (let i = 0; i < data.length; i++) {
-    const nId = String(data[i][0] || "").trim();
-    const targetU = String(data[i][1] || "").trim().toUpperCase();
-    const statusBaca = String(data[i][8] || "BELUM").trim().toUpperCase();
-    const userMatch = !cleanUser || targetU === cleanUser || targetU === "ALL";
-    const idMatch = !idFilter || idFilter.length === 0 || idFilter.includes(nId);
-    if (userMatch && idMatch && statusBaca !== "SUDAH") {
-      sheet.getRange(i + 2, 9).setValue("SUDAH");
-      updated++;
-    }
-  }
-  return { success: true, updated: updated };
+  return list;
 }
 
 function getHelpSystemUrl() {
@@ -495,7 +452,7 @@ function loginUser(username, password, deviceId) {
     if (rowUser === cleanUser && rowPass === cleanPass) {
       const nama = String(data[i][1] || "");
       const role = String(data[i][5] || "");
-      appendActivityLog(cleanUser, "LOGIN_SUCCESS", "Berhasil login ke SansChat (" + (deviceId || "PWA") + ")");
+      appendActivityLog(cleanUser, "LOGIN_SUCCESS", "Berhasil login ke SansChat");
       updateUserActiveSession(cleanUser, nama, role, "ONLINE", deviceId);
       return {
         success: true,
@@ -517,21 +474,19 @@ function loginUser(username, password, deviceId) {
   return { success: false, message: "Username atau Password Salah!" };
 }
 
-function getInitialDashboardBundle(username, deviceId) {
+function getInitialDashboardBundle(username) {
   const cleanUser = String(username || "").trim().toUpperCase();
-  const profile = getUserProfileDetail(cleanUser);
-  updateUserActiveSession(cleanUser, profile ? profile.nama : cleanUser, profile ? profile.role : "", "ONLINE", deviceId);
-  const queuedNotifs = getQueuedNotifications(cleanUser, true);
-  const unreadPrivate = hasUnreadPrivateMessages(cleanUser) || queuedNotifs.length > 0;
-
+  if (cleanUser) {
+    heartbeatSession(cleanUser);
+  }
   return {
-    profile: profile,
+    profile: getUserProfileDetail(cleanUser),
     groups: getUserAssignedGroups(cleanUser),
     groupMapping: getNamaGrupMapping(),
-    announcements: getAnnouncements(false),
-    announcementsDetailed: getAnnouncements(true),
-    queuedNotifications: queuedNotifs,
-    hasUnreadPrivate: unreadPrivate,
+    announcements: getAnnouncements(),
+    informasiItems: getInformasiItems(cleanUser),
+    pendingNotifications: getPendingNotifications(cleanUser),
+    hasUnreadPrivate: hasUnreadPrivateMessages(cleanUser),
     incomingCall: checkIncomingCall(cleanUser)
   };
 }
@@ -760,51 +715,197 @@ function updateGroupProfilePicture(sheetName, base64Data) {
   return { success: false };
 }
 
-function getAnnouncements(includeMeta) {
+function getAnnouncements() {
   const sheet = getSpreadsheet().getSheetByName("Informasi");
   if (!sheet || sheet.getLastRow() < 2) return [];
-  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(3, sheet.getLastColumn())).getValues();
-  const priorityRank = { "TINGGI": 1, "PENTING": 1, "HIGH": 1, "SEDANG": 2, "NORMAL": 3, "RENDAH": 4 };
+  const numCols = Math.max(3, sheet.getLastColumn());
+  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, numCols).getValues();
+  const priorityRank = { "DARURAT": 0, "URGENT": 0, "TINGGI": 1, "HIGH": 1, "NORMAL": 2, "SEDANG": 2, "RENDAH": 3, "LOW": 3 };
+  const items = [];
 
-  const parsed = data.map((r, idx) => {
-    const text = String(r[0] || "").trim();
-    const prio = String(r[1] || "NORMAL").trim().toUpperCase();
-    const tgl = r[2] instanceof Date ? r[2].toISOString() : String(r[2] || "");
-    return {
-      text: text,
-      prioritas: prio,
-      tanggal: tgl,
-      rank: priorityRank[prio] || 3,
-      order: idx
-    };
-  }).filter(item => item.text !== "");
-
-  parsed.sort((a, b) => (a.rank !== b.rank) ? (a.rank - b.rank) : (a.order - b.order));
-
-  if (includeMeta) {
-    return parsed;
+  for (let i = 0; i < data.length; i++) {
+    const isi = String(data[i][0] || "").trim();
+    if (!isi) continue;
+    const prioritas = String(data[i][1] || "NORMAL").trim().toUpperCase();
+    const rawDate = data[i][2];
+    const tanggalMs = (rawDate instanceof Date) ? rawDate.getTime() : 0;
+    const statusAktif = (numCols >= 6) ? String(data[i][5] || "AKTIF").trim().toUpperCase() : "AKTIF";
+    if (statusAktif === "NONAKTIF" || statusAktif === "ARSIP") continue;
+    items.push({
+      isi: isi,
+      prioritas: prioritas,
+      rank: (priorityRank[prioritas] !== undefined) ? priorityRank[prioritas] : 2,
+      tanggalMs: tanggalMs,
+      orderIdx: i
+    });
   }
-  return parsed.map(item => {
-    const prefix = (item.prioritas === "TINGGI" || item.prioritas === "PENTING") ? "[PENTING] " : "";
-    return prefix + item.text;
+
+  items.sort((a, b) => {
+    if (a.rank !== b.rank) return a.rank - b.rank;
+    if (b.tanggalMs !== a.tanggalMs) return b.tanggalMs - a.tanggalMs;
+    return b.orderIdx - a.orderIdx;
   });
+
+  return items.map(it => it.isi);
 }
 
-function addAnnouncement(isiPengumuman, prioritas, tanggal, actorUsername) {
-  const cleanText = String(isiPengumuman || "").trim();
-  if (!cleanText) return { success: false, message: "Isi pengumuman kosong" };
-  const ss = getSpreadsheet();
-  let sheet = ss.getSheetByName("Informasi");
-  if (!sheet) {
-    sheet = ss.insertSheet("Informasi");
-    sheet.appendRow(["Isi Pengumuman", "Prioritas", "Tanggal"]);
+function getInformasiItems(username) {
+  const sheet = getSpreadsheet().getSheetByName("Informasi");
+  if (!sheet || sheet.getLastRow() < 2) return [];
+  const numCols = Math.max(3, sheet.getLastColumn());
+  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, numCols).getValues();
+  const result = [];
+  for (let i = 0; i < data.length; i++) {
+    const isi = String(data[i][0] || "").trim();
+    if (!isi) continue;
+    const rawDate = data[i][2];
+    const tanggalStr = (rawDate instanceof Date) ? rawDate.toISOString() : String(rawDate || "");
+    result.push({
+      rowNumber: i + 2,
+      isiPengumuman: isi,
+      prioritas: String(data[i][1] || "NORMAL").trim().toUpperCase(),
+      tanggal: tanggalStr,
+      penulis: numCols >= 4 ? String(data[i][3] || "") : "",
+      targetRole: numCols >= 5 ? String(data[i][4] || "SEMUA") : "SEMUA",
+      statusAktif: numCols >= 6 ? String(data[i][5] || "AKTIF") : "AKTIF"
+    });
   }
-  const cleanPrio = String(prioritas || "NORMAL").trim().toUpperCase();
-  const tglVal = tanggal ? new Date(tanggal) : new Date();
-  sheet.appendRow([cleanText, cleanPrio, isNaN(tglVal.getTime()) ? new Date() : tglVal]);
-  appendActivityLog(actorUsername || "ADMIN", "ADD_ANNOUNCEMENT", "[" + cleanPrio + "] " + cleanText.substring(0, 80));
-  SpreadsheetApp.flush();
-  return { success: true, announcements: getAnnouncements(true) };
+  return result.reverse();
+}
+
+function addInformasiItem(username, isiPengumuman, prioritas, targetRole) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(8000);
+  try {
+    const cleanText = String(isiPengumuman || "").trim();
+    if (!cleanText) return { success: false, message: "Isi pengumuman kosong" };
+    const ss = getSpreadsheet();
+    let sheet = ss.getSheetByName("Informasi");
+    if (!sheet) {
+      sheet = ss.insertSheet("Informasi");
+      sheet.appendRow(["Isi Pengumuman", "Prioritas", "Tanggal", "Penulis", "TargetRole", "StatusAktif"]);
+    }
+    const cleanUser = String(username || "ADMIN").trim().toUpperCase();
+    const cleanPrio = String(prioritas || "NORMAL").trim().toUpperCase();
+    const cleanTarget = String(targetRole || "SEMUA").trim().toUpperCase();
+    const now = new Date();
+
+    if (sheet.getLastColumn() >= 6 || sheet.getLastRow() === 1) {
+      if (sheet.getLastColumn() < 6 && sheet.getLastRow() === 1) {
+        sheet.getRange(1, 1, 1, 6).setValues([["Isi Pengumuman", "Prioritas", "Tanggal", "Penulis", "TargetRole", "StatusAktif"]]);
+      }
+      sheet.appendRow([cleanText, cleanPrio, now, cleanUser, cleanTarget, "AKTIF"]);
+    } else {
+      sheet.appendRow([cleanText, cleanPrio, now]);
+    }
+
+    appendActivityLog(cleanUser, "ADD_INFORMASI", "Menambah pengumuman (" + cleanPrio + ")");
+    SpreadsheetApp.flush();
+    return { success: true };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function enqueueNotification(targetUsername, senderUsername, senderNama, roomName, sheetSource, tipeNotif, ringkasanPesan) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(8000);
+  try {
+    const ss = getSpreadsheet();
+    let notifSheet = ss.getSheetByName("NotifikasiAntrean");
+    if (!notifSheet) {
+      notifSheet = ss.insertSheet("NotifikasiAntrean");
+      notifSheet.appendRow(["NotifID", "TargetUsername", "SenderUsername", "SenderNama", "RoomName", "SheetSource", "TipeNotif", "RingkasanPesan", "StatusBaca", "Timestamp"]);
+    }
+    const notifId = "NTF-" + Date.now() + "-" + Math.floor(Math.random() * 900 + 100);
+    const now = new Date();
+    const cleanSummary = String(ringkasanPesan || "").substring(0, 200);
+    notifSheet.appendRow([
+      notifId,
+      String(targetUsername || "ALL").trim().toUpperCase(),
+      String(senderUsername || "").trim().toUpperCase(),
+      String(senderNama || senderUsername || "Warga").trim(),
+      String(roomName || "").trim(),
+      String(sheetSource || "").trim(),
+      String(tipeNotif || "CHAT").trim().toUpperCase(),
+      cleanSummary,
+      "BELUM",
+      now
+    ]);
+    SpreadsheetApp.flush();
+    return { success: true, notifId: notifId };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function getPendingNotifications(username) {
+  const ss = getSpreadsheet();
+  const notifSheet = ss.getSheetByName("NotifikasiAntrean");
+  if (!notifSheet || notifSheet.getLastRow() < 2) return [];
+  const cleanUser = String(username || "").trim().toUpperCase();
+  if (!cleanUser) return [];
+
+  const numCols = Math.max(10, notifSheet.getLastColumn());
+  const data = notifSheet.getRange(2, 1, notifSheet.getLastRow() - 1, numCols).getValues();
+  const pending = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const target = String(data[i][1] || "").trim().toUpperCase();
+    const sender = String(data[i][2] || "").trim().toUpperCase();
+    const statusBaca = String(data[i][8] || "BELUM").trim().toUpperCase();
+    if (statusBaca !== "BELUM") continue;
+    if (target === cleanUser || (target === "ALL" && sender !== cleanUser)) {
+      const ts = (data[i][9] instanceof Date) ? data[i][9].toISOString() : String(data[i][9] || "");
+      pending.push({
+        rowNumber: i + 2,
+        notifId: String(data[i][0] || ""),
+        targetUsername: target,
+        senderUsername: sender,
+        senderNama: String(data[i][3] || sender),
+        roomName: String(data[i][4] || ""),
+        sheetSource: String(data[i][5] || ""),
+        tipeNotif: String(data[i][6] || "CHAT"),
+        ringkasanPesan: String(data[i][7] || ""),
+        statusBaca: statusBaca,
+        timestamp: ts
+      });
+    }
+  }
+  return pending;
+}
+
+function ackNotification(notifId, username, statusBaca) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(8000);
+  try {
+    const ss = getSpreadsheet();
+    const notifSheet = ss.getSheetByName("NotifikasiAntrean");
+    if (!notifSheet || notifSheet.getLastRow() < 2) return { success: false };
+    const cleanId = String(notifId || "").trim();
+    const cleanUser = String(username || "").trim().toUpperCase();
+    const nextStatus = String(statusBaca || "SUDAH").trim().toUpperCase();
+    const lastRow = notifSheet.getLastRow();
+    const ids = notifSheet.getRange(2, 1, lastRow - 1, 2).getValues();
+    let updated = 0;
+
+    for (let i = 0; i < ids.length; i++) {
+      const rowId = String(ids[i][0] || "").trim();
+      const rowTarget = String(ids[i][1] || "").trim().toUpperCase();
+      if ((cleanId && rowId === cleanId) || (!cleanId && cleanUser && rowTarget === cleanUser)) {
+        notifSheet.getRange(i + 2, 9).setValue(nextStatus);
+        updated++;
+      }
+    }
+    SpreadsheetApp.flush();
+    return { success: true, updated: updated };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function markAllNotificationsRead(username) {
+  return ackNotification("", username, "SUDAH");
 }
 
 function getGroupMembersByKolomC(groupName, chatSheetName) {
@@ -967,15 +1068,10 @@ function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, reply
     }
 
     const cleanUser = String(username || "").trim().toUpperCase();
-    const cleanName = String(nama || cleanUser).trim();
-    sheet.appendRow([new Date(), cleanUser, cleanName, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
+    const cleanSenderNama = nama || cleanUser;
+    sheet.appendRow([new Date(), cleanUser, cleanSenderNama, pesan, tipe || "text", mediaUrl || "", replyTo || "", cleanUser]);
     appendActivityLog(cleanUser, "SEND_MESSAGE", "Kirim pesan ke room: " + sheet.getName());
-
-    const roomLabel = resolved.groupName || groupName || sheet.getName();
-    const members = getGroupMembersByKolomC(roomLabel, sheet.getName());
-    const memberUsernames = members.map(m => m.username);
-    enqueueNotifications(memberUsernames, cleanUser, cleanName, roomLabel, sheet.getName(), "GROUP_CHAT", pesan || ("[" + (tipe || "media") + "]"));
-
+    enqueueNotification("ALL", cleanUser, cleanSenderNama, groupName || sheet.getName(), sheet.getName(), "GROUP_CHAT", pesan);
     SpreadsheetApp.flush();
     return { success: true, sheetName: sheet.getName() };
   } finally {
@@ -1052,11 +1148,11 @@ function sendPrivateMessage(username, nama, pesan, tipe, mediaUrl, targetUsernam
       sheet.appendRow(["Timestamp", "Username", "Nama", "Pesan", "Tipe", "MediaUrl", "StatusPesan", "TujuanUsername", "ReplyTo"]);
     }
     const cleanSender = String(username || "").trim().toUpperCase();
-    const cleanSenderName = String(nama || cleanSender).trim();
     const cleanTarget = String(targetUsername || cleanSender).trim().toUpperCase();
-    sheet.appendRow([new Date(), cleanSender, cleanSenderName, pesan, tipe || "text", mediaUrl || "", "BELUM", cleanTarget, replyTo || ""]);
+    const cleanSenderNama = nama || cleanSender;
+    sheet.appendRow([new Date(), cleanSender, cleanSenderNama, pesan, tipe || "text", mediaUrl || "", "BELUM", cleanTarget, replyTo || ""]);
     appendActivityLog(cleanSender, "SEND_PRIVATE", "Kirim pesan privat ke: " + cleanTarget);
-    enqueueNotifications([cleanTarget], cleanSender, cleanSenderName, "Chat Privat", "ChatPrivat", "PRIVATE_CHAT", pesan || ("[" + (tipe || "media") + "]"));
+    enqueueNotification(cleanTarget, cleanSender, cleanSenderNama, "Chat Privat", "ChatPrivat", "PRIVATE_CHAT", pesan);
     SpreadsheetApp.flush();
     return { success: true };
   } finally {
@@ -1130,7 +1226,6 @@ function markPrivateMessagesAsRead(username) {
       sheet.getRange(i + 2, 7).setValue("SUDAH");
     }
   }
-  markQueuedNotificationsRead(uName, null);
 }
 
 function initiateCall(targetUsername, callerUsername, callerName, type, roomUrl) {
@@ -1142,25 +1237,28 @@ function initiateCall(targetUsername, callerUsername, callerName, type, roomUrl)
   }
   const cleanTarget = String(targetUsername || "ALL").trim().toUpperCase();
   const cleanCaller = String(callerUsername || "").trim().toUpperCase();
-  const cleanCallerName = String(callerName || cleanCaller).trim();
+  const cleanCallerName = callerName || callerUsername;
   const cleanType = type || "voice";
+  const cleanUrl = roomUrl || "";
+
   sheet.appendRow([
     cleanTarget,
     cleanCaller,
     cleanCallerName,
     cleanType,
     "RINGING",
-    roomUrl || "",
+    cleanUrl,
     new Date()
   ]);
-
-  if (cleanTarget === "ALL") {
-    const contacts = getAllWargaContacts().map(c => c.username);
-    enqueueNotifications(contacts, cleanCaller, cleanCallerName, "Panggilan Grup", "PanggilanAktif", "CALL_" + cleanType.toUpperCase(), (cleanType === "video" ? "Video Call" : "Telpon") + " dari " + cleanCallerName);
-  } else {
-    enqueueNotifications([cleanTarget], cleanCaller, cleanCallerName, "Panggilan Masuk", "PanggilanAktif", "CALL_" + cleanType.toUpperCase(), (cleanType === "video" ? "Video Call" : "Telpon") + " dari " + cleanCallerName);
-  }
-
+  enqueueNotification(
+    cleanTarget,
+    cleanCaller,
+    cleanCallerName,
+    cleanType === "video" ? "Video Call" : "Panggilan Suara",
+    "PanggilanAktif",
+    "CALL",
+    (cleanType === "video" ? "Video Call dari " : "Panggilan Suara dari ") + cleanCallerName
+  );
   SpreadsheetApp.flush();
   return { success: true };
 }
