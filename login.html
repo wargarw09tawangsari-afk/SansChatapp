@@ -349,7 +349,7 @@
     fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'loginUser', username: u, password: p, deviceInfo: (navigator.userAgent || 'Android-PWA').substring(0, 60) })
+      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
     })
     .then(r => r.json())
     .then(resObj => {

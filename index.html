@@ -274,23 +274,6 @@
 
 <script>
   let deferredInstallPrompt = null;
-  const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
-
-  function logIndexActivity(aktivitas, detail) {
-    const savedUser = (localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username') || 'GUEST').trim().toUpperCase();
-    if (!navigator.onLine) return;
-    fetch(S3_API_BASE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        action: 'logActivity',
-        username: savedUser,
-        aktivitas: aktivitas,
-        detail: detail,
-        halaman: 'Index'
-      })
-    }).catch(() => {});
-  }
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./service-worker.js').then((reg) => {
@@ -356,7 +339,6 @@
       Notification.requestPermission().catch(() => {});
     }
 
-    logIndexActivity('NAVIGATE_LOGIN', 'Membuka halaman login dari Index');
     const base = window.location.href.split('?')[0].replace(/index\.html$/, '');
     window.location.href = (base.endsWith('/') ? base : base + '/') + "login.html";
   }

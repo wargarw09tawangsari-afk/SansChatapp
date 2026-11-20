@@ -1837,32 +1837,6 @@
   let lastAlertedUnreadState = false;
   let namaGrupSheetMap = {}; // Pemetaan Kolom A (Nama Grup) -> Kolom B (Sheet Chat)
 
-  let lastLoggedPage = "";
-  function logPageAndSessionActivity(pageName, aktivitas, detail, statusSesi = "ONLINE") {
-    if (!currentUser || !currentUser.username || !navigator.onLine) return;
-    const cleanPage = String(pageName || activeGroupName || (isPrivateChatMode ? "Chat Privat" : "Utama")).trim();
-    const actName = aktivitas || "PAGE_VIEW";
-    const detailText = detail || ("Membuka halaman: " + cleanPage);
-
-    callServerAPI('heartbeatSession', {
-      username: currentUser.username,
-      statusSesi: statusSesi,
-      halaman: cleanPage,
-      deviceInfo: (navigator.userAgent || "PWA").substring(0, 60)
-    }).catch(() => {});
-
-    if (actName !== "HEARTBEAT" || lastLoggedPage !== cleanPage) {
-      lastLoggedPage = cleanPage;
-      callServerAPI('logActivity', {
-        username: currentUser.username,
-        aktivitas: actName,
-        detail: detailText,
-        halaman: cleanPage
-      }).catch(() => {});
-    }
-  }
-
-
   // NO. 1: PALET WARNA TULISAN PENGUMUMAN BERUBAH TIAP TAMPIL
   const announcementThemes = [
     { bg: "#182229", border: "#facc15", text: "#fde047", icon: "#facc15" }, // Kuning Emas Terang
@@ -2223,17 +2197,7 @@
         localStorage.setItem('sanschat_announcements', JSON.stringify(announcements));
         announcementIndex = 0;
         playNextAnnouncementCell(false);
-      } else {
-        callServerAPI('getAnnouncements', {}).then((annList) => {
-          if (Array.isArray(annList) && annList.length > 0) {
-            announcements = annList;
-            localStorage.setItem('sanschat_announcements', JSON.stringify(announcements));
-            announcementIndex = 0;
-            playNextAnnouncementCell(false);
-          }
-        }).catch(() => {});
       }
-      logPageAndSessionActivity('Utama', 'SYNC_UTAMA', 'Halaman utama tersinkron dengan sheet Informasi, SesiAktif & NotifikasiAntrean', 'ONLINE');
       updatePrivateButtonBadge(bundle.hasUnreadPrivate);
       if (bundle.incomingCall) {
         startIncomingCallUI(bundle.incomingCall);
@@ -2241,15 +2205,7 @@
     }).catch(() => {});
   }
 
-  let lastHeartbeatSent = 0;
   function backgroundSyncWatcher() {
-    if (currentUser && currentUser.username && navigator.onLine && (Date.now() - lastHeartbeatSent > 25000)) {
-      lastHeartbeatSent = Date.now();
-      const curPage = !document.getElementById('roomView').classList.contains('hidden')
-        ? (isPrivateChatMode ? 'Chat Privat' : (activeGroupName || activeChatSheet))
-        : 'Utama';
-      logPageAndSessionActivity(curPage, 'HEARTBEAT', 'Update status sesi aktif di halaman ' + curPage, 'ONLINE');
-    }
     if (!currentUser || !currentUser.username || !navigator.onLine) return;
     notifyServiceWorkerUser();
 
@@ -2259,33 +2215,24 @@
       }
     }).catch(() => {});
 
-    callServerAPI('getPendingNotifications', { username: currentUser.username }).then((queueList) => {
-      const pending = Array.isArray(queueList) ? queueList : [];
-      const hasQueueUnread = pending.length > 0;
-      callServerAPI('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnreadPriv) => {
-        const anyUnread = Boolean(hasUnreadPriv || hasQueueUnread);
-        updatePrivateButtonBadge(anyUnread);
-        const banner = document.getElementById('incomingChatBanner');
-        if (anyUnread && !isPrivateChatMode) {
-          const topNotif = pending.length > 0 ? pending[pending.length - 1] : null;
-          const summaryMsg = topNotif
-            ? `💬 ${topNotif.senderNama} (${topNotif.roomName || 'Privat'}): ${topNotif.ringkasanPesan || 'Pesan baru'}`
-            : `💬 Pesan Privat Masuk untuk ${currentUser.username}`;
-          banner.classList.remove('hidden');
-          document.getElementById('incomingChatBannerText').innerText = summaryMsg;
-          if (!lastAlertedUnreadState) {
-            lastAlertedUnreadState = true;
-            triggerBackgroundAlert(
-              topNotif ? `💬 ${topNotif.senderNama} • ${topNotif.roomName || 'SansChat'}` : "💬 Pesan Privat Baru di Sc-SansChat",
-              topNotif && topNotif.ringkasanPesan ? topNotif.ringkasanPesan : ("Ada pesan masuk untuk " + currentUser.username + ". Ketuk TERIMA CHAT!"),
-              "open_private_chat"
-            );
-          }
-        } else {
-          banner.classList.add('hidden');
-          lastAlertedUnreadState = false;
+    callServerAPI('hasUnreadPrivateMessages', { username: currentUser.username }).then((hasUnread) => {
+      updatePrivateButtonBadge(hasUnread);
+      const banner = document.getElementById('incomingChatBanner');
+      if (hasUnread && !isPrivateChatMode) {
+        banner.classList.remove('hidden');
+        document.getElementById('incomingChatBannerText').innerText = `💬 Pesan Privat Masuk untuk ${currentUser.username}`;
+        if (!lastAlertedUnreadState) {
+          lastAlertedUnreadState = true;
+          triggerBackgroundAlert(
+            "💬 Pesan Privat Baru di Sc-SansChat",
+            "Ada pesan privat masuk untuk " + currentUser.username + ". Ketuk TERIMA CHAT!",
+            "open_private_chat"
+          );
         }
-      }).catch(() => {});
+      } else {
+        banner.classList.add('hidden');
+        lastAlertedUnreadState = false;
+      }
     }).catch(() => {});
   }
 
@@ -2347,8 +2294,7 @@
     if (banner) banner.classList.add('hidden');
     lastAlertedUnreadState = false;
     openPrivateChatPage();
-    callServerAPI('markPrivateMessagesAsRead', { username: currentUser.username }).catch(() => {});
-    callServerAPI('markNotificationRead', { notifId: '', username: currentUser.username }).then(() => {
+    callServerAPI('markPrivateMessagesAsRead', { username: currentUser.username }).then(() => {
       updatePrivateButtonBadge(false);
     }).catch(() => {});
   }
@@ -2369,9 +2315,6 @@
   async function confirmLogout() {
     stopActiveRoomAutoRefresh();
     stopRingtone();
-    if (currentUser && currentUser.username) {
-      try { await callServerAPI('logoutUser', { username: currentUser.username }); } catch (e) {}
-    }
     document.getElementById('logoutModalButtons').classList.add('hidden');
 
     const s1 = document.getElementById('stepLogout1');
@@ -2489,41 +2432,11 @@
     reader.readAsDataURL(file);
   }
 
-  // NO. 1: PENGUMUMAN DARI SHEET INFORMASI (KOLOM B) + WARNA PRIORITAS / KUSTOM / BERUBAH TIAP TAMPIL
-  function resolveAnnouncementTheme(item, idx) {
-    const fallback = announcementThemes[idx % announcementThemes.length];
-    const prio = String((item && item.prioritas) || "").trim().toUpperCase();
-    let theme = Object.assign({}, fallback);
-
-    if (prio === "DARURAT" || prio === "URGENT" || prio === "PENTING") {
-      theme = { bg: "#2b1215", border: "#f87171", text: "#fca5a5", icon: "#f87171" };
-    } else if (prio === "TINGGI" || prio === "HIGH") {
-      theme = { bg: "#291d11", border: "#fbbf24", text: "#fde047", icon: "#fbbf24" };
-    } else if (prio === "SEDANG" || prio === "MEDIUM" || prio === "INFO") {
-      theme = { bg: "#132332", border: "#38bdf8", text: "#7dd3fc", icon: "#38bdf8" };
-    } else if (prio === "RENDAH" || prio === "LOW" || prio === "SUKSES") {
-      theme = { bg: "#142621", border: "#34d399", text: "#6ee7b7", icon: "#34d399" };
-    }
-
-    if (item && item.warnaTeks) {
-      theme.text = item.warnaTeks;
-      theme.icon = item.warnaTeks;
-    }
-    if (item && item.warnaLatar) {
-      theme.bg = item.warnaLatar;
-    }
-    return theme;
-  }
-
+  // NO. 1: WARNA TULISAN DI PENGUMUMAN BERUBAH TIAP TAMPIL
   function playNextAnnouncementCell(animate = true) {
     if (!announcements || announcements.length === 0) return;
-    const rawItem = announcements[announcementIndex];
-    const isObj = (typeof rawItem === 'object' && rawItem !== null);
-    const bodyText = isObj ? String(rawItem.teks || rawItem.judul || "").trim() : String(rawItem || "").trim();
-    const titleText = isObj ? String(rawItem.judul || "").trim() : "";
-    const currentText = titleText && !bodyText.startsWith(titleText) ? (`[${titleText}] ${bodyText}`) : bodyText;
-    const theme = resolveAnnouncementTheme(isObj ? rawItem : null, announcementIndex);
-
+    const currentText = announcements[announcementIndex];
+    const theme = announcementThemes[announcementIndex % announcementThemes.length];
     const card = document.getElementById('announcementCard');
     const box = document.getElementById('announcementBox');
     const icon = document.getElementById('announcementIcon');
@@ -2631,7 +2544,6 @@
       loadMessages(false);
     });
 
-    logPageAndSessionActivity(activeGroupName || activeChatSheet, 'OPEN_GROUP_ROOM', 'Masuk ke ruang chat ' + activeGroupName + ' (Sheet: ' + activeChatSheet + ')', 'ONLINE');
     startActiveRoomAutoRefresh();
   }
 
@@ -2666,7 +2578,6 @@
     const cachedPriv = JSON.parse(localStorage.getItem('sanschat_priv_' + currentUser.username) || 'null');
     if (cachedPriv) renderPrivateMessageList(cachedPriv, false);
 
-    logPageAndSessionActivity('Chat Privat', 'OPEN_PRIVATE_CHAT', 'Membuka halaman Chat Privat', 'ONLINE');
     loadMessages(false);
     startActiveRoomAutoRefresh();
   }
