@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sanschat-v35';
+const CACHE_NAME = 'sanschat-v36';
 const USER_META_CACHE = 'sanschat-user-meta-v1';
 const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 const ASSETS_TO_CACHE = [
@@ -138,6 +138,47 @@ async function checkBackgroundAlertsForUser(username) {
       }
     }
 
+    const queueResp = await fetch(S3_API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'getQueuedNotifications', username: username, unreadOnly: true })
+    });
+    const queueJson = await queueResp.json();
+    const queuedItems = (queueJson && Array.isArray(queueJson.data)) ? queueJson.data : [];
+
+    if (queuedItems.length > 0) {
+      const now = Date.now();
+      if (now - lastNotifiedChatTime > 10000) {
+        lastNotifiedChatTime = now;
+        const topItem = queuedItems[0];
+        const senderLabel = topItem.senderNama || topItem.senderUsername || "Warga";
+        const roomLabel = topItem.roomName || "SansChat";
+        const summaryText = topItem.ringkasanPesan || "Ada pesan baru masuk.";
+        await self.registration.showNotification(
+          `💬 ${senderLabel} (${roomLabel})`,
+          {
+            body: `${summaryText} [${queuedItems.length} antrean]`,
+            icon: './icon-192.png',
+            badge: './icon-192.png',
+            tag: 'sanschat-unread-queue',
+            renotify: true,
+            requireInteraction: true,
+            vibrate: [400, 150, 400, 150, 400],
+            data: {
+              actionType: 'open_private_chat',
+              username: username,
+              notifId: topItem.notifId || '',
+              roomName: roomLabel
+            },
+            actions: [
+              { action: 'open_chat', title: '💬 TERIMA CHAT' }
+            ]
+          }
+        );
+      }
+      return;
+    }
+
     const chatResp = await fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -195,15 +236,28 @@ self.addEventListener('notificationclick', (event) => {
 
   event.waitUntil((async () => {
     const savedU = await restoreSwUserMeta();
-    const targetUser = encodeURIComponent(notifData.username || savedU || '');
+    const rawUser = notifData.username || savedU || '';
+    const targetUser = encodeURIComponent(rawUser);
     let targetUrl = `./utama.html?user=${targetUser}`;
+
+    if (rawUser) {
+      await fetch(S3_API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'markQueuedNotificationsRead',
+          username: rawUser,
+          notifIds: notifData.notifId ? [notifData.notifId] : []
+        })
+      }).catch(() => {});
+    }
 
     if (notifData.actionType === 'incoming_call') {
       if (clickedAction === 'reject_call') {
         await fetch(S3_API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'updateCallStatus', username: notifData.username || savedU, status: 'ENDED' })
+          body: JSON.stringify({ action: 'updateCallStatus', username: rawUser, status: 'ENDED' })
         }).catch(() => {});
         return;
       }

@@ -254,7 +254,7 @@
     <ol>
       <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
       <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
-      <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
+      <li>Buka kembali lewat ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
     </ol>
   </div>
 
@@ -276,6 +276,20 @@
 
 <script>
   const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+
+  function getOrCreateDeviceId() {
+    let devId = "";
+    try {
+      devId = localStorage.getItem('sanschat_device_id') || "";
+      if (!devId) {
+        devId = "DEV-" + Math.random().toString(36).substring(2, 8).toUpperCase() + "-" + Date.now().toString().slice(-4);
+        localStorage.setItem('sanschat_device_id', devId);
+      }
+    } catch (e) {
+      devId = "DEV-WEB-" + Date.now().toString().slice(-4);
+    }
+    return devId;
+  }
 
   window.onload = function() {
     const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
@@ -349,7 +363,7 @@
     fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
+      body: JSON.stringify({ action: 'loginUser', username: u, password: p, deviceId: getOrCreateDeviceId() })
     })
     .then(r => r.json())
     .then(resObj => {
