@@ -570,7 +570,7 @@ function updateGroupProfilePicture(sheetName, base64Data) {
 function getAnnouncements() {
   const sheet = getSpreadsheet().getSheetByName("Informasi");
   if (!sheet || sheet.getLastRow() < 2) return [];
-  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+  const data = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues();
   return data.map(r => String(r[0] || "").trim()).filter(Boolean);
 }
 
