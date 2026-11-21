@@ -414,6 +414,32 @@ html, body {
   function escapeHtml(str) {
     return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, ">").replace(/"/g, "&quot;");
   }
+  function getHistoryStorageKey(room) {
+    const u = currentUser.username || "GUEST";
+    const keyPart = room.isPrivate ? "PRIVATE_" + u : "GROUP_" + (room.sheetName || room.name || "DEFAULT");
+    return "sanschat_history_" + u + "_" + keyPart;
+  }
+  function loadLocalChatHistory(room) {
+    try {
+      const raw = localStorage.getItem(getHistoryStorageKey(room));
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveLocalChatHistory(room, msgs) {
+    try {
+      const arr = Array.isArray(msgs) ? msgs.slice(-150) : [];
+      localStorage.setItem(getHistoryStorageKey(room), JSON.stringify(arr));
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'CACHE_CHAT_HISTORY',
+          roomKey: getHistoryStorageKey(room),
+          messages: arr
+        });
+      }
+    } catch (e) {}
+  }
   function callServerAPI(action, extraData) {
     return fetch(S3_API_BASE, {
       method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -438,6 +464,9 @@ html, body {
     }
     if (savedUser) currentUser.username = savedUser.toUpperCase();
     if (!currentUser.username) { window.location.href = './login.html'; return; }
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'SET_ACTIVE_USER', username: currentUser.username });
+    }
     renderUserHeader();
     syncInitialDashboardBundle();
   };
@@ -469,13 +498,17 @@ html, body {
       item.className = 'group-item';
       item.onclick = () => openGroupRoom(g.name, g.sheetName, g.foto);
       const avHtml = g.foto ? `<img src="${escapeHtml(g.foto)}" alt="Grup">` : '👥';
+      const localHist = loadLocalChatHistory({ name: g.name, sheetName: g.sheetName, isPrivate: false });
+      const lastLocal = localHist.length ? localHist[localHist.length - 1] : null;
+      const previewText = g.lastMessage || (lastLocal ? ((lastLocal.senderNama || '') + ': ' + (lastLocal.pesan || '')) : 'Ketuk untuk membuka obrolan');
+      const previewTime = (g.lastTime || (lastLocal && lastLocal.timestamp) || '').slice(11, 16);
       item.innerHTML = `
         <div class="group-avatar">${avHtml}</div>
         <div class="group-info">
           <div class="group-title">${escapeHtml(g.name)}</div>
-          <div class="group-last-msg">${escapeHtml(g.lastMessage || 'Ketuk untuk membuka obrolan')}</div>
+          <div class="group-last-msg">${escapeHtml(previewText)}</div>
         </div>
-        <div class="group-time">${escapeHtml((g.lastTime || '').slice(11, 16))}</div>
+        <div class="group-time">${escapeHtml(previewTime)}</div>
       `;
       container.appendChild(item);
     });
@@ -488,6 +521,8 @@ html, body {
     document.getElementById('btnGroupMembersAction').classList.remove('hidden');
     document.getElementById('mainView').classList.add('hidden');
     document.getElementById('roomView').classList.remove('hidden');
+    const cachedMsgs = loadLocalChatHistory(activeRoom);
+    if (cachedMsgs.length) renderChatMessages(cachedMsgs, false);
     loadMessages(false);
     startActiveRoomAutoRefresh();
   }
@@ -499,6 +534,8 @@ html, body {
     document.getElementById('btnGroupMembersAction').classList.add('hidden');
     document.getElementById('mainView').classList.add('hidden');
     document.getElementById('roomView').classList.remove('hidden');
+    const cachedMsgs = loadLocalChatHistory(activeRoom);
+    if (cachedMsgs.length) renderChatMessages(cachedMsgs, false);
     loadMessages(false);
     startActiveRoomAutoRefresh();
   }
@@ -519,15 +556,22 @@ html, body {
     syncInitialDashboardBundle();
   }
   function loadMessages(silent) {
-    if (activeRoom.isPrivate) {
+    const roomSnapshot = Object.assign({}, activeRoom);
+    if (roomSnapshot.isPrivate) {
       callServerAPI('getPrivateChatSheetRecords', { username: currentUser.username }).then(rows => {
         if (!Array.isArray(rows)) return;
         const mapped = rows.map(r => ({ senderUsername: r.pengirimUsername, senderNama: r.nama, pesan: r.pesanD || r.pesanF, timestamp: r.timestamp }));
-        renderChatMessages(mapped, silent);
+        saveLocalChatHistory(roomSnapshot, mapped);
+        if (activeRoom.isPrivate) renderChatMessages(mapped, silent);
       }).catch(() => {});
     } else {
-      callServerAPI('getMessages', { chatSheetName: activeRoom.sheetName, username: currentUser.username, groupName: activeRoom.name }).then(msgs => {
-        if (Array.isArray(msgs)) renderChatMessages(msgs, silent);
+      callServerAPI('getMessages', { chatSheetName: roomSnapshot.sheetName, username: currentUser.username, groupName: roomSnapshot.name }).then(msgs => {
+        if (Array.isArray(msgs)) {
+          saveLocalChatHistory(roomSnapshot, msgs);
+          if (!activeRoom.isPrivate && activeRoom.sheetName === roomSnapshot.sheetName) {
+            renderChatMessages(msgs, silent);
+          }
+        }
       }).catch(() => {});
     }
   }
@@ -553,12 +597,24 @@ html, body {
     const text = inp.value.trim();
     if (!text) return;
     inp.value = '';
+    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    const optimisticMsg = {
+      senderUsername: currentUser.username,
+      senderNama: currentUser.nama || currentUser.username,
+      pesan: text,
+      timestamp: nowStr
+    };
+    const existing = loadLocalChatHistory(activeRoom);
+    existing.push(optimisticMsg);
+    saveLocalChatHistory(activeRoom, existing);
+    renderChatMessages(existing, false);
+
     if (activeRoom.isPrivate) {
       callServerAPI('sendPrivateMessage', { username: currentUser.username, nama: currentUser.nama || currentUser.username, pesan: text, tipe: 'text', mediaUrl: '', targetUsername: currentUser.username, replyTo: '' })
-        .then(() => loadMessages(false)).catch(() => {});
+        .then(() => loadMessages(true)).catch(() => {});
     } else {
       callServerAPI('sendMessage', { chatSheetName: activeRoom.sheetName, username: currentUser.username, nama: currentUser.nama || currentUser.username, pesan: text, tipe: 'text', mediaUrl: '', replyTo: '', groupName: activeRoom.name })
-        .then(() => loadMessages(false)).catch(() => {});
+        .then(() => loadMessages(true)).catch(() => {});
     }
   }
   function insertQuickEmoji(emoji) { const inp = document.getElementById('inputPesan'); inp.value += emoji; inp.focus(); }
@@ -593,6 +649,9 @@ ID: ${currentUser.username}
 Role: ${currentUser.role || '-'}`); }
   function openWebApps() { if (currentUser.webAppsUrl) window.open(currentUser.webAppsUrl, '_blank'); else alert("URL WebAps belum dikonfigurasi."); }
   function handleLogout() {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ACTIVE_USER' });
+    }
     localStorage.removeItem('sanschat_active_username'); localStorage.removeItem('sanschat_user_session');
     sessionStorage.removeItem('sanschat_active_username'); sessionStorage.removeItem('sanschat_user_session');
     window.location.href = './login.html';

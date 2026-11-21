@@ -2,6 +2,7 @@
  * ============================================================================
  * SPREADSHEET ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI
  * Sc-SansChat Backend Script (Realtime Chat History, Penggolongan Kolom C & Warga Management)
+ * Sinkron dengan tata letak 1-Frame utama.html & Riwayat Obrolan (Chat History)
  * ============================================================================
  */
 const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
@@ -147,6 +148,14 @@ function columnLetterToIndex(colRef) {
   return -1;
 }
 
+function formatChatTimestamp(val) {
+  if (!val) return "";
+  if (val instanceof Date) {
+    return Utilities.formatDate(val, "Asia/Jakarta", "yyyy-MM-dd HH:mm:ss");
+  }
+  return String(val);
+}
+
 function ensureDefaultSheets() {
   const ss = getSpreadsheet();
   if (!ss.getSheetByName("Users")) {
@@ -268,7 +277,7 @@ function getUserProfileDetail(username) {
 function getAnnouncements() {
   const sheet = getSpreadsheet().getSheetByName("Informasi");
   if (!sheet || sheet.getLastRow() < 2) return [];
-  return sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues().map(r => String(r[0] || "").trim()).filter(Boolean);
+  return sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues().map(r => String(r[0] || "").trim()).filter(Boolean);
 }
 function getNamaGrupMapping() {
   const sheet = getSpreadsheet().getSheetByName("NamaGrup");
@@ -281,6 +290,20 @@ function getNamaGrupMapping() {
     foto: String(r[3] || "").trim(),
     deskripsi: String(r[4] || "").trim()
   })).filter(g => g.name);
+}
+function getGroupLastChatSummary(sheetName) {
+  const ss = getSpreadsheet();
+  const sh = ss.getSheetByName(String(sheetName || "").trim());
+  if (!sh || sh.getLastRow() < 2) return { lastMessage: "", lastTime: "" };
+  const lastRow = sh.getLastRow();
+  const rowVals = sh.getRange(lastRow, 1, 1, Math.min(sh.getLastColumn(), 4)).getValues()[0];
+  const sender = String(rowVals[2] || rowVals[1] || "").trim();
+  const text = String(rowVals[3] || "").trim();
+  const preview = sender && text ? (sender + ": " + text) : (text || "");
+  return {
+    lastMessage: preview,
+    lastTime: formatChatTimestamp(rowVals[0])
+  };
 }
 function getUserAssignedGroups(username) {
   const ss = getSpreadsheet();
@@ -300,7 +323,15 @@ function getUserAssignedGroups(username) {
     const colIdx = columnLetterToIndex(g.kolom);
     const val = colIdx > 0 ? String(matchedRow[colIdx - 1] || "").trim().toUpperCase() : "AKTIF";
     if (val && val !== "TIDAK" && val !== "FALSE" && val !== "0") {
-      assigned.push({ name: g.name, sheetName: g.sheetName || g.name.replace(/\s+/g, ""), foto: g.foto, lastMessage: "", lastTime: "" });
+      const targetSheet = g.sheetName || g.name.replace(/\s+/g, "");
+      const summary = getGroupLastChatSummary(targetSheet);
+      assigned.push({
+        name: g.name,
+        sheetName: targetSheet,
+        foto: g.foto,
+        lastMessage: summary.lastMessage,
+        lastTime: summary.lastTime
+      });
     }
   });
   return assigned;
@@ -339,8 +370,10 @@ function sendMessage(chatSheetName, username, nama, pesan, tipe, mediaUrl, reply
     sh = ss.insertSheet(sName);
     sh.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
   }
-  sh.appendRow([new Date(), String(username || "").toUpperCase(), nama || username, pesan || "", tipe || "text", mediaUrl || "", replyTo || "", ""]);
-  return { success: true };
+  const now = new Date();
+  const cleanSender = String(username || "").trim().toUpperCase();
+  sh.appendRow([now, cleanSender, nama || username, pesan || "", tipe || "text", mediaUrl || "", replyTo || "", cleanSender]);
+  return { success: true, timestamp: formatChatTimestamp(now) };
 }
 function getMessages(chatSheetName, username, groupName) {
   const ss = getSpreadsheet();
@@ -348,13 +381,15 @@ function getMessages(chatSheetName, username, groupName) {
   const sh = ss.getSheetByName(sName);
   if (!sh || sh.getLastRow() < 2) return [];
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, Math.min(sh.getLastColumn(), 8)).getValues();
-  return rows.map(r => ({
-    timestamp: r[0] instanceof Date ? Utilities.formatDate(r[0], "Asia/Jakarta", "yyyy-MM-dd HH:mm:ss") : String(r[0] || ""),
+  return rows.map((r, idx) => ({
+    rowNumber: idx + 2,
+    timestamp: formatChatTimestamp(r[0]),
     senderUsername: String(r[1] || ""),
     senderNama: String(r[2] || ""),
     pesan: String(r[3] || ""),
     tipe: String(r[4] || "text"),
-    mediaUrl: String(r[5] || "")
+    mediaUrl: String(r[5] || ""),
+    replyTo: String(r[6] || "")
   }));
 }
 function sendPrivateMessage(username, nama, pesan, tipe, mediaUrl, targetUsername, replyTo) {
@@ -364,8 +399,11 @@ function sendPrivateMessage(username, nama, pesan, tipe, mediaUrl, targetUsernam
     sh = ss.insertSheet("ChatPrivat");
     sh.appendRow(["Timestamp", "Username", "Nama", "Pesan", "Tipe", "MediaUrl", "StatusPesan", "TujuanUsername", "ReplyTo"]);
   }
-  sh.appendRow([new Date(), String(username || "").toUpperCase(), nama || username, pesan || "", tipe || "text", mediaUrl || "", "UNREAD", String(targetUsername || "").toUpperCase(), replyTo || ""]);
-  return { success: true };
+  const now = new Date();
+  const cleanSender = String(username || "").trim().toUpperCase();
+  const cleanTarget = String(targetUsername || cleanSender).trim().toUpperCase();
+  sh.appendRow([now, cleanSender, nama || username, pesan || "", tipe || "text", mediaUrl || "", "UNREAD", cleanTarget, replyTo || ""]);
+  return { success: true, timestamp: formatChatTimestamp(now) };
 }
 function getPrivateChatSheetRecords(username) {
   const ss = getSpreadsheet();
@@ -377,13 +415,30 @@ function getPrivateChatSheetRecords(username) {
     const u = String(r[1] || "").trim().toUpperCase();
     const t = String(r[7] || "").trim().toUpperCase();
     return u === cleanUser || t === cleanUser || cleanUser === "ADMINPUSAT";
-  }).map(r => ({
-    timestamp: r[0] instanceof Date ? Utilities.formatDate(r[0], "Asia/Jakarta", "yyyy-MM-dd HH:mm:ss") : String(r[0] || ""),
+  }).map((r, idx) => ({
+    rowNumber: idx + 2,
+    timestamp: formatChatTimestamp(r[0]),
     pengirimUsername: String(r[1] || ""),
     nama: String(r[2] || ""),
     pesanD: String(r[3] || ""),
-    pesanF: String(r[3] || "")
+    pesanF: String(r[3] || ""),
+    statusPesan: String(r[6] || ""),
+    tujuanUsername: String(r[7] || ""),
+    replyTo: String(r[8] || "")
   }));
+}
+function hasUnreadPrivateMessages(username) {
+  const ss = getSpreadsheet();
+  const sh = ss.getSheetByName("ChatPrivat");
+  if (!sh || sh.getLastRow() < 2) return false;
+  const cleanUser = String(username || "").trim().toUpperCase();
+  const rows = sh.getRange(2, 1, sh.getLastRow() - 1, 8).getValues();
+  for (let i = 0; i < rows.length; i++) {
+    const target = String(rows[i][7] || "").trim().toUpperCase();
+    const status = String(rows[i][6] || "").trim().toUpperCase();
+    if (target === cleanUser && status === "UNREAD") return true;
+  }
+  return false;
 }
 function markPrivateMessagesAsRead(username) {
   const ss = getSpreadsheet();
@@ -392,7 +447,7 @@ function markPrivateMessagesAsRead(username) {
   const cleanUser = String(username || "").trim().toUpperCase();
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, 8).getValues();
   for (let i = 0; i < rows.length; i++) {
-    if (String(rows[i][7] || "").trim().toUpperCase() === cleanUser) {
+    if (String(rows[i][7] || "").trim().toUpperCase() === cleanUser && String(rows[i][6] || "").trim().toUpperCase() === "UNREAD") {
       sh.getRange(i + 2, 7).setValue("READ");
     }
   }

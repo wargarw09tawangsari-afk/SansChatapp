@@ -1,5 +1,6 @@
-const CACHE_NAME = 'sanschat-v36';
+const CACHE_NAME = 'sanschat-v37-chat-history';
 const USER_META_CACHE = 'sanschat-user-meta-v1';
+const CHAT_HISTORY_CACHE = 'sanschat-chat-history-v1';
 const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 const ASSETS_TO_CACHE = [
   './',
@@ -53,7 +54,11 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== USER_META_CACHE).map((k) => caches.delete(k)))
+      Promise.all(
+        keys
+          .filter((k) => k !== CACHE_NAME && k !== USER_META_CACHE && k !== CHAT_HISTORY_CACHE)
+          .map((k) => caches.delete(k))
+      )
     )
   );
   self.clients.claim();
@@ -65,7 +70,23 @@ self.addEventListener('message', (event) => {
   }
   if (event.data && event.data.type === 'CLEAR_ACTIVE_USER') {
     swActiveUsername = "";
-    event.waitUntil(caches.delete(USER_META_CACHE));
+    event.waitUntil(Promise.all([
+      caches.delete(USER_META_CACHE),
+      caches.delete(CHAT_HISTORY_CACHE)
+    ]));
+  }
+  if (event.data && event.data.type === 'CACHE_CHAT_HISTORY') {
+    const roomKey = encodeURIComponent(String(event.data.roomKey || 'default'));
+    const messages = Array.isArray(event.data.messages) ? event.data.messages : [];
+    event.waitUntil((async () => {
+      try {
+        const c = await caches.open(CHAT_HISTORY_CACHE);
+        await c.put('/chat-history/' + roomKey, new Response(JSON.stringify({
+          updatedAt: Date.now(),
+          messages: messages
+        })));
+      } catch (e) {}
+    })());
   }
   if (event.data && event.data.type === 'TRIGGER_BG_CHECK') {
     event.waitUntil((async () => {

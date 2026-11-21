@@ -1,7 +1,7 @@
 {
   "short_name": "Sc-SansChat",
   "name": "Sc-SansChat - Warga RW 09 Sansivera",
-  "description": "Aplikasi komunikasi warga pengganti WhatsApp berbasis PWA & Spreadsheet",
+  "description": "Aplikasi komunikasi warga pengganti WhatsApp berbasis PWA & Spreadsheet (1 Frame Responsif & Riwayat Chat)",
   "icons": [
     {
       "src": "./icon-192.png",
