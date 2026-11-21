@@ -1,661 +1,357 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Sc-SansChat - Utama</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <meta name="theme-color" content="#111b21">
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#111b21" />
+  <link rel="stylesheet" href="./single-frame.css" />
   <style>
-    :root {
-      --wa-bg: #0b141a;
-      --wa-panel: #111b21;
-      --wa-card: #182229;
-      --wa-border: #2a3942;
-      --wa-green: #00a884;
-      --wa-green-light: #25d366;
-      --wa-text: #e9edef;
-      --wa-text-secondary: #8696a0;
-      --wa-chat-bg: #efeae2;
-      --font-xl: clamp(17px, 2.8vw, 26px);
-      --font-lg: clamp(14px, 2.2vw, 20px);
-      --font-md: clamp(12px, 1.7vw, 16px);
-      --btn-touch: clamp(42px, 6.2vh, 56px);
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #0b141a;
+      color: #e9edef;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    html, body {
-      width: 100%; height: 100dvh; max-height: 100dvh; background-color: var(--wa-bg); color: var(--wa-text);
-      overflow: hidden; display: flex; justify-content: center; align-items: stretch;
-      padding: clamp(4px, 1vh, 12px) clamp(4px, 1.2vw, 16px);
+    .sf-sidebar {
+      background: #111b21;
+      border-right: 1px solid #222e35;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
     }
-    .app-container {
-      background: var(--wa-panel); width: 100%; max-width: min(1100px, 100%); height: 100%; max-height: 100%;
-      display: flex; flex-direction: column; overflow: hidden; position: relative;
-      border: 2.5px solid var(--wa-green); border-radius: clamp(14px, 2vw, 22px); box-shadow: 0 0 32px rgba(0,0,0,0.85);
+    .sf-main {
+      background: #0b141a;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
     }
-    .view-screen { flex: 1; min-height: 0; width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-
-    /* HALAMAN 1: UTAMA (#mainView) */
-    .main-header {
-      background: var(--wa-panel); padding: clamp(8px, 1.2vh, 14px) clamp(8px, 1.5vw, 16px);
-      display: flex; flex-direction: column; border-bottom: 2px solid #1f2c34; gap: clamp(6px, 1vh, 10px); flex-shrink: 0;
+    .sf-header {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      background: #202c33;
+      border-bottom: 1px solid #2a3942;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
-    .header-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; flex-wrap: wrap; }
-    .header-left-group { display: flex; align-items: center; gap: clamp(6px, 1.2vw, 12px); flex-shrink: 0; }
-    .header-right-group { display: flex; align-items: center; gap: clamp(6px, 1vw, 10px); flex: 1; justify-content: flex-end; flex-wrap: wrap; }
-    .profile-avatar-clickable {
-      width: clamp(54px, 8.5vh, 78px); height: clamp(54px, 8.5vh, 78px); border-radius: 50%; background: #2a3942;
-      border: 3px solid var(--wa-green); cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: clamp(24px, 4vh, 36px); overflow: hidden; flex-shrink: 0; box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+    .sf-badge-btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #2a3942;
+      background: #111b21;
+      color: #e9edef;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .profile-avatar-clickable img { width: 100%; height: 100%; object-fit: cover; }
-    .brand-frame-3d {
-      background: linear-gradient(145deg, #00b890 0%, #005c4b 70%, #042f26 100%);
-      border: 2px solid var(--wa-green-light); border-radius: 14px;
-      padding: clamp(5px, 0.8vh, 9px) clamp(8px, 1.2vw, 14px); display: flex; flex-direction: column;
-      align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+    .sf-messages {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .brand-line-top { font-size: clamp(20px, 3.2vh, 28px); font-weight: 900; line-height: 0.9; color: #ffffff; }
-    .brand-line-sub { font-size: clamp(9px, 1.3vh, 12px); font-weight: 800; line-height: 1.1; color: #ecfdf5; background: rgba(4, 35, 29, 0.92); border: 1px solid #34d399; border-radius: 99px; padding: 2px 7px; margin: 2px 0; }
-    .brand-line-bottom { font-size: clamp(11px, 1.6vh, 14px); font-weight: 800; line-height: 1.1; color: #d1fae5; }
-    .btn-webaps {
-      background: linear-gradient(145deg, #fde047 0%, #eab308 52%, #a16207 100%); color: #1c1917; border: 2px solid #fef08a;
-      padding: 8px 12px; min-height: var(--btn-touch); border-radius: 14px; font-weight: 900; font-size: var(--font-md);
-      cursor: pointer; white-space: nowrap; box-shadow: 0 4px 0 #713f12, 0 6px 14px rgba(234, 179, 8, 0.35);
+    .msg-bubble {
+      max-width: 85%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #202c33;
+      font-size: 13.5px;
+      line-height: 1.4;
+      word-break: break-word;
     }
-    .btn-chat-privat {
-      padding: 8px 12px; min-height: var(--btn-touch); border-radius: 14px; font-weight: 900; cursor: pointer;
-      color: #ffffff; background: linear-gradient(145deg, #38bdf8 0%, #0284c7 52%, #0369a1 100%); border: 2px solid #bae6fd;
-      font-size: var(--font-md); display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
-      line-height: 1.1; box-shadow: 0 4px 0 #0c4a6e, 0 6px 14px rgba(2, 132, 199, 0.35);
+    .msg-mine {
+      align-self: flex-end;
+      background: #005c4b;
     }
-    .btn-logout {
-      background: linear-gradient(145deg, #f87171 0%, #dc2626 52%, #991b1b 100%); color: #ffffff; border: 2px solid #fecaca;
-      padding: 8px 12px; min-height: var(--btn-touch); border-radius: 14px; font-weight: 900; font-size: var(--font-md);
-      cursor: pointer; white-space: nowrap; box-shadow: 0 4px 0 #7f1d1d, 0 6px 14px rgba(220, 38, 38, 0.35);
+    .sf-composer {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      background: #202c33;
+      border-top: 1px solid #2a3942;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
     }
-    .user-info-row { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-    .user-name-display { font-size: var(--font-xl); font-weight: 900; color: var(--wa-text); line-height: 1.15; }
-    .user-role-display { font-size: var(--font-lg); color: var(--wa-green-light); font-weight: 800; line-height: 1.15; }
-    .marquee-box { background: #182229; border: 1.5px solid #eab308; border-radius: 12px; padding: 6px 10px; overflow: hidden; white-space: nowrap; font-size: var(--font-md); font-weight: 800; color: #fef08a; flex-shrink: 0; }
-    .marquee-content { display: inline-block; animation: marqueeAnim 18s linear infinite; }
-    @keyframes marqueeAnim { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .group-list-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 6px 8px 16px 8px; background: var(--wa-panel); }
-    .group-item { display: flex; align-items: center; padding: clamp(10px, 1.5vh, 14px) 10px; border-bottom: 1px solid #1f2c34; cursor: pointer; gap: 12px; border-radius: 12px; }
-    .group-item:hover { background: #182229; }
-    .group-avatar { width: clamp(48px, 7vh, 64px); height: clamp(48px, 7vh, 64px); border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-size: clamp(20px, 3.2vh, 28px); flex-shrink: 0; overflow: hidden; border: 2px solid var(--wa-green); }
-    .group-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .group-info { flex: 1; min-width: 0; }
-    .group-title { font-size: var(--font-lg); font-weight: 800; color: var(--wa-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .group-last-msg { font-size: var(--font-md); color: var(--wa-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-    .group-time { font-size: var(--font-md); color: var(--wa-green-light); font-weight: 800; flex-shrink: 0; }
-
-    /* HALAMAN 2: RUANG CHAT (#roomView) */
-    .room-header { background: #111b21; color: var(--wa-text); padding: clamp(6px, 1vh, 10px) clamp(8px, 1.2vw, 14px); display: flex; align-items: center; justify-content: space-between; gap: 6px; border-bottom: 2px solid #2a3942; flex-shrink: 0; z-index: 20; }
-    .room-header-left { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
-    .back-btn { background: #202c33; border: 1.5px solid var(--wa-green); color: var(--wa-green-light); font-size: var(--font-lg); font-weight: 900; cursor: pointer; padding: 6px 12px; min-height: var(--btn-touch); border-radius: 12px; flex-shrink: 0; }
-    .room-avatar { width: clamp(42px, 6vh, 54px); height: clamp(42px, 6vh, 54px); border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-size: clamp(18px, 2.8vh, 24px); overflow: hidden; flex-shrink: 0; border: 2px solid var(--wa-green); }
-    .room-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .room-title-box { min-width: 0; flex: 1; }
-    .room-title { font-size: var(--font-lg); font-weight: 900; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .room-subtitle { font-size: var(--font-md); color: var(--wa-green-light); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .room-header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .room-action-btn { background: #202c33; border: 1.5px solid #374151; color: var(--wa-text); min-height: var(--btn-touch); padding: 6px 10px; border-radius: 12px; font-size: var(--font-md); font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; }
-    .btn-grup-plus { background: var(--wa-green); color: #0b141a; border-color: var(--wa-green-light); font-weight: 900; }
-
-    /* Area Chat dengan padding bawah agar pesan terakhir tidak tertutup bar Emoji / Ketik Pesan / Kamera */
-    .chat-messages-area {
-      flex: 1; min-height: 0; width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch;
-      background-color: var(--wa-chat-bg); padding: 12px 10px calc(var(--btn-touch) + 38px) 10px;
-      scroll-padding-bottom: calc(var(--btn-touch) + 38px); display: flex; flex-direction: column; gap: 8px;
+    .sf-composer input[type="text"] {
+      flex: 1 1 180px;
+      min-width: 120px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #2a3942;
+      background: #111b21;
+      color: #e9edef;
+      font-size: 14px;
     }
-    .message-bubble { max-width: min(85%, 640px); padding: 8px 12px; border-radius: 14px; font-size: var(--font-md); line-height: 1.35; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.18); }
-    .msg-incoming { align-self: flex-start; background: #ffffff; color: #111b21; border-top-left-radius: 4px; }
-    .msg-outgoing { align-self: flex-end; background: #d9fdd3; color: #111b21; border-top-right-radius: 4px; }
-    .msg-sender { font-size: var(--font-md); font-weight: 900; color: #008069; margin-bottom: 3px; }
-    .msg-meta { font-size: 11px; color: #667781; text-align: right; margin-top: 4px; font-weight: 700; }
-
-    .chat-input-bar {
-      background: #111b21; padding: 6px 8px; padding-bottom: max(6px, env(safe-area-inset-bottom));
-      display: flex; align-items: center; gap: 6px; border-top: 2px solid #2a3942; flex-shrink: 0; z-index: 25;
-      min-height: calc(var(--btn-touch) + 8px);
+    .btn-send {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: #00a884;
+      color: #061310;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .input-icon-btn { background: #202c33; border: 1.5px solid #2a3942; color: var(--wa-text); min-width: var(--btn-touch); height: var(--btn-touch); border-radius: 14px; font-size: clamp(18px, 3vh, 24px); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .chat-text-input { flex: 1; min-width: 0; min-height: var(--btn-touch); max-height: 100px; padding: 10px 14px; border-radius: 16px; border: 1.5px solid #2a3942; background: #182229; color: var(--wa-text); font-size: var(--font-lg); font-weight: 600; outline: none; }
-    .chat-text-input:focus { border-color: var(--wa-green); }
-    .send-msg-btn { background: var(--wa-green); color: #0b141a; border: none; min-width: var(--btn-touch); height: var(--btn-touch); border-radius: 14px; font-size: clamp(18px, 3vh, 24px); font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.78); display: flex; align-items: center; justify-content: center; padding: 12px; z-index: 100; }
-    .modal-card { background: var(--wa-panel); border: 2px solid var(--wa-green); border-radius: 18px; padding: 16px; width: 100%; max-width: 520px; max-height: 85dvh; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .hidden { display: none !important; }
-
-/* ============================================================
-   PENYELARASAN 1 FRAME RESPONSIF (HALAMAN 1 & HALAMAN 2)
-   ============================================================ */
-html, body {
-  padding: env(safe-area-inset-top, 10px) 6px env(safe-area-inset-bottom, 10px) 6px;
-}
-
-.app-container {
-  max-width: 720px;
-  margin: 0 auto;
-  border-radius: 16px;
-}
-
-/* --- Halaman Utama: 1 Frame Header + Pengumuman + Daftar Grup + Footer --- */
-#mainView .main-header {
-  padding: 10px;
-  gap: 8px;
-}
-
-#mainView .header-top-row {
-  flex-wrap: nowrap;
-  gap: 6px;
-}
-
-#mainView .profile-avatar-clickable {
-  width: clamp(64px, 16vw, 96px);
-  height: clamp(64px, 16vw, 96px);
-  font-size: clamp(32px, 8vw, 48px);
-  border-width: 3px;
-}
-
-#mainView .brand-frame-3d {
-  padding: 6px 10px;
-  border-radius: 14px;
-}
-
-#mainView .brand-line-top {
-  font-size: clamp(24px, 6vw, 36px);
-}
-
-#mainView .brand-line-sub {
-  font-size: clamp(10px, 2.5vw, 13px);
-  padding: 2px 6px;
-}
-
-#mainView .brand-line-bottom {
-  font-size: clamp(12px, 3vw, 16px);
-}
-
-#mainView .btn-webaps,
-#mainView .btn-chat-privat,
-#mainView .btn-logout {
-  min-height: clamp(58px, 14vw, 84px);
-  padding: 8px 10px;
-  border-radius: 14px;
-  font-size: clamp(14px, 3.8vw, 22px);
-}
-
-#mainView .btn-chat-privat .lbl-top,
-#mainView .btn-chat-privat .lbl-bot {
-  font-size: clamp(13px, 3.5vw, 20px);
-}
-
-#mainView .user-info-name {
-  font-size: clamp(20px, 5.5vw, 32px);
-}
-
-#mainView .user-info-address {
-  font-size: clamp(16px, 4.4vw, 24px);
-}
-
-#mainView .announcement-perspective {
-  margin: 6px 8px;
-}
-
-#mainView .announcement-bar {
-  min-height: 54px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  font-size: clamp(15px, 4vw, 22px);
-}
-
-#mainView .announcement-icon {
-  font-size: clamp(22px, 5.5vw, 30px);
-}
-
-#mainView .chat-item {
-  padding: 12px 10px;
-}
-
-#mainView .avatar {
-  width: clamp(62px, 15vw, 88px);
-  height: clamp(62px, 15vw, 88px);
-  font-size: clamp(28px, 7vw, 42px);
-  margin-right: 12px;
-}
-
-#mainView .chat-item::after {
-  left: clamp(86px, 19vw, 112px);
-}
-
-#mainView .chat-name {
-  font-size: clamp(19px, 5vw, 28px);
-}
-
-#mainView .chat-time,
-#mainView .chat-last-msg {
-  font-size: clamp(14px, 3.6vw, 20px);
-}
-
-#mainView .robotic-footer {
-  padding: 8px;
-  font-size: clamp(12px, 3.2vw, 16px);
-}
-
-/* --- Halaman Kedua (#roomView): 1 Frame Header + Chat Body + Input Bar --- */
-#roomView .room-header {
-  padding: 8px;
-  gap: 6px;
-}
-
-#roomView .back-btn,
-#roomView .room-header .profile-avatar-clickable,
-#roomView .room-header .btn-combo-call,
-#roomView .room-header .btn-grup-plus {
-  width: auto;
-  min-width: clamp(46px, 11vw, 64px);
-  height: clamp(46px, 11vw, 64px);
-  min-height: clamp(46px, 11vw, 64px);
-  padding: 6px 10px;
-  border-radius: 14px;
-  font-size: clamp(15px, 3.8vw, 22px);
-}
-
-#roomView .room-header .profile-avatar-clickable {
-  width: clamp(46px, 11vw, 64px);
-}
-
-#roomView .room-title {
-  font-size: clamp(16px, 4.2vw, 24px);
-  padding: 5px 10px;
-  border-radius: 10px;
-}
-
-#roomView .room-subtitle {
-  font-size: clamp(11px, 2.8vw, 15px);
-}
-
-#roomView .chat-body {
-  padding: 12px 10px 110px 10px;
-  gap: 10px;
-}
-
-#roomView .msg-bubble {
-  max-width: 86%;
-  min-width: 120px;
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: clamp(15px, 4vw, 22px);
-}
-
-#roomView .msg-sender-name,
-#roomView .msg-meta {
-  font-size: clamp(12px, 3.2vw, 16px);
-}
-
-#roomView .chat-input-wrapper {
-  position: sticky;
-  bottom: 6px;
-  left: 6px;
-  right: 6px;
-  margin: 0 6px 6px 6px;
-  padding: 6px 8px;
-  border-radius: 36px;
-  gap: 6px;
-}
-
-#roomView .chat-input-pill {
-  min-height: 48px;
-  padding: 4px 10px;
-  border-radius: 28px;
-  gap: 6px;
-}
-
-#roomView .chat-input-pill input {
-  font-size: clamp(15px, 4vw, 20px);
-  padding: 4px 0;
-}
-
-#roomView .pill-icon {
-  font-size: clamp(22px, 5.5vw, 30px);
-  padding: 2px;
-}
-
-#roomView .send-btn-circle {
-  width: 48px;
-  height: 48px;
-  font-size: 22px;
-}
-
-#roomView .reply-preview-banner {
-  position: sticky;
-  bottom: 70px;
-  margin: 0 8px 6px 8px;
-  padding: 8px 12px;
-  font-size: clamp(14px, 3.6vw, 18px);
-}
+    .room-item {
+      padding: 10px 12px;
+      border-bottom: 1px solid #1d282f;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .room-item.active {
+      background: #2a3942;
+    }
+    @media (max-width: 767px) {
+      .sf-sidebar {
+        max-height: 28dvh;
+        border-right: none;
+        border-bottom: 1px solid #222e35;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="app-container">
-  <div id="mainView" class="view-screen">
-    <div class="main-header">
-      <div class="header-top-row">
-        <div class="header-left-group">
-          <div id="userAvatar" class="profile-avatar-clickable" onclick="openProfileModal()">👤</div>
-          <div class="brand-frame-3d">
-            <span class="brand-line-top">Sc</span>
-            <span class="brand-line-sub">Projack12@06</span>
-            <span class="brand-line-bottom">SansChat</span>
-          </div>
+  <div class="sf-desktop-shell">
+    <aside class="sf-sidebar">
+      <div class="sf-header">
+        <div>
+          <div id="activeUserLabel" style="font-weight:700; font-size:14px;">WARGA RW 09</div>
+          <div id="activeRoleLabel" style="font-size:11px; color:#8696a0;">Mode 1 Frame Adaptif</div>
         </div>
-        <div class="header-right-group">
-          <button class="btn-webaps" onclick="openWebApps()">WebAps</button>
-          <button id="btnChatPrivat" class="btn-chat-privat" onclick="openPrivateChatRoom()"><span>Chat</span><span>Privat</span></button>
-          <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        <div class="sf-action-bar" style="width:auto;">
+          <button type="button" id="togglePrivateBtn" class="sf-badge-btn">Chat Privat</button>
+          <a href="./login.html" class="sf-badge-btn" style="text-decoration:none;">Akun</a>
         </div>
       </div>
-      <div class="user-info-row">
-        <div id="displayUserName" class="user-name-display">MEMUAT WARGA...</div>
-        <div id="displayUserRole" class="user-role-display">RW 09 SANSIVERA</div>
-      </div>
-      <div class="marquee-box">
-        <div id="announcementMarquee" class="marquee-content">📢 Selamat datang di Sc-SansChat Warga RW 09 Cluster Sansivera.</div>
-      </div>
-    </div>
-    <div id="groupListContainer" class="group-list-scroll"></div>
-  </div>
+      <div id="roomList" class="sf-scroll-body"></div>
+    </aside>
 
-  <div id="roomView" class="view-screen hidden">
-    <div class="room-header">
-      <div class="room-header-left">
-        <button class="back-btn" onclick="handleBackToMain()">←</button>
-        <div id="roomAvatar" class="room-avatar">👥</div>
-        <div class="room-title-box">
-          <div id="roomTitle" class="room-title">Grup Warga</div>
-          <div id="roomSubtitle" class="room-subtitle">Online</div>
+    <main class="sf-main">
+      <header class="sf-header">
+        <div>
+          <div id="currentRoomTitle" style="font-weight:700; font-size:14px;">Grup Umum</div>
+          <div id="currentRoomSub" style="font-size:11px; color:#8696a0;">Siap mengirim pesan &amp; lampiran</div>
         </div>
-      </div>
-      <div class="room-header-actions">
-        <button id="btnGroupMembersAction" class="room-action-btn btn-grup-plus" onclick="openGroupMembersModal()">Grup +</button>
-      </div>
-    </div>
-    <div id="chatMessagesArea" class="chat-messages-area"></div>
-    <div class="chat-input-bar">
-      <button type="button" class="input-icon-btn" onclick="insertQuickEmoji('😊')" title="Emoji">😊</button>
-      <input type="text" id="inputPesan" class="chat-text-input" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') sendCurrentMessage()">
-      <button type="button" class="input-icon-btn" onclick="triggerCameraCapture()" title="Kamera">📷</button>
-      <button type="button" class="send-msg-btn" onclick="sendCurrentMessage()" title="Kirim">➤</button>
-    </div>
-    <input type="file" id="cameraInputFile" accept="image/*" capture="environment" class="hidden" onchange="handleCameraSelected(event)">
+        <div class="sf-action-bar" style="width:auto;">
+          <button type="button" id="voiceCallBtn" class="sf-badge-btn">📞 Telpon</button>
+          <button type="button" id="videoCallBtn" class="sf-badge-btn">🎥 Video</button>
+          <button type="button" id="refreshBtn" class="sf-badge-btn">🔄 Refresh</button>
+        </div>
+      </header>
+
+      <div id="messagesContainer" class="sf-messages"></div>
+
+      <form id="chatComposer" class="sf-composer">
+        <input type="file" id="attachmentInput" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" style="display:none;" />
+        <button type="button" id="attachBtn" class="sf-badge-btn" title="Lampirkan file atau foto">📎 File</button>
+        <input type="text" id="messageInput" placeholder="Ketik pesan..." autocomplete="off" />
+        <button type="submit" id="sendBtn" class="btn-send">Kirim</button>
+      </form>
+    </main>
   </div>
-</div>
 
-<div id="groupMembersModal" class="modal-overlay hidden">
-  <div class="modal-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong style="font-size:var(--font-lg);color:var(--wa-green-light);">Anggota Grup</strong>
-      <button class="room-action-btn" onclick="closeGroupMembersModal()">✕</button>
-    </div>
-    <div id="groupMembersList" style="display:flex;flex-direction:column;gap:8px;"></div>
-  </div>
-</div>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+    const urlParams = new URLSearchParams(window.location.search);
+    const savedUser = (() => {
+      try { return JSON.parse(localStorage.getItem("sanschat_user") || "null"); } catch (e) { return null; }
+    })();
+    const activeUsername = (urlParams.get("user") || (savedUser && savedUser.username) || "ADMINPUSAT").toUpperCase();
+    const activeNama = (savedUser && savedUser.nama) || activeUsername;
 
-<script>
-  const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
-  let currentUser = { username: "", nama: "", role: "", foto: "", webAppsUrl: "" };
-  let activeRoom = { name: "", sheetName: "", isPrivate: false };
-  let activeRoomPollingTimer = null;
+    let isPrivateMode = urlParams.get("openPrivate") === "1";
+    let currentGroup = { name: "Grup Umum", sheetName: "ChatUmum" };
+    let pendingAttachment = null;
 
-  function escapeHtml(str) {
-    return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, ">").replace(/"/g, "&quot;");
-  }
-  function getHistoryStorageKey(room) {
-    const u = currentUser.username || "GUEST";
-    const keyPart = room.isPrivate ? "PRIVATE_" + u : "GROUP_" + (room.sheetName || room.name || "DEFAULT");
-    return "sanschat_history_" + u + "_" + keyPart;
-  }
-  function loadLocalChatHistory(room) {
-    try {
-      const raw = localStorage.getItem(getHistoryStorageKey(room));
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) { return []; }
-  }
-  function saveLocalChatHistory(room, msgs) {
-    try {
-      const arr = Array.isArray(msgs) ? msgs.slice(-150) : [];
-      localStorage.setItem(getHistoryStorageKey(room), JSON.stringify(arr));
-      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-          type: 'CACHE_CHAT_HISTORY',
-          roomKey: getHistoryStorageKey(room),
-          messages: arr
-        });
+    document.getElementById("activeUserLabel").textContent = `${activeNama} (${activeUsername})`;
+
+    async function postApi(payload) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      return (json && json.data !== undefined) ? json.data : json;
+    }
+
+    function renderRooms(groups) {
+      const listEl = document.getElementById("roomList");
+      listEl.innerHTML = "";
+      const items = (Array.isArray(groups) && groups.length) ? groups : [{ name: "Grup Umum", sheetName: "ChatUmum" }];
+      items.forEach((g) => {
+        const div = document.createElement("div");
+        div.className = "room-item" + (!isPrivateMode && g.sheetName === currentGroup.sheetName ? " active" : "");
+        div.innerHTML = `<div style="font-weight:600; font-size:13px;">${g.name}</div><div style="font-size:11px; color:#8696a0;">${g.lastMessage || "Buka ruang obrolan"}</div>`;
+        div.onclick = () => {
+          isPrivateMode = false;
+          currentGroup = g;
+          document.getElementById("currentRoomTitle").textContent = g.name;
+          renderRooms(items);
+          loadMessages();
+        };
+        listEl.appendChild(div);
+      });
+    }
+
+    function renderMessages(msgs) {
+      const box = document.getElementById("messagesContainer");
+      box.innerHTML = "";
+      if (!Array.isArray(msgs) || !msgs.length) {
+        box.innerHTML = `<div style="text-align:center; color:#8696a0; font-size:12px; margin-top:20px;">Belum ada pesan di ruang ini.</div>`;
+        return;
       }
-    } catch (e) {}
-  }
-  function callServerAPI(action, extraData) {
-    return fetch(S3_API_BASE, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(Object.assign({ action: action }, extraData || {}))
-    }).then(r => r.json()).then(res => res.data);
-  }
-  function scrollChatToBottomSmooth() {
-    const area = document.getElementById('chatMessagesArea');
-    if (!area) return;
-    requestAnimationFrame(() => {
-      area.scrollTop = area.scrollHeight;
-      setTimeout(() => { area.scrollTop = area.scrollHeight; }, 120);
-    });
-  }
-  window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    const paramUser = (params.get('user') || '').trim().toUpperCase();
-    const savedSessionStr = localStorage.getItem('sanschat_user_session') || sessionStorage.getItem('sanschat_user_session');
-    const savedUser = paramUser || localStorage.getItem('sanschat_active_username') || '';
-    if (savedSessionStr) {
-      try { const parsed = JSON.parse(savedSessionStr); if (parsed && parsed.username) currentUser = Object.assign(currentUser, parsed); } catch (e) {}
-    }
-    if (savedUser) currentUser.username = savedUser.toUpperCase();
-    if (!currentUser.username) { window.location.href = './login.html'; return; }
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ type: 'SET_ACTIVE_USER', username: currentUser.username });
-    }
-    renderUserHeader();
-    syncInitialDashboardBundle();
-  };
-  function renderUserHeader() {
-    document.getElementById('displayUserName').innerText = currentUser.nama || currentUser.username;
-    document.getElementById('displayUserRole').innerText = currentUser.role || 'WARGA RW 09';
-    const av = document.getElementById('userAvatar');
-    av.innerHTML = currentUser.foto ? `<img src="${escapeHtml(currentUser.foto)}" alt="Profil">` : '👤';
-  }
-  function syncInitialDashboardBundle() {
-    callServerAPI('getInitialDashboardBundle', { username: currentUser.username }).then(bundle => {
-      if (!bundle) return;
-      if (bundle.profile) { currentUser = Object.assign(currentUser, bundle.profile); renderUserHeader(); }
-      if (Array.isArray(bundle.announcements) && bundle.announcements.length > 0) {
-        document.getElementById('announcementMarquee').innerText = "📢 " + bundle.announcements.join("  •  ");
-      }
-      renderGroupList(Array.isArray(bundle.groups) ? bundle.groups : []);
-    }).catch(() => {});
-  }
-  function renderGroupList(groups) {
-    const container = document.getElementById('groupListContainer');
-    container.innerHTML = '';
-    if (!groups.length) {
-      container.innerHTML = `<div style="padding:18px;text-align:center;color:var(--wa-text-secondary);font-size:var(--font-md);">Belum ada grup terdaftar untuk akun ini.</div>`;
-      return;
-    }
-    groups.forEach(g => {
-      const item = document.createElement('div');
-      item.className = 'group-item';
-      item.onclick = () => openGroupRoom(g.name, g.sheetName, g.foto);
-      const avHtml = g.foto ? `<img src="${escapeHtml(g.foto)}" alt="Grup">` : '👥';
-      const localHist = loadLocalChatHistory({ name: g.name, sheetName: g.sheetName, isPrivate: false });
-      const lastLocal = localHist.length ? localHist[localHist.length - 1] : null;
-      const previewText = g.lastMessage || (lastLocal ? ((lastLocal.senderNama || '') + ': ' + (lastLocal.pesan || '')) : 'Ketuk untuk membuka obrolan');
-      const previewTime = (g.lastTime || (lastLocal && lastLocal.timestamp) || '').slice(11, 16);
-      item.innerHTML = `
-        <div class="group-avatar">${avHtml}</div>
-        <div class="group-info">
-          <div class="group-title">${escapeHtml(g.name)}</div>
-          <div class="group-last-msg">${escapeHtml(previewText)}</div>
-        </div>
-        <div class="group-time">${escapeHtml(previewTime)}</div>
-      `;
-      container.appendChild(item);
-    });
-  }
-  function openGroupRoom(groupName, sheetName, foto) {
-    activeRoom = { name: groupName, sheetName: sheetName, isPrivate: false };
-    document.getElementById('roomTitle').innerText = groupName;
-    document.getElementById('roomSubtitle').innerText = "Sheet: " + (sheetName || groupName);
-    document.getElementById('roomAvatar').innerHTML = foto ? `<img src="${escapeHtml(foto)}" alt="Room">` : '👥';
-    document.getElementById('btnGroupMembersAction').classList.remove('hidden');
-    document.getElementById('mainView').classList.add('hidden');
-    document.getElementById('roomView').classList.remove('hidden');
-    const cachedMsgs = loadLocalChatHistory(activeRoom);
-    if (cachedMsgs.length) renderChatMessages(cachedMsgs, false);
-    loadMessages(false);
-    startActiveRoomAutoRefresh();
-  }
-  function openPrivateChatRoom() {
-    activeRoom = { name: "Chat Privat", sheetName: "ChatPrivat", isPrivate: true };
-    document.getElementById('roomTitle').innerText = "Chat Privat";
-    document.getElementById('roomSubtitle').innerText = "Pesan Langsung Warga";
-    document.getElementById('roomAvatar').innerHTML = '💬';
-    document.getElementById('btnGroupMembersAction').classList.add('hidden');
-    document.getElementById('mainView').classList.add('hidden');
-    document.getElementById('roomView').classList.remove('hidden');
-    const cachedMsgs = loadLocalChatHistory(activeRoom);
-    if (cachedMsgs.length) renderChatMessages(cachedMsgs, false);
-    loadMessages(false);
-    startActiveRoomAutoRefresh();
-  }
-  function startActiveRoomAutoRefresh() {
-    stopActiveRoomAutoRefresh();
-    activeRoomPollingTimer = setInterval(() => {
-      if (!document.getElementById('roomView').classList.contains('hidden') && navigator.onLine) { loadMessages(true); }
-    }, 3500);
-  }
-  function stopActiveRoomAutoRefresh() {
-    if (activeRoomPollingTimer) { clearInterval(activeRoomPollingTimer); activeRoomPollingTimer = null; }
-  }
-  function handleBackToMain() {
-    stopActiveRoomAutoRefresh();
-    if (activeRoom.isPrivate) { callServerAPI('markPrivateMessagesAsRead', { username: currentUser.username }).catch(() => {}); }
-    document.getElementById('roomView').classList.add('hidden');
-    document.getElementById('mainView').classList.remove('hidden');
-    syncInitialDashboardBundle();
-  }
-  function loadMessages(silent) {
-    const roomSnapshot = Object.assign({}, activeRoom);
-    if (roomSnapshot.isPrivate) {
-      callServerAPI('getPrivateChatSheetRecords', { username: currentUser.username }).then(rows => {
-        if (!Array.isArray(rows)) return;
-        const mapped = rows.map(r => ({ senderUsername: r.pengirimUsername, senderNama: r.nama, pesan: r.pesanD || r.pesanF, timestamp: r.timestamp }));
-        saveLocalChatHistory(roomSnapshot, mapped);
-        if (activeRoom.isPrivate) renderChatMessages(mapped, silent);
-      }).catch(() => {});
-    } else {
-      callServerAPI('getMessages', { chatSheetName: roomSnapshot.sheetName, username: currentUser.username, groupName: roomSnapshot.name }).then(msgs => {
-        if (Array.isArray(msgs)) {
-          saveLocalChatHistory(roomSnapshot, msgs);
-          if (!activeRoom.isPrivate && activeRoom.sheetName === roomSnapshot.sheetName) {
-            renderChatMessages(msgs, silent);
+      msgs.forEach((m) => {
+        const sender = (m.senderUsername || m.pengirimUsername || "").toUpperCase();
+        const text = m.pesan || m.pesanD || "";
+        const media = m.mediaUrl || m.pesanF || "";
+        const bubble = document.createElement("div");
+        bubble.className = "msg-bubble" + (sender === activeUsername ? " msg-mine" : "");
+        let html = `<div style="font-size:11px; color:#8696a0; margin-bottom:2px;">${m.senderNama || m.nama || sender}</div>`;
+        if (text) html += `<div>${text}</div>`;
+        if (media) {
+          if (media.startsWith("data:image/") || media.includes("googleusercontent.com/d/")) {
+            html += `<img src="${media}" alt="Lampiran" style="max-width:220px; border-radius:8px; margin-top:6px; display:block;" />`;
+          } else {
+            html += `<a href="${media}" target="_blank" rel="noopener" style="color:#53bdeb; font-size:12px; display:inline-block; margin-top:6px;">Buka Lampiran</a>`;
           }
+        }
+        bubble.innerHTML = html;
+        box.appendChild(bubble);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function loadDashboard() {
+      try {
+        const bundle = await postApi({ action: "getInitialDashboardBundle", username: activeUsername });
+        if (bundle && bundle.groups) renderRooms(bundle.groups);
+        await loadMessages();
+      } catch (e) {}
+    }
+
+    async function loadMessages() {
+      try {
+        if (isPrivateMode) {
+          document.getElementById("currentRoomTitle").textContent = "Chat Privat";
+          const priv = await postApi({ action: "getPrivateChatSheetRecords", username: activeUsername });
+          renderMessages(priv);
+        } else {
+          const msgs = await postApi({
+            action: "getMessages",
+            chatSheetName: currentGroup.sheetName,
+            username: activeUsername,
+            groupName: currentGroup.name
+          });
+          renderMessages(msgs);
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById("attachBtn").addEventListener("click", () => {
+      document.getElementById("attachmentInput").click();
+    });
+
+    document.getElementById("attachmentInput").addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingAttachment = {
+          fileName: file.name,
+          mimeType: file.type || "application/octet-stream",
+          base64Data: reader.result
+        };
+        document.getElementById("currentRoomSub").textContent = `Lampiran siap: ${file.name}`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("chatComposer").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const inputEl = document.getElementById("messageInput");
+      const text = inputEl.value.trim();
+      if (!text && !pendingAttachment) return;
+
+      const tipe = pendingAttachment
+        ? (pendingAttachment.mimeType.startsWith("image/") ? "image" : (pendingAttachment.mimeType.startsWith("video/") ? "video" : "file"))
+        : "text";
+      const mediaUrl = pendingAttachment ? pendingAttachment.base64Data : "";
+      const fileName = pendingAttachment ? pendingAttachment.fileName : "";
+
+      inputEl.value = "";
+      pendingAttachment = null;
+      document.getElementById("currentRoomSub").textContent = "Mengirim...";
+
+      try {
+        if (isPrivateMode) {
+          await postApi({
+            action: "sendPrivateMessage",
+            username: activeUsername,
+            nama: activeNama,
+            pesan: text || fileName,
+            tipe: tipe,
+            mediaUrl: mediaUrl,
+            targetUsername: activeUsername,
+            fileName: fileName
+          });
+        } else {
+          await postApi({
+            action: "sendMessage",
+            chatSheetName: currentGroup.sheetName,
+            username: activeUsername,
+            nama: activeNama,
+            pesan: text || fileName,
+            tipe: tipe,
+            mediaUrl: mediaUrl,
+            groupName: currentGroup.name,
+            fileName: fileName
+          });
+        }
+        document.getElementById("currentRoomSub").textContent = "Terkirim";
+        await loadMessages();
+      } catch (err) {
+        document.getElementById("currentRoomSub").textContent = "Gagal mengirim";
+      }
+    });
+
+    document.getElementById("togglePrivateBtn").addEventListener("click", () => {
+      isPrivateMode = !isPrivateMode;
+      document.getElementById("togglePrivateBtn").textContent = isPrivateMode ? "Grup Warga" : "Chat Privat";
+      loadMessages();
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", loadDashboard);
+
+    document.getElementById("voiceCallBtn").addEventListener("click", async () => {
+      await postApi({ action: "initiateCall", targetUsername: "ALL", callerUsername: activeUsername, callerName: activeNama, type: "voice" });
+      alert("Panggilan suara diinisiasi.");
+    });
+
+    document.getElementById("videoCallBtn").addEventListener("click", async () => {
+      await postApi({ action: "initiateCall", targetUsername: "ALL", callerUsername: activeUsername, callerName: activeNama, type: "video" });
+      alert("Panggilan video diinisiasi.");
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').then((reg) => {
+        if (reg.active) {
+          reg.active.postMessage({ type: 'SET_ACTIVE_USER', username: activeUsername });
         }
       }).catch(() => {});
     }
-  }
-  function renderChatMessages(msgs, silent) {
-    const area = document.getElementById('chatMessagesArea');
-    const prevCount = area.children.length;
-    area.innerHTML = '';
-    msgs.forEach(m => {
-      const isMe = String(m.senderUsername || '').toUpperCase() === currentUser.username;
-      const bubble = document.createElement('div');
-      bubble.className = 'message-bubble ' + (isMe ? 'msg-outgoing' : 'msg-incoming');
-      bubble.innerHTML = `
-        <div class="msg-sender">${escapeHtml(m.senderNama || m.senderUsername || 'Warga')}</div>
-        <div>${escapeHtml(m.pesan || '')}</div>
-        <div class="msg-meta">${escapeHtml((m.timestamp || '').slice(11, 16))}</div>
-      `;
-      area.appendChild(bubble);
-    });
-    if (!silent || area.children.length !== prevCount) { scrollChatToBottomSmooth(); }
-  }
-  function sendCurrentMessage() {
-    const inp = document.getElementById('inputPesan');
-    const text = inp.value.trim();
-    if (!text) return;
-    inp.value = '';
-    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    const optimisticMsg = {
-      senderUsername: currentUser.username,
-      senderNama: currentUser.nama || currentUser.username,
-      pesan: text,
-      timestamp: nowStr
-    };
-    const existing = loadLocalChatHistory(activeRoom);
-    existing.push(optimisticMsg);
-    saveLocalChatHistory(activeRoom, existing);
-    renderChatMessages(existing, false);
 
-    if (activeRoom.isPrivate) {
-      callServerAPI('sendPrivateMessage', { username: currentUser.username, nama: currentUser.nama || currentUser.username, pesan: text, tipe: 'text', mediaUrl: '', targetUsername: currentUser.username, replyTo: '' })
-        .then(() => loadMessages(true)).catch(() => {});
-    } else {
-      callServerAPI('sendMessage', { chatSheetName: activeRoom.sheetName, username: currentUser.username, nama: currentUser.nama || currentUser.username, pesan: text, tipe: 'text', mediaUrl: '', replyTo: '', groupName: activeRoom.name })
-        .then(() => loadMessages(true)).catch(() => {});
-    }
-  }
-  function insertQuickEmoji(emoji) { const inp = document.getElementById('inputPesan'); inp.value += emoji; inp.focus(); }
-  function triggerCameraCapture() { document.getElementById('cameraInputFile').click(); }
-  function handleCameraSelected(e) {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const inp = document.getElementById('inputPesan');
-    inp.value = (inp.value ? inp.value + " " : "") + `[Foto: ${file.name}]`;
-    inp.focus();
-  }
-  function openGroupMembersModal() {
-    document.getElementById('groupMembersModal').classList.remove('hidden');
-    const list = document.getElementById('groupMembersList');
-    list.innerHTML = `<div style="color:var(--wa-text-secondary);font-size:var(--font-md);">Memuat anggota...</div>`;
-    callServerAPI('getGroupMembersByKolomC', { groupName: activeRoom.name, chatSheetName: activeRoom.sheetName }).then(members => {
-      list.innerHTML = '';
-      if (!Array.isArray(members) || !members.length) {
-        list.innerHTML = `<div style="color:var(--wa-text-secondary);font-size:var(--font-md);">Data anggota belum tersedia.</div>`; return;
-      }
-      members.forEach(m => {
-        const div = document.createElement('div');
-        div.style.cssText = "padding:8px 10px;background:#182229;border-radius:10px;border:1px solid #2a3942;font-size:var(--font-md);";
-        div.innerHTML = `<strong>${escapeHtml(m.nama)}</strong> <span style="color:var(--wa-text-secondary);">(${escapeHtml(m.username)})</span>`;
-        list.appendChild(div);
-      });
-    }).catch(() => {});
-  }
-  function closeGroupMembersModal() { document.getElementById('groupMembersModal').classList.add('hidden'); }
-  function openProfileModal() { alert(`${currentUser.nama || currentUser.username}
-ID: ${currentUser.username}
-Role: ${currentUser.role || '-'}`); }
-  function openWebApps() { if (currentUser.webAppsUrl) window.open(currentUser.webAppsUrl, '_blank'); else alert("URL WebAps belum dikonfigurasi."); }
-  function handleLogout() {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ACTIVE_USER' });
-    }
-    localStorage.removeItem('sanschat_active_username'); localStorage.removeItem('sanschat_user_session');
-    sessionStorage.removeItem('sanschat_active_username'); sessionStorage.removeItem('sanschat_user_session');
-    window.location.href = './login.html';
-  }
-</script>
+    loadDashboard();
+  </script>
 </body>
 </html>
