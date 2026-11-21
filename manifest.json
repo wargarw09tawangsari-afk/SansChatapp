@@ -20,7 +20,7 @@
   "background_color": "#0b141a",
   "theme_color": "#111b21",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "scope": "./",
   "permissions": [
     "notifications",

@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * SPREADSHEET ID: 1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI
- * Sc-SansChat Backend Script (Realtime Chat History, Penggolongan Kolom C & Warga Management)
+ * Sc-SansChat Backend Script (Realtime Chat History, Penggolongan Kolom C, Warga Management & WA-Style Call Sync)
  * ============================================================================
  */
 const SPREADSHEET_ID = "1kmZa08cDx5ts4Ld819mLsVmBJ83J-vZPu89i59TU3VI";
@@ -53,6 +53,7 @@ function doGet(e) {
 
 function doPost(e) {
   try {
+    ensureDefaultSheets();
     const payload = JSON.parse(e.postData.contents);
     const action = payload.action;
     let result = null;
@@ -60,6 +61,9 @@ function doPost(e) {
     switch (action) {
       case 'loginUser':
         result = loginUser(payload.username, payload.password);
+        break;
+      case 'autoResolveIncomingTarget':
+        result = autoResolveIncomingTarget(payload.username);
         break;
       case 'getInitialDashboardBundle':
         result = getInitialDashboardBundle(payload.username);
@@ -115,14 +119,36 @@ function doPost(e) {
         result = { success: true };
         break;
       case 'initiateCall':
-        result = initiateCall(payload.targetUsername, payload.callerUsername, payload.callerName, payload.type, payload.roomUrl);
+        result = initiateCall(
+          payload.targetUsername,
+          payload.callerUsername,
+          payload.callerName,
+          payload.type,
+          payload.roomUrl,
+          payload.callId,
+          payload.groupName,
+          payload.participants
+        );
+        break;
+      case 'addCallParticipants':
+        result = addCallParticipants(
+          payload.callId,
+          payload.adderUsername,
+          payload.adderName,
+          payload.newParticipants,
+          payload.type,
+          payload.roomUrl,
+          payload.groupName
+        );
         break;
       case 'checkIncomingCall':
         result = checkIncomingCall(payload.username);
         break;
+      case 'getCallSessionState':
+        result = getCallSessionState(payload.callId, payload.username);
+        break;
       case 'updateCallStatus':
-        updateCallStatus(payload.username, payload.status);
-        result = { success: true };
+        result = updateCallStatus(payload.username, payload.status, payload.callId);
         break;
       default:
         result = { success: false, message: "Action tidak dikenali: " + action };
@@ -155,25 +181,58 @@ function columnLetterToIndex(colRef) {
   return -1;
 }
 
+/**
+ * Memastikan sheet & seluruh kolom header tersedia otomatis jika belum ada
+ */
+function ensureSheetHeaders(sheet, requiredHeaders) {
+  if (!sheet) return;
+  const lastRow = sheet.getLastRow();
+  if (lastRow === 0) {
+    sheet.appendRow(requiredHeaders);
+    return;
+  }
+  const lastCol = Math.max(1, sheet.getLastColumn());
+  const existing = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(h => String(h || "").trim());
+  const existingUpper = existing.map(h => h.toUpperCase());
+  let nextCol = existing.length + 1;
+
+  for (let i = 0; i < requiredHeaders.length; i++) {
+    const req = String(requiredHeaders[i]).trim();
+    if (!existingUpper.includes(req.toUpperCase())) {
+      sheet.getRange(1, nextCol).setValue(req);
+      existingUpper.push(req.toUpperCase());
+      nextCol++;
+    }
+  }
+}
+
 function ensureDefaultSheets() {
   const ss = getSpreadsheet();
 
-  if (!ss.getSheetByName("Users")) {
-    const u = ss.insertSheet("Users");
-    u.appendRow(["Username", "Nama", "Alamat", "Password", "Foto", "Role", "Grup RT37", "Grup RT38", "Grup RT39", "Grup RW09", "Grup Umum"]);
+  let u = ss.getSheetByName("Users");
+  const userHeaders = ["Username", "Nama", "Alamat", "Password", "Foto", "Role", "Grup RT37", "Grup RT38", "Grup RT39", "Grup RW09", "Grup Umum"];
+  if (!u) {
+    u = ss.insertSheet("Users");
+    u.appendRow(userHeaders);
+  } else {
+    ensureSheetHeaders(u, userHeaders);
   }
 
   let ng = ss.getSheetByName("NamaGrup");
+  const ngHeaders = ["Nama Grup", "Sheet Chat", "Kolom", "Foto Grup", "Deskripsi"];
   if (!ng) {
     ng = ss.insertSheet("NamaGrup");
-    ng.appendRow(["Nama Grup", "Sheet Chat", "Kolom", "Foto Grup", "Deskripsi"]);
+    ng.appendRow(ngHeaders);
     ng.appendRow(["Grup RT37", "ChatRT37", "G", "", "Grup komunikasi warga RT 37 RW 09"]);
     ng.appendRow(["Grup RT38", "ChatRT38", "H", "", "Grup komunikasi warga RT 38 RW 09"]);
     ng.appendRow(["Grup RT39", "ChatRT39", "I", "", "Grup komunikasi warga RT 39 RW 09"]);
     ng.appendRow(["Grup RW09", "ChatRW09", "J", "", "Grup komunikasi seluruh warga dan pengurus RW 09"]);
     ng.appendRow(["Grup Umum", "ChatUmum", "K", "", "Grup obrolan dan koordinasi umum seluruh warga SansChat RW 09"]);
+  } else {
+    ensureSheetHeaders(ng, ngHeaders);
   }
 
+  const chatHeaders = ["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"];
   if (ng.getLastRow() >= 2) {
     const rows = ng.getRange(2, 1, ng.getLastRow() - 1, 2).getValues();
     for (let i = 0; i < rows.length; i++) {
@@ -183,42 +242,83 @@ function ensureDefaultSheets() {
         colB = colA.replace(/^Grup\s*/i, "Chat").replace(/\s+/g, "");
         ng.getRange(i + 2, 2).setValue(colB);
       }
-      if (colA && colB && !findExactSheetCaseInsensitive(ss, colB)) {
-        const created = ss.insertSheet(colB);
-        created.appendRow(["Timestamp", "SenderUsername", "SenderNama", "Pesan", "Tipe", "MediaUrl", "ReplyTo", "ReadBy"]);
+      if (colA && colB) {
+        let gSheet = findExactSheetCaseInsensitive(ss, colB);
+        if (!gSheet) {
+          gSheet = ss.insertSheet(colB);
+          gSheet.appendRow(chatHeaders);
+        } else {
+          ensureSheetHeaders(gSheet, chatHeaders);
+        }
       }
     }
   }
 
-  if (!ss.getSheetByName("Informasi")) {
-    const inf = ss.insertSheet("Informasi");
-    inf.appendRow(["ID", "Isi Pengumuman", "Prioritas", "Tanggal", "Status", "TargetRole", "BerlakuSampai"]);
+  let inf = ss.getSheetByName("Informasi");
+  const infHeaders = ["ID", "Isi Pengumuman", "Prioritas", "Tanggal", "Status", "TargetRole", "BerlakuSampai"];
+  if (!inf) {
+    inf = ss.insertSheet("Informasi");
+    inf.appendRow(infHeaders);
     inf.appendRow(["INF-001", "Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga.", "TINGGI", new Date(), "AKTIF", "ALL", ""]);
+  } else {
+    ensureSheetHeaders(inf, infHeaders);
   }
 
-  if (!ss.getSheetByName("ChatPrivat")) {
-    const cp = ss.insertSheet("ChatPrivat");
-    cp.appendRow(["Timestamp", "Username", "Nama", "Pesan", "Tipe", "MediaUrl", "StatusPesan", "TujuanUsername", "ReplyTo"]);
+  let cp = ss.getSheetByName("ChatPrivat");
+  const cpHeaders = ["Timestamp", "Username", "Nama", "Pesan", "Tipe", "MediaUrl", "StatusPesan", "TujuanUsername", "ReplyTo"];
+  if (!cp) {
+    cp = ss.insertSheet("ChatPrivat");
+    cp.appendRow(cpHeaders);
+  } else {
+    ensureSheetHeaders(cp, cpHeaders);
   }
 
-  if (!ss.getSheetByName("PanggilanAktif")) {
-    const pa = ss.insertSheet("PanggilanAktif");
-    pa.appendRow(["TargetUsername", "CallerUsername", "CallerName", "Type", "Status", "RoomUrl", "Timestamp"]);
+  let pa = ss.getSheetByName("PanggilanAktif");
+  const paHeaders = [
+    "TargetUsername", "CallerUsername", "CallerName", "Type", "Status",
+    "RoomUrl", "Timestamp", "CallID", "GroupName", "Participants", "AnsweredBy", "EndedBy"
+  ];
+  if (!pa) {
+    pa = ss.insertSheet("PanggilanAktif");
+    pa.appendRow(paHeaders);
+  } else {
+    ensureSheetHeaders(pa, paHeaders);
   }
 
-  if (!ss.getSheetByName("LogAktifitas")) {
-    const logS = ss.insertSheet("LogAktifitas");
-    logS.appendRow(["Timestamp", "Username", "Aktivitas", "Detail"]);
+  let rp = ss.getSheetByName("RiwayatPanggilan");
+  const rpHeaders = ["CallID", "WaktuMulai", "WaktuSelesai", "CallerUsername", "CallerName", "TargetParticipants", "Type", "GroupName", "StatusAkhir", "EndedBy"];
+  if (!rp) {
+    rp = ss.insertSheet("RiwayatPanggilan");
+    rp.appendRow(rpHeaders);
+  } else {
+    ensureSheetHeaders(rp, rpHeaders);
   }
 
-  if (!ss.getSheetByName("SesiAktif")) {
-    const sesiS = ss.insertSheet("SesiAktif");
-    sesiS.appendRow(["Username", "Nama", "Role", "DeviceID", "WaktuLogin", "StatusSesi", "LastActive"]);
+  let logS = ss.getSheetByName("LogAktifitas");
+  const logHeaders = ["Timestamp", "Username", "Aktivitas", "Detail"];
+  if (!logS) {
+    logS = ss.insertSheet("LogAktifitas");
+    logS.appendRow(logHeaders);
+  } else {
+    ensureSheetHeaders(logS, logHeaders);
   }
 
-  if (!ss.getSheetByName("NotifikasiAntrean")) {
-    const notifS = ss.insertSheet("NotifikasiAntrean");
-    notifS.appendRow(["NotifID", "TargetUsername", "SenderUsername", "SenderNama", "RoomName", "SheetSource", "TipeNotif", "RingkasanPesan", "StatusBaca", "Timestamp"]);
+  let sesiS = ss.getSheetByName("SesiAktif");
+  const sesiHeaders = ["Username", "Nama", "Role", "DeviceID", "WaktuLogin", "StatusSesi", "LastActive"];
+  if (!sesiS) {
+    sesiS = ss.insertSheet("SesiAktif");
+    sesiS.appendRow(sesiHeaders);
+  } else {
+    ensureSheetHeaders(sesiS, sesiHeaders);
+  }
+
+  let notifS = ss.getSheetByName("NotifikasiAntrean");
+  const notifHeaders = ["NotifID", "TargetUsername", "SenderUsername", "SenderNama", "RoomName", "SheetSource", "TipeNotif", "RingkasanPesan", "StatusBaca", "Timestamp"];
+  if (!notifS) {
+    notifS = ss.insertSheet("NotifikasiAntrean");
+    notifS.appendRow(notifHeaders);
+  } else {
+    ensureSheetHeaders(notifS, notifHeaders);
   }
 }
 
@@ -331,15 +431,41 @@ function loginUser(username, password) {
   return { success: false, message: "Username atau Password Salah!" };
 }
 
+/**
+ * Resolusi Auto-Login bagi penerima pesan baru / telpon / video call
+ * Memastikan perangkat penerima yang menerima notifikasi atau membuka link otomatis terautentikasi ke sesi miliknya.
+ */
+function autoResolveIncomingTarget(username) {
+  const cleanUser = String(username || "").trim().toUpperCase();
+  if (!cleanUser) return { success: false };
+  const profile = getUserProfileDetail(cleanUser);
+  if (!profile) return { success: false };
+
+  updateUserActiveSession(cleanUser, profile.nama, profile.role, "ONLINE");
+  appendActivityLog(cleanUser, "AUTO_LOGIN_EVENT", "Otomatis masuk karena pesan / panggilan masuk");
+
+  return {
+    success: true,
+    user: profile,
+    incomingCall: checkIncomingCall(cleanUser),
+    hasUnreadPrivate: hasUnreadPrivateMessages(cleanUser)
+  };
+}
+
 function getInitialDashboardBundle(username) {
   const cleanUser = String(username || "").trim().toUpperCase();
+  const profile = getUserProfileDetail(cleanUser);
+  if (profile) {
+    updateUserActiveSession(cleanUser, profile.nama, profile.role, "ONLINE");
+  }
   return {
-    profile: getUserProfileDetail(cleanUser),
+    profile: profile,
     groups: getUserAssignedGroups(cleanUser),
     groupMapping: getNamaGrupMapping(),
     announcements: getAnnouncements(),
     hasUnreadPrivate: hasUnreadPrivateMessages(cleanUser),
-    incomingCall: checkIncomingCall(cleanUser)
+    incomingCall: checkIncomingCall(cleanUser),
+    latestGroupNotification: checkLatestUnreadGroupMessage(cleanUser)
   };
 }
 
@@ -526,6 +652,44 @@ function getUserAssignedGroups(username) {
   return assignedRooms;
 }
 
+/**
+ * Mengecek apakah ada pesan grup baru yang belum dibaca oleh user (untuk auto-open room saat notifikasi masuk)
+ */
+function checkLatestUnreadGroupMessage(username) {
+  const cleanUser = String(username || "").trim().toUpperCase();
+  if (!cleanUser) return null;
+  const groups = getUserAssignedGroups(cleanUser);
+  const ss = getSpreadsheet();
+  const now = Date.now();
+
+  for (let i = 0; i < groups.length; i++) {
+    const g = groups[i];
+    const sheet = findExactSheetCaseInsensitive(ss, g.sheetName);
+    if (!sheet || sheet.getLastRow() < 2) continue;
+    const lastRow = sheet.getLastRow();
+    const rowVals = sheet.getRange(lastRow, 1, 1, 8).getValues()[0];
+    const rawTime = rowVals[0];
+    const msgTime = (rawTime instanceof Date) ? rawTime.getTime() : 0;
+    const sender = String(rowVals[1] || "").trim().toUpperCase();
+    const senderNama = String(rowVals[2] || sender).trim();
+    const pesan = String(rowVals[3] || "").trim();
+    const readBy = String(rowVals[7] || "").toUpperCase().split(",").map(s => s.trim());
+
+    if (sender && sender !== cleanUser && !readBy.includes(cleanUser) && (now - msgTime) < 45000) {
+      return {
+        groupName: g.name,
+        sheetName: g.sheetName,
+        foto: g.foto || "",
+        senderUsername: sender,
+        senderNama: senderNama,
+        pesan: pesan,
+        timestamp: msgTime
+      };
+    }
+  }
+  return null;
+}
+
 function getAllWargaContacts() {
   const sheet = getSpreadsheet().getSheetByName("Users");
   if (!sheet || sheet.getLastRow() < 2) return [];
@@ -533,7 +697,8 @@ function getAllWargaContacts() {
   return data.map(r => ({
     username: String(r[0] || "").trim().toUpperCase(),
     nama: String(r[1] || "").trim(),
-    alamat: String(r[2] || "").trim()
+    alamat: String(r[2] || "").trim(),
+    foto: String(r[4] || "").trim()
   })).filter(r => r.username && r.nama);
 }
 
@@ -567,9 +732,6 @@ function updateGroupProfilePicture(sheetName, base64Data) {
   return { success: false };
 }
 
-/**
- * Mengambil pengumuman dari sheet "Informasi" Kolom B (Isi Pengumuman)
- */
 function getAnnouncements() {
   const sheet = getSpreadsheet().getSheetByName("Informasi");
   if (!sheet || sheet.getLastRow() < 2) return [];
@@ -579,7 +741,6 @@ function getAnnouncements() {
   const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(h => String(h || "").trim().toLowerCase());
   const data = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
 
-  // Default Kolom B (index 1); gunakan kolom header "isi pengumuman" jika ada dan bukan kolom ID
   let isiColIndex = 1;
   const headerIsiIdx = headers.findIndex(h => h.includes("isi pengumuman") || h === "pengumuman");
   if (headerIsiIdx !== -1) {
@@ -920,64 +1081,334 @@ function markPrivateMessagesAsRead(username) {
   }
 }
 
-function initiateCall(targetUsername, callerUsername, callerName, type, roomUrl) {
-  const ss = getSpreadsheet();
-  let sheet = ss.getSheetByName("PanggilanAktif");
-  if (!sheet) {
-    sheet = ss.insertSheet("PanggilanAktif");
-    sheet.appendRow(["TargetUsername", "CallerUsername", "CallerName", "Type", "Status", "RoomUrl", "Timestamp"]);
+/**
+ * ============================================================================
+ * SINKRONISASI REAL-TIME PANGGILAN SUARA & VIDEO CALL (WHATSAPP-STYLE)
+ * ============================================================================
+ */
+function initiateCall(targetUsername, callerUsername, callerName, type, roomUrl, callId, groupName, participants) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const ss = getSpreadsheet();
+    let sheet = ss.getSheetByName("PanggilanAktif");
+    const paHeaders = [
+      "TargetUsername", "CallerUsername", "CallerName", "Type", "Status",
+      "RoomUrl", "Timestamp", "CallID", "GroupName", "Participants", "AnsweredBy", "EndedBy"
+    ];
+    if (!sheet) {
+      sheet = ss.insertSheet("PanggilanAktif");
+      sheet.appendRow(paHeaders);
+    } else {
+      ensureSheetHeaders(sheet, paHeaders);
+    }
+
+    const cleanCaller = String(callerUsername || "").trim().toUpperCase();
+    const cleanTarget = String(targetUsername || "ALL").trim().toUpperCase();
+    const generatedCallId = String(callId || ("CALL-" + Date.now() + "-" + cleanCaller)).trim();
+    const participantList = Array.isArray(participants)
+      ? participants.map(p => String(p || "").trim().toUpperCase()).filter(Boolean)
+      : String(participants || cleanTarget).split(",").map(p => p.trim().toUpperCase()).filter(Boolean);
+
+    if (!participantList.includes(cleanCaller)) {
+      participantList.unshift(cleanCaller);
+    }
+    if (cleanTarget !== "ALL" && !participantList.includes(cleanTarget)) {
+      participantList.push(cleanTarget);
+    }
+
+    const participantsStr = participantList.join(",");
+    const now = new Date();
+
+    // Akhiri panggilan RINGING lama dari caller yang sama agar tidak tumpang tindih
+    if (sheet.getLastRow() >= 2) {
+      const existing = sheet.getRange(2, 1, sheet.getLastRow() - 1, 12).getValues();
+      for (let i = 0; i < existing.length; i++) {
+        const rowCaller = String(existing[i][1] || "").trim().toUpperCase();
+        const rowStatus = String(existing[i][4] || "").trim().toUpperCase();
+        if (rowCaller === cleanCaller && (rowStatus === "RINGING" || rowStatus === "CONNECTED")) {
+          sheet.getRange(i + 2, 5).setValue("ENDED");
+          sheet.getRange(i + 2, 12).setValue(cleanCaller);
+        }
+      }
+    }
+
+    sheet.appendRow([
+      cleanTarget,
+      cleanCaller,
+      callerName || cleanCaller,
+      type || "voice",
+      "RINGING",
+      roomUrl || "",
+      now,
+      generatedCallId,
+      groupName || "",
+      participantsStr,
+      "",
+      ""
+    ]);
+
+    appendActivityLog(cleanCaller, "CALL_INITIATE", `${type || 'voice'} -> ${cleanTarget} (${generatedCallId})`);
+    SpreadsheetApp.flush();
+
+    return {
+      success: true,
+      callId: generatedCallId,
+      status: "RINGING",
+      participants: participantList,
+      roomUrl: roomUrl || ""
+    };
+  } finally {
+    lock.releaseLock();
   }
-  sheet.appendRow([
-    String(targetUsername || "ALL").trim().toUpperCase(),
-    String(callerUsername || "").trim().toUpperCase(),
-    callerName || callerUsername,
-    type || "voice",
-    "RINGING",
-    roomUrl || "",
-    new Date()
-  ]);
-  SpreadsheetApp.flush();
-  return { success: true };
+}
+
+/**
+ * Menambahkan peserta tambahan di tengah panggilan / video call berlangsung (seperti fitur Add Participant WhatsApp)
+ */
+function addCallParticipants(callId, adderUsername, adderName, newParticipants, type, roomUrl, groupName) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const ss = getSpreadsheet();
+    let sheet = ss.getSheetByName("PanggilanAktif");
+    if (!sheet) return { success: false };
+
+    const cleanCallId = String(callId || "").trim();
+    const cleanAdder = String(adderUsername || "").trim().toUpperCase();
+    const additions = Array.isArray(newParticipants)
+      ? newParticipants.map(u => String(u || "").trim().toUpperCase()).filter(Boolean)
+      : String(newParticipants || "").split(",").map(u => u.trim().toUpperCase()).filter(Boolean);
+
+    if (additions.length === 0) return { success: false, message: "Tidak ada peserta baru dipilih" };
+
+    const lastRow = sheet.getLastRow();
+    let updatedList = [];
+    let foundRow = -1;
+    let currentRoomUrl = roomUrl || "";
+    let currentType = type || "voice";
+    let currentGroup = groupName || "";
+    let originalCaller = cleanAdder;
+    let originalCallerName = adderName || cleanAdder;
+
+    if (lastRow >= 2) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 12).getValues();
+      for (let i = data.length - 1; i >= 0; i--) {
+        const rCallId = String(data[i][7] || "").trim();
+        const rStatus = String(data[i][4] || "").trim().toUpperCase();
+        if ((cleanCallId && rCallId === cleanCallId) || (!cleanCallId && rStatus !== "ENDED")) {
+          foundRow = i + 2;
+          originalCaller = String(data[i][1] || cleanAdder).trim().toUpperCase();
+          originalCallerName = String(data[i][2] || adderName || cleanAdder).trim();
+          currentType = String(data[i][3] || currentType);
+          currentRoomUrl = String(data[i][5] || currentRoomUrl);
+          currentGroup = String(data[i][8] || currentGroup);
+
+          const existingStr = String(data[i][9] || "");
+          updatedList = existingStr.split(",").map(s => s.trim().toUpperCase()).filter(Boolean);
+          additions.forEach(a => {
+            if (!updatedList.includes(a)) updatedList.push(a);
+          });
+
+          const newTargetCol = updatedList.filter(u => u !== originalCaller).join(",") || additions.join(",");
+          sheet.getRange(foundRow, 1).setValue(newTargetCol);
+          sheet.getRange(foundRow, 10).setValue(updatedList.join(","));
+          sheet.getRange(foundRow, 7).setValue(new Date()); // refresh timestamp agar dering penerima baru aktif
+          break;
+        }
+      }
+    }
+
+    if (foundRow === -1) {
+      updatedList = [cleanAdder].concat(additions);
+      const genId = cleanCallId || ("CALL-" + Date.now() + "-" + cleanAdder);
+      sheet.appendRow([
+        additions.join(","),
+        cleanAdder,
+        adderName || cleanAdder,
+        currentType,
+        "RINGING",
+        currentRoomUrl,
+        new Date(),
+        genId,
+        currentGroup,
+        updatedList.join(","),
+        "",
+        ""
+      ]);
+    }
+
+    appendActivityLog(cleanAdder, "CALL_ADD_PARTICIPANT", `Menambahkan ${additions.join(",")} ke panggilan ${cleanCallId}`);
+    SpreadsheetApp.flush();
+
+    return {
+      success: true,
+      participants: updatedList,
+      added: additions
+    };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function checkIncomingCall(username) {
   const sheet = getSpreadsheet().getSheetByName("PanggilanAktif");
   if (!sheet || sheet.getLastRow() < 2) return null;
-  const numCols = Math.max(7, sheet.getLastColumn());
+  const numCols = Math.max(12, sheet.getLastColumn());
   const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, numCols).getValues();
   const uName = String(username || "").trim().toUpperCase();
+  if (!uName) return null;
   const now = Date.now();
 
   for (let i = data.length - 1; i >= 0; i--) {
-    const target = String(data[i][0] || "").trim().toUpperCase();
+    const targetRaw = String(data[i][0] || "").trim().toUpperCase();
     const caller = String(data[i][1] || "").trim().toUpperCase();
     const status = String(data[i][4] || "").trim().toUpperCase();
     const rawTime = data[i][6];
     const callTime = (rawTime instanceof Date) ? rawTime.getTime() : now;
+    const callId = String(data[i][7] || ("ROW-" + (i + 2))).trim();
+    const groupName = String(data[i][8] || "").trim();
+    const participantsRaw = String(data[i][9] || "").trim().toUpperCase();
+    const answeredByRaw = String(data[i][10] || "").trim().toUpperCase();
 
-    if ((target === uName || (target === "ALL" && caller !== uName)) && status === "RINGING" && (now - callTime) < 60000) {
+    if (caller === uName) continue;
+    if (status === "ENDED" || status === "REJECTED") continue;
+    if ((now - callTime) > 90000) continue;
+
+    const targetList = targetRaw.split(",").map(s => s.trim()).filter(Boolean);
+    const participantList = participantsRaw.split(",").map(s => s.trim()).filter(Boolean);
+    const answeredList = answeredByRaw.split(",").map(s => s.trim()).filter(Boolean);
+
+    const isTargeted = targetList.includes("ALL") || targetList.includes(uName) || participantList.includes(uName);
+    const alreadyAnsweredByMe = answeredList.includes(uName);
+
+    if (isTargeted && !alreadyAnsweredByMe && (status === "RINGING" || status === "CONNECTED")) {
       return {
+        callId: callId,
         callerUsername: caller,
         callerName: String(data[i][2] || "Warga"),
         type: String(data[i][3] || "voice"),
-        roomUrl: String(data[i][5] || "")
+        status: status,
+        roomUrl: String(data[i][5] || ""),
+        groupName: groupName,
+        participants: participantList
       };
     }
   }
   return null;
 }
 
-function updateCallStatus(username, newStatus) {
+/**
+ * Mengambil status sesi panggilan saat ini untuk sinkronisasi pengirim & penerima
+ * (Kapan penerima menekan Terima -> status menjadi CONNECTED; kapan salah satu menekan Akhiri -> status menjadi ENDED)
+ */
+function getCallSessionState(callId, username) {
   const sheet = getSpreadsheet().getSheetByName("PanggilanAktif");
-  if (!sheet || sheet.getLastRow() < 2) return;
-  const data = sheet.getDataRange().getValues();
-  const uName = String(username || "").trim().toUpperCase();
-  for (let i = data.length - 1; i >= 1; i--) {
-    const target = String(data[i][0] || "").trim().toUpperCase();
-    const caller = String(data[i][1] || "").trim().toUpperCase();
-    if (target === uName || caller === uName || target === "ALL") {
-      sheet.getRange(i + 1, 5).setValue(newStatus);
-      break;
+  if (!sheet || sheet.getLastRow() < 2) return { status: "ENDED" };
+
+  const numCols = Math.max(12, sheet.getLastColumn());
+  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, numCols).getValues();
+  const cleanCallId = String(callId || "").trim();
+  const cleanUser = String(username || "").trim().toUpperCase();
+
+  for (let i = data.length - 1; i >= 0; i--) {
+    const rowCallId = String(data[i][7] || "").trim();
+    const rowTarget = String(data[i][0] || "").trim().toUpperCase();
+    const rowCaller = String(data[i][1] || "").trim().toUpperCase();
+    const rowParticipants = String(data[i][9] || "").trim().toUpperCase();
+
+    const isMatch = cleanCallId
+      ? (rowCallId === cleanCallId)
+      : (rowCaller === cleanUser || rowTarget.includes(cleanUser) || rowParticipants.includes(cleanUser));
+
+    if (isMatch) {
+      const status = String(data[i][4] || "ENDED").trim().toUpperCase();
+      const answeredBy = String(data[i][10] || "").trim().toUpperCase().split(",").map(s => s.trim()).filter(Boolean);
+      const participants = String(data[i][9] || "").trim().toUpperCase().split(",").map(s => s.trim()).filter(Boolean);
+      return {
+        callId: rowCallId,
+        status: status,
+        callerUsername: rowCaller,
+        callerName: String(data[i][2] || ""),
+        type: String(data[i][3] || "voice"),
+        roomUrl: String(data[i][5] || ""),
+        groupName: String(data[i][8] || ""),
+        participants: participants,
+        answeredBy: answeredBy,
+        endedBy: String(data[i][11] || "").trim().toUpperCase()
+      };
     }
+  }
+  return { status: "ENDED" };
+}
+
+/**
+ * Update status panggilan:
+ * - ANSWERED / CONNECTED: Penerima menekan tombol Terima -> panggilan tersambung ke seluruh pihak
+ * - ENDED: Salah satu pihak menekan tombol Akhiri -> seluruh sesi panggilan diakhiri serentak
+ */
+function updateCallStatus(username, newStatus, callId) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const ss = getSpreadsheet();
+    const sheet = ss.getSheetByName("PanggilanAktif");
+    if (!sheet || sheet.getLastRow() < 2) return { success: false };
+
+    const numCols = Math.max(12, sheet.getLastColumn());
+    const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, numCols).getValues();
+    const uName = String(username || "").trim().toUpperCase();
+    const cleanCallId = String(callId || "").trim();
+    const normalizedStatus = String(newStatus || "").trim().toUpperCase();
+
+    for (let i = data.length - 1; i >= 0; i--) {
+      const rowTarget = String(data[i][0] || "").trim().toUpperCase();
+      const rowCaller = String(data[i][1] || "").trim().toUpperCase();
+      const rowCallId = String(data[i][7] || "").trim();
+      const rowParticipants = String(data[i][9] || "").trim().toUpperCase();
+
+      const isMatch = cleanCallId
+        ? (rowCallId === cleanCallId)
+        : (rowTarget.includes(uName) || rowCaller === uName || rowParticipants.includes(uName) || rowTarget === "ALL");
+
+      if (isMatch) {
+        const rowNum = i + 2;
+        if (normalizedStatus === "ANSWERED" || normalizedStatus === "CONNECTED") {
+          sheet.getRange(rowNum, 5).setValue("CONNECTED");
+          const prevAns = String(data[i][10] || "").trim().toUpperCase().split(",").map(s => s.trim()).filter(Boolean);
+          if (uName && !prevAns.includes(uName)) prevAns.push(uName);
+          sheet.getRange(rowNum, 11).setValue(prevAns.join(","));
+          appendActivityLog(uName, "CALL_CONNECTED", `Panggilan tersambung (${rowCallId})`);
+        } else if (normalizedStatus === "ENDED" || normalizedStatus === "REJECTED") {
+          sheet.getRange(rowNum, 5).setValue("ENDED");
+          sheet.getRange(rowNum, 12).setValue(uName);
+
+          // Catat ke RiwayatPanggilan
+          let rpSheet = ss.getSheetByName("RiwayatPanggilan");
+          if (rpSheet) {
+            rpSheet.appendRow([
+              rowCallId,
+              data[i][6] || new Date(),
+              new Date(),
+              rowCaller,
+              String(data[i][2] || rowCaller),
+              rowParticipants || rowTarget,
+              String(data[i][3] || "voice"),
+              String(data[i][8] || ""),
+              "ENDED",
+              uName
+            ]);
+          }
+          appendActivityLog(uName, "CALL_ENDED", `Panggilan diakhiri oleh ${uName} (${rowCallId})`);
+        } else {
+          sheet.getRange(rowNum, 5).setValue(normalizedStatus);
+        }
+        SpreadsheetApp.flush();
+        return { success: true, callId: rowCallId, status: normalizedStatus };
+      }
+    }
+    return { success: false };
+  } finally {
+    lock.releaseLock();
   }
 }
