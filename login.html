@@ -1,201 +1,374 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Sc-SansChat - Login</title>
-  <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#111b21" />
-  <link rel="stylesheet" href="./single-frame.css" />
-  <style>
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: #0b141a;
-      color: #e9edef;
-    }
-    .login-card {
-      width: 100%;
-      max-width: 460px;
-      margin: auto;
-      padding: 18px;
-      background: #111b21;
-      border: 1px solid #222e35;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-    }
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    label {
-      font-size: 13px;
-      color: #aebac1;
-      font-weight: 600;
-    }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #2a3942;
-      background: #202c33;
-      color: #e9edef;
-      font-size: 14px;
-    }
-    .pw-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .pw-wrap input {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-    .btn-toggle {
-      flex: 0 0 auto;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #2a3942;
-      background: #202c33;
-      color: #e9edef;
-      cursor: pointer;
-    }
-    .btn-login {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: none;
-      background: #00a884;
-      color: #061310;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 2px;
-    }
-    .btn-quick {
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #2a3942;
-      background: #202c33;
-      color: #e9edef;
-      font-size: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      text-align: center;
-      flex: 1 1 120px;
-    }
-    #statusMsg {
-      font-size: 13px;
-      min-height: 18px;
-      color: #f15c6d;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Sc-SansChat - Login</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#0b141a">
+<style>
+  :root {
+    --wa-bg: #0b141a;
+    --wa-panel: #111b21;
+    --wa-card: #182229;
+    --wa-border: #2a3942;
+    --wa-green: #00a884;
+    --wa-green-light: #25d366;
+    --wa-text: #e9edef;
+    --wa-text-secondary: #8696a0;
+    --font-xl: clamp(32px, 9.2vw, 48px);
+    --font-lg: clamp(26px, 7.2vw, 38px);
+    --btn-h: 86px;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    width: 100%;
+    min-height: 100dvh;
+    background-color: var(--wa-bg);
+    color: var(--wa-text);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 5px;
+  }
+  .login-container {
+    background: var(--wa-panel);
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 18px 12px;
+    position: relative;
+    border: 3px solid var(--wa-green);
+    border-radius: 22px;
+    box-shadow: 0 0 36px rgba(0,0,0,0.9);
+    gap: 14px;
+  }
+  .login-top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .help-btn-3d {
+    background: #202c33;
+    color: var(--wa-green);
+    border: 2px solid var(--wa-green);
+    padding: 16px 20px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-size: var(--font-lg);
+    font-weight: 900;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    line-height: 1.2;
+    min-height: 72px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .logo-sc-3d-large {
+    width: 148px;
+    height: 148px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #00b890 0%, #005c4b 65%, #042f26 100%);
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow:
+      0 12px 28px rgba(0, 168, 132, 0.5),
+      0 5px 0 #003d31,
+      inset 0 2px 6px rgba(255,255,255,0.4),
+      inset 0 -4px 8px rgba(0,0,0,0.45);
+    border: 3.5px solid var(--wa-green-light);
+  }
+  .logo-sc-3d-large::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    border-radius: 21px;
+    border: 1.5px solid rgba(167, 243, 208, 0.35);
+    pointer-events: none;
+  }
+  .logo-sc-main-txt {
+    font-weight: 900;
+    font-size: 68px;
+    line-height: 0.86;
+    color: #ffffff;
+    letter-spacing: -1.5px;
+    text-shadow: 0 2px 0 #004d3d, 0 4px 0 #003328, 0 7px 12px rgba(0,0,0,0.75);
+    z-index: 2;
+  }
+  .logo-sc-sub-badge {
+    margin-top: -2px;
+    padding: 3px 12px;
+    border-radius: 99px;
+    background: rgba(4, 35, 29, 0.94);
+    border: 1.5px solid #34d399;
+    color: #ecfdf5;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.3px;
+    z-index: 1;
+  }
+  .login-title {
+    font-size: var(--font-xl);
+    font-weight: 900;
+    color: var(--wa-text);
+    text-align: center;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .login-subtitle {
+    font-size: var(--font-lg);
+    color: var(--wa-green);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .pwa-warning-box {
+    background: rgba(234, 67, 53, 0.18);
+    border: 2px solid #ea4335;
+    border-radius: 16px;
+    padding: 14px 16px;
+    color: #fca5a5;
+    font-size: var(--font-lg);
+    line-height: 1.35;
+  }
+  .pwa-warning-title {
+    font-weight: 900;
+    color: #f87171;
+    margin-bottom: 6px;
+    font-size: var(--font-lg);
+    text-transform: uppercase;
+  }
+  .pwa-warning-box ol {
+    padding-left: 28px;
+    margin-top: 6px;
+    font-weight: 700;
+  }
+  .pwa-warning-box li {
+    margin-bottom: 6px;
+    color: var(--wa-text);
+  }
+  .field-group {
+    width: 100%;
+    position: relative;
+  }
+  .field-group label {
+    display: block;
+    font-size: var(--font-lg);
+    color: var(--wa-green);
+    margin-bottom: 8px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+  .field-group input {
+    width: 100%;
+    padding: 18px 72px 18px 18px;
+    background: var(--wa-card);
+    border: 2px solid var(--wa-border);
+    border-radius: 18px;
+    color: var(--wa-text);
+    font-size: var(--font-lg);
+    font-weight: 800;
+    outline: none;
+    min-height: 78px;
+  }
+  .field-group input:focus {
+    border-color: var(--wa-green);
+  }
+  .password-toggle {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 42px;
+    user-select: none;
+    color: var(--wa-text-secondary);
+  }
+  .btn-3d-robotic {
+    width: 100%;
+    background: var(--wa-green);
+    color: var(--wa-panel);
+    border: none;
+    padding: 18px;
+    border-radius: 20px;
+    font-size: var(--font-xl);
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 8px 24px rgba(0, 168, 132, 0.45);
+    min-height: var(--btn-h);
+    margin-top: 4px;
+  }
+  .btn-3d-robotic:disabled {
+    background: var(--wa-border);
+    color: var(--wa-text-secondary);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+  .hidden { display: none !important; }
+</style>
 </head>
 <body>
-  <div class="sf-viewport-frame">
-    <div class="sf-scroll-body" style="display:flex; padding: 12px;">
-      <form id="loginForm" class="login-card" autocomplete="on">
-        <h1 style="margin:0; font-size:20px; text-align:center;">Login Sc-SansChat</h1>
+<div class="login-container">
+  <div class="login-top-bar">
+    <a id="btnHelpSystem" href="https://script.google.com/macros/s/AKfycbxVG-UxQMPXRBfHSHm1rLbNMSYKvsSv8_FDtTSR-RYxRmHA98wz2UhWcRL3-Le2O2yn/exec" target="_blank" class="help-btn-3d">HELP SYSTEM</a>
+  </div>
 
-        <div class="field-group">
-          <label for="usernameInput">Username Warga</label>
-          <input id="usernameInput" name="username" type="text" placeholder="Contoh: ADMINPUSAT" required />
-        </div>
+  <div class="logo-sc-3d-large">
+    <span class="logo-sc-main-txt">Sc</span>
+    <span class="logo-sc-sub-badge">Projack12@06</span>
+  </div>
 
-        <div class="field-group">
-          <label for="passwordInput">Password</label>
-          <div class="pw-wrap">
-            <input id="passwordInput" name="password" type="password" placeholder="Masukkan password" required />
-            <button type="button" id="togglePwBtn" class="btn-toggle" aria-label="Tampilkan atau sembunyikan password">👁️</button>
-          </div>
-        </div>
+  <div class="login-title">SANSCHAT SYSTEM</div>
+  <div class="login-subtitle">Otentikasi Warga RT/RW</div>
 
-        <div id="statusMsg" role="status" aria-live="polite"></div>
-        <button type="submit" id="loginSubmitBtn" class="btn-login">Masuk Sekarang</button>
+  <div id="pwaWarningCard" class="pwa-warning-box hidden">
+    <div class="pwa-warning-title">⚠️ AKSES DIBATASI (BELUM DIINSTAL)</div>
+    <div>Anda membuka aplikasi melalui browser web biasa. Untuk membuka kunci tombol login, pasang aplikasi ke HP Anda:</div>
+    <ol>
+      <li>Ketuk menu titik tiga (<b>⋮</b>) di pojok kanan atas browser.</li>
+      <li>Pilih <b>"Tambahkan ke Layar Utama"</b> / <b>"Instal Aplikasi"</b>.</li>
+      <li>Buka aplikasi melalui ikon <b>Sc-SansChat</b> di layar utama HP Anda.</li>
+    </ol>
+  </div>
 
-        <div class="sf-action-bar">
-          <a href="./utama.html" class="btn-quick">💬 Halaman Utama</a>
-          <a id="loginHelpLink" href="#" target="_blank" rel="noopener" class="btn-quick" style="opacity:0.5; pointer-events:none;">🆘 Help System</a>
-          <a id="loginPortalLink" href="#" target="_blank" rel="noopener" class="btn-quick" style="opacity:0.5; pointer-events:none;">🌐 Portal Web</a>
-        </div>
-      </form>
+  <div class="field-group">
+    <label>USERNAME WARGA</label>
+    <input type="text" id="loginUsername" placeholder="MASUKKAN USERNAME..." oninput="this.value = this.value.toUpperCase(); checkPWAInstallationStatus();">
+  </div>
+
+  <div class="field-group">
+    <label>KODE AKSES / PASSWORD</label>
+    <div style="position:relative;">
+      <input type="password" id="loginPassword" placeholder="MASUKKAN PASSWORD..." onkeypress="if(event.key==='Enter') doLogin()">
+      <span id="eyeIcon" class="password-toggle" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
     </div>
   </div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
-    const pwInput = document.getElementById("passwordInput");
-    const toggleBtn = document.getElementById("togglePwBtn");
-    const statusEl = document.getElementById("statusMsg");
+  <button id="btnLoginSubmit" class="btn-3d-robotic" onclick="doLogin()">VERIFIKASI & MASUK</button>
+</div>
 
-    toggleBtn.addEventListener("click", () => {
-      const isPw = pwInput.type === "password";
-      pwInput.type = isPw ? "text" : "password";
-      toggleBtn.textContent = isPw ? "🙈" : "👁️";
-    });
+<script>
+  const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 
-    function applyConfigLinks(cfg) {
-      if (!cfg) return;
-      if (cfg.helpSystemUrl && /^https?:\/\//i.test(cfg.helpSystemUrl)) {
-        const h = document.getElementById("loginHelpLink");
-        h.href = cfg.helpSystemUrl;
-        h.style.opacity = "1";
-        h.style.pointerEvents = "auto";
-      }
-      if (cfg.portalWebUrl && /^https?:\/\//i.test(cfg.portalWebUrl)) {
-        const p = document.getElementById("loginPortalLink");
-        p.href = cfg.portalWebUrl;
-        p.style.opacity = "1";
-        p.style.pointerEvents = "auto";
-      }
+  window.onload = function() {
+    const savedUser = localStorage.getItem('sanschat_active_username') || sessionStorage.getItem('sanschat_active_username');
+    if (savedUser) {
+      document.getElementById('loginUsername').value = savedUser.toUpperCase();
+    }
+    checkPWAInstallationStatus();
+  };
+
+  function checkPWAInstallationStatus() {
+    const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const btnSubmit = document.getElementById('btnLoginSubmit');
+    const warningCard = document.getElementById('pwaWarningCard');
+
+    if (usernameInput === 'ADMINPUSAT' || isStandalone) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = "VERIFIKASI & MASUK";
+      warningCard.classList.add('hidden');
+    } else {
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = "APLIKASI BELUM DIINSTAL";
+      warningCard.classList.remove('hidden');
+    }
+  }
+
+  function togglePasswordVisibility() {
+    const passInput = document.getElementById('loginPassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (passInput.type === 'password') {
+      passInput.type = 'text';
+      eyeIcon.innerText = '👁️';
+    } else {
+      passInput.type = 'password';
+      eyeIcon.innerText = '👁️‍🗨️';
+    }
+  }
+
+  function saveUserMemoryAndRedirect(userObj) {
+    const cleanUsername = String(userObj.username || "").trim().toUpperCase();
+    try {
+      localStorage.setItem('sanschat_active_username', cleanUsername);
+      localStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+      sessionStorage.setItem('sanschat_active_username', cleanUsername);
+      sessionStorage.setItem('sanschat_user_session', JSON.stringify(userObj));
+    } catch (e) {}
+
+    const base = window.location.href.split('?')[0].replace(/login\.html$/, '').replace(/index\.html$/, '');
+    const finalUtamaUrl = (base.endsWith('/') ? base : base + '/') + "utama.html?user=" + encodeURIComponent(cleanUsername);
+
+    window.location.href = finalUtamaUrl;
+  }
+
+  function doLogin() {
+    const usernameInput = document.getElementById('loginUsername').value.trim().toUpperCase();
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    if (usernameInput !== 'ADMINPUSAT' && !isStandalone) {
+      alert("Harap instal aplikasi terlebih dahulu ke layar utama HP Android Anda melalui menu browser.");
+      return;
     }
 
-    (async () => {
-      try {
-        const cached = JSON.parse(localStorage.getItem("sanschat_sheet_config") || "null");
-        applyConfigLinks(cached);
-        const res = await fetch(API_URL + "?action=getConfig");
-        const json = await res.json();
-        const cfg = (json && json.config) ? json.config : (json && json.data && json.data.config ? json.data.config : null);
-        if (cfg) {
-          localStorage.setItem("sanschat_sheet_config", JSON.stringify(cfg));
-          applyConfigLinks(cfg);
-        }
-      } catch (_) {}
-    })();
+    const u = usernameInput;
+    const p = document.getElementById('loginPassword').value.trim();
+    if (!u || !p) { alert("Harap isi Username dan Password!"); return; }
 
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const u = document.getElementById("usernameInput").value.trim().toUpperCase();
-      const p = pwInput.value.trim();
-      if (!u || !p) {
-        statusEl.textContent = "Username dan password wajib diisi.";
-        return;
+    const btn = document.getElementById('btnLoginSubmit');
+    btn.innerText = "MEMVERIFIKASI...";
+    btn.disabled = true;
+
+    fetch(S3_API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'loginUser', username: u, password: p })
+    })
+    .then(r => r.json())
+    .then(resObj => {
+      const res = resObj.data;
+      if (res && res.success && res.user) {
+        btn.innerText = "MEMBUKA HALAMAN UTAMA...";
+        saveUserMemoryAndRedirect(res.user);
+      } else {
+        btn.innerText = "VERIFIKASI & MASUK";
+        btn.disabled = false;
+        alert((res && res.message) ? res.message : "Login gagal!");
       }
-      statusEl.style.color = "#8696a0";
-      statusEl.textContent = "Memverifikasi akun...";
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ action: "loginUser", username: u, password: p })
-        });
-        const json = await res.json();
-        const data = json && json.data ? json.data : json;
-        if (data && data.success) {
-          localStorage.setItem("sanschat_user", JSON.stringify(data.user || { username: u }));
-          window.location.href = "./utama.html?user=" + encodeURIComponent(u);
-        } else {
-          statusEl.style.color = "#f15c6d";
-          statusEl.textContent = (data && data.message) || "Username atau password salah.";
-        }
-      } catch (err) {
-        statusEl.style.color = "#f15c6d";
-        statusEl.textContent = "Gagal terhubung ke server.";
-      }
+    })
+    .catch(err => {
+      btn.innerText = "VERIFIKASI & MASUK";
+      btn.disabled = false;
+      alert("Koneksi bermasalah: " + err.message);
     });
-  </script>
+  }
+</script>
 </body>
 </html>

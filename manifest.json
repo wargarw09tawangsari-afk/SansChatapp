@@ -1,7 +1,7 @@
 {
   "short_name": "Sc-SansChat",
   "name": "Sc-SansChat - Warga RW 09 Sansivera",
-  "description": "Aplikasi komunikasi warga 1 frame adaptif berbasis PWA & Spreadsheet",
+  "description": "Aplikasi komunikasi warga pengganti WhatsApp berbasis PWA & Spreadsheet",
   "icons": [
     {
       "src": "./icon-192.png",
@@ -20,6 +20,11 @@
   "background_color": "#0b141a",
   "theme_color": "#111b21",
   "display": "standalone",
-  "orientation": "any",
-  "scope": "./"
+  "orientation": "portrait",
+  "scope": "./",
+  "permissions": [
+    "notifications",
+    "background-sync",
+    "periodic-background-sync"
+  ]
 }
