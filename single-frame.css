@@ -1,5 +1,6 @@
 /* Sc-SansChat Single-Frame Adaptive Layout (Laptop, Tablet, Android)
-   Memastikan tampilan 1 frame penuh (100dvh) tanpa memotong tombol, field input, atau kontrol utama. */
+   Mempertahankan semua fungsi, tombol, field, dan tautan spreadsheet dalam 1 frame adaptif
+   tanpa mengurangi atau membuang pengaturan awal. */
 :root {
   --sf-vh: 1dvh;
   --sf-safe-top: env(safe-area-inset-top, 0px);
@@ -50,10 +51,11 @@ html, body {
   width: 100%;
 }
 
-input, select, textarea, button {
+input, select, textarea, button, a.sf-link-btn {
   max-width: 100%;
 }
 
+/* Tablet & Laptop (>= 768px) */
 @media (min-width: 768px) {
   .sf-desktop-shell {
     display: grid;
@@ -64,6 +66,7 @@ input, select, textarea, button {
   }
 }
 
+/* HP Android & Layar Kecil (< 768px) */
 @media (max-width: 767px) {
   .sf-desktop-shell {
     display: flex;

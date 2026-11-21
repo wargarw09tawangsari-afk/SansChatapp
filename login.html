@@ -15,20 +15,20 @@
     }
     .login-card {
       width: 100%;
-      max-width: 440px;
+      max-width: 460px;
       margin: auto;
-      padding: 20px;
+      padding: 18px;
       background: #111b21;
       border: 1px solid #222e35;
       border-radius: 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 11px;
     }
     .field-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
     label {
       font-size: 13px;
@@ -37,7 +37,7 @@
     }
     input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 11px 12px;
+      padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid #2a3942;
       background: #202c33;
@@ -55,7 +55,7 @@
     }
     .btn-toggle {
       flex: 0 0 auto;
-      padding: 11px 12px;
+      padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid #2a3942;
       background: #202c33;
@@ -72,7 +72,19 @@
       font-weight: 700;
       font-size: 14px;
       cursor: pointer;
-      margin-top: 4px;
+      margin-top: 2px;
+    }
+    .btn-quick {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #2a3942;
+      background: #202c33;
+      color: #e9edef;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      flex: 1 1 120px;
     }
     #statusMsg {
       font-size: 13px;
@@ -86,10 +98,12 @@
     <div class="sf-scroll-body" style="display:flex; padding: 12px;">
       <form id="loginForm" class="login-card" autocomplete="on">
         <h1 style="margin:0; font-size:20px; text-align:center;">Login Sc-SansChat</h1>
+
         <div class="field-group">
           <label for="usernameInput">Username Warga</label>
           <input id="usernameInput" name="username" type="text" placeholder="Contoh: ADMINPUSAT" required />
         </div>
+
         <div class="field-group">
           <label for="passwordInput">Password</label>
           <div class="pw-wrap">
@@ -97,12 +111,19 @@
             <button type="button" id="togglePwBtn" class="btn-toggle" aria-label="Tampilkan atau sembunyikan password">👁️</button>
           </div>
         </div>
+
         <div id="statusMsg" role="status" aria-live="polite"></div>
         <button type="submit" id="loginSubmitBtn" class="btn-login">Masuk Sekarang</button>
-        <a href="./utama.html" style="text-align:center; font-size:12px; color:#53bdeb; text-decoration:none;">Lanjut ke Halaman Utama</a>
+
+        <div class="sf-action-bar">
+          <a href="./utama.html" class="btn-quick">💬 Halaman Utama</a>
+          <a id="loginHelpLink" href="#" target="_blank" rel="noopener" class="btn-quick" style="opacity:0.5; pointer-events:none;">🆘 Help System</a>
+          <a id="loginPortalLink" href="#" target="_blank" rel="noopener" class="btn-quick" style="opacity:0.5; pointer-events:none;">🌐 Portal Web</a>
+        </div>
       </form>
     </div>
   </div>
+
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
     const pwInput = document.getElementById("passwordInput");
@@ -114,6 +135,36 @@
       pwInput.type = isPw ? "text" : "password";
       toggleBtn.textContent = isPw ? "🙈" : "👁️";
     });
+
+    function applyConfigLinks(cfg) {
+      if (!cfg) return;
+      if (cfg.helpSystemUrl && /^https?:\/\//i.test(cfg.helpSystemUrl)) {
+        const h = document.getElementById("loginHelpLink");
+        h.href = cfg.helpSystemUrl;
+        h.style.opacity = "1";
+        h.style.pointerEvents = "auto";
+      }
+      if (cfg.portalWebUrl && /^https?:\/\//i.test(cfg.portalWebUrl)) {
+        const p = document.getElementById("loginPortalLink");
+        p.href = cfg.portalWebUrl;
+        p.style.opacity = "1";
+        p.style.pointerEvents = "auto";
+      }
+    }
+
+    (async () => {
+      try {
+        const cached = JSON.parse(localStorage.getItem("sanschat_sheet_config") || "null");
+        applyConfigLinks(cached);
+        const res = await fetch(API_URL + "?action=getConfig");
+        const json = await res.json();
+        const cfg = (json && json.config) ? json.config : (json && json.data && json.data.config ? json.data.config : null);
+        if (cfg) {
+          localStorage.setItem("sanschat_sheet_config", JSON.stringify(cfg));
+          applyConfigLinks(cfg);
+        }
+      } catch (_) {}
+    })();
 
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();

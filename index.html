@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Sc-SansChat - Portal Masuk</title>
+  <title>Sc-SansChat - Portal Masuk RW 09</title>
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#111b21" />
   <link rel="stylesheet" href="./single-frame.css" />
@@ -15,22 +15,22 @@
     }
     .entry-box {
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
       margin: auto;
-      padding: 20px;
+      padding: 18px;
       background: #111b21;
       border: 1px solid #222e35;
       border-radius: 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .btn-primary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 16px;
+      padding: 11px 16px;
       border-radius: 10px;
       border: none;
       background: #00a884;
@@ -40,20 +40,25 @@
       cursor: pointer;
       width: 100%;
     }
-    .btn-secondary {
+    .btn-secondary, .btn-sheet-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 10px 14px;
+      gap: 6px;
+      padding: 9px 12px;
       border-radius: 10px;
       border: 1px solid #2a3942;
       background: #202c33;
       color: #e9edef;
+      font-size: 13px;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
-      width: 100%;
+      flex: 1 1 150px;
+    }
+    .btn-sheet-link[aria-disabled="true"] {
+      opacity: 0.45;
+      pointer-events: none;
     }
     .meta-note {
       font-size: 12px;
@@ -68,22 +73,71 @@
     <div class="sf-scroll-body" style="display:flex; padding: 12px;">
       <div class="entry-box">
         <div style="text-align:center;">
-          <img src="./icon-192.png" alt="Sc-SansChat" width="64" height="64" style="border-radius:14px;" />
-          <h1 style="margin:10px 0 4px; font-size:20px;">Sc-SansChat RW 09</h1>
+          <img src="./icon-192.png" alt="Sc-SansChat" width="60" height="60" style="border-radius:14px;" />
+          <h1 style="margin:8px 0 4px; font-size:20px;">Sc-SansChat RW 09 Sansivera</h1>
           <div style="font-size:12px; color:#8696a0;">Mode 1 Frame Adaptif • Laptop, Tab &amp; Android</div>
         </div>
-        <a class="btn-primary" href="./login.html">Masuk ke Portal Login</a>
-        <a class="btn-secondary" href="./utama.html">Buka Halaman Utama Chat</a>
-        <div class="meta-note">Semua tombol, kolom input, dan kontrol utama tetap aktif dan dapat diakses penuh di setiap ukuran layar.</div>
+
+        <a class="btn-primary" id="goLoginBtn" href="./login.html">Masuk ke Portal Login</a>
+        <a class="btn-secondary" id="goUtamaBtn" href="./utama.html">Buka Halaman Utama Chat</a>
+
+        <div class="sf-action-bar" id="sheetLinksBar">
+          <a class="btn-sheet-link" id="helpSystemLink" href="#" target="_blank" rel="noopener" aria-disabled="true">🆘 Help System (S1)</a>
+          <a class="btn-sheet-link" id="portalWebLink" href="#" target="_blank" rel="noopener" aria-disabled="true">🌐 Portal Web (S2)</a>
+          <a class="btn-sheet-link" id="sansChatLink" href="#" target="_blank" rel="noopener" aria-disabled="true">💬 Link SansChat (S3)</a>
+        </div>
+
+        <div class="meta-note" id="sheetSyncStatus">Menyinkronkan tautan konfigurasi dari Spreadsheet...</div>
       </div>
     </div>
   </div>
+
   <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
+
+    function bindSheetLink(elId, urlValue) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      const clean = String(urlValue || "").trim();
+      if (clean && /^https?:\/\//i.test(clean)) {
+        el.href = clean;
+        el.setAttribute("aria-disabled", "false");
+        el.style.opacity = "1";
+        el.style.pointerEvents = "auto";
+      }
+    }
+
+    async function loadSpreadsheetConfig() {
+      const statusEl = document.getElementById("sheetSyncStatus");
+      try {
+        const res = await fetch(API_URL + "?action=getConfig", { method: "GET" });
+        const json = await res.json();
+        const cfg = (json && json.config) ? json.config : (json && json.data && json.data.config ? json.data.config : {});
+        bindSheetLink("helpSystemLink", cfg.helpSystemUrl);
+        bindSheetLink("portalWebLink", cfg.portalWebUrl);
+        bindSheetLink("sansChatLink", cfg.sansChatUrl);
+        localStorage.setItem("sanschat_sheet_config", JSON.stringify(cfg));
+        statusEl.textContent = "Tautan S1/S2/S3 & pengaturan awal aktif dalam 1 frame.";
+      } catch (e) {
+        try {
+          const cached = JSON.parse(localStorage.getItem("sanschat_sheet_config") || "null");
+          if (cached) {
+            bindSheetLink("helpSystemLink", cached.helpSystemUrl);
+            bindSheetLink("portalWebLink", cached.portalWebUrl);
+            bindSheetLink("sansChatLink", cached.sansChatUrl);
+          }
+        } catch (_) {}
+        statusEl.textContent = "Mode offline/cache aktif; semua tombol & field tetap siap.";
+      }
+    }
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js').catch(() => {});
       });
     }
+
+    loadSpreadsheetConfig();
   </script>
 </body>
 </html>

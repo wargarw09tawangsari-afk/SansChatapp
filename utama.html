@@ -30,30 +30,48 @@
     }
     .sf-header {
       flex: 0 0 auto;
-      padding: 10px 14px;
+      padding: 8px 12px;
       background: #202c33;
       border-bottom: 1px solid #2a3942;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
     }
-    .sf-badge-btn {
-      padding: 6px 10px;
+    .sf-badge-btn, .sf-link-btn {
+      padding: 6px 9px;
       border-radius: 8px;
       border: 1px solid #2a3942;
       background: #111b21;
       color: #e9edef;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
+      text-decoration: none;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sf-link-btn[aria-disabled="true"] {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .sf-sheet-strip {
+      flex: 0 0 auto;
+      padding: 6px 12px;
+      background: #182229;
+      border-bottom: 1px solid #222e35;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
     }
     .sf-messages {
       flex: 1 1 auto;
       min-height: 0;
       overflow-y: auto;
-      padding: 12px 14px;
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -73,18 +91,18 @@
     }
     .sf-composer {
       flex: 0 0 auto;
-      padding: 8px 12px;
+      padding: 8px 10px;
       background: #202c33;
       border-top: 1px solid #2a3942;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .sf-composer input[type="text"] {
-      flex: 1 1 180px;
-      min-width: 120px;
-      padding: 10px 12px;
+      flex: 1 1 160px;
+      min-width: 110px;
+      padding: 9px 12px;
       border-radius: 10px;
       border: 1px solid #2a3942;
       background: #111b21;
@@ -92,7 +110,7 @@
       font-size: 14px;
     }
     .btn-send {
-      padding: 10px 14px;
+      padding: 9px 14px;
       border-radius: 10px;
       border: none;
       background: #00a884;
@@ -101,7 +119,7 @@
       cursor: pointer;
     }
     .room-item {
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-bottom: 1px solid #1d282f;
       cursor: pointer;
       display: flex;
@@ -113,7 +131,7 @@
     }
     @media (max-width: 767px) {
       .sf-sidebar {
-        max-height: 28dvh;
+        max-height: 24dvh;
         border-right: none;
         border-bottom: 1px solid #222e35;
       }
@@ -124,13 +142,13 @@
   <div class="sf-desktop-shell">
     <aside class="sf-sidebar">
       <div class="sf-header">
-        <div>
-          <div id="activeUserLabel" style="font-weight:700; font-size:14px;">WARGA RW 09</div>
+        <div style="min-width:0;">
+          <div id="activeUserLabel" style="font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">WARGA RW 09</div>
           <div id="activeRoleLabel" style="font-size:11px; color:#8696a0;">Mode 1 Frame Adaptif</div>
         </div>
         <div class="sf-action-bar" style="width:auto;">
           <button type="button" id="togglePrivateBtn" class="sf-badge-btn">Chat Privat</button>
-          <a href="./login.html" class="sf-badge-btn" style="text-decoration:none;">Akun</a>
+          <a href="./login.html" class="sf-badge-btn">Akun</a>
         </div>
       </div>
       <div id="roomList" class="sf-scroll-body"></div>
@@ -138,8 +156,8 @@
 
     <main class="sf-main">
       <header class="sf-header">
-        <div>
-          <div id="currentRoomTitle" style="font-weight:700; font-size:14px;">Grup Umum</div>
+        <div style="min-width:0;">
+          <div id="currentRoomTitle" style="font-weight:700; font-size:13.5px;">Grup Umum</div>
           <div id="currentRoomSub" style="font-size:11px; color:#8696a0;">Siap mengirim pesan &amp; lampiran</div>
         </div>
         <div class="sf-action-bar" style="width:auto;">
@@ -148,6 +166,13 @@
           <button type="button" id="refreshBtn" class="sf-badge-btn">🔄 Refresh</button>
         </div>
       </header>
+
+      <div class="sf-sheet-strip" id="spreadsheetLinksBar">
+        <a id="utamaHelpLink" href="#" target="_blank" rel="noopener" class="sf-link-btn" aria-disabled="true">🆘 Help System (S1)</a>
+        <a id="utamaPortalLink" href="#" target="_blank" rel="noopener" class="sf-link-btn" aria-disabled="true">🌐 Portal Web (S2)</a>
+        <a id="utamaSansChatLink" href="#" target="_blank" rel="noopener" class="sf-link-btn" aria-disabled="true">💬 SansChat Link (S3)</a>
+        <span id="dynamicGroupLinks" style="display:inline-flex; flex-wrap:wrap; gap:6px;"></span>
+      </div>
 
       <div id="messagesContainer" class="sf-messages"></div>
 
@@ -170,10 +195,47 @@
     const activeNama = (savedUser && savedUser.nama) || activeUsername;
 
     let isPrivateMode = urlParams.get("openPrivate") === "1";
-    let currentGroup = { name: "Grup Umum", sheetName: "ChatUmum" };
+    let currentGroup = { name: "Grup Umum", sheetName: "ChatUmum", link: "" };
     let pendingAttachment = null;
 
     document.getElementById("activeUserLabel").textContent = `${activeNama} (${activeUsername})`;
+    if (savedUser && savedUser.role) {
+      document.getElementById("activeRoleLabel").textContent = `Role: ${savedUser.role} • 1 Frame`;
+    }
+
+    function activateAnchorLink(el, url) {
+      if (!el) return;
+      const clean = String(url || "").trim();
+      if (clean && /^https?:\/\//i.test(clean)) {
+        el.href = clean;
+        el.setAttribute("aria-disabled", "false");
+        el.style.opacity = "1";
+        el.style.pointerEvents = "auto";
+      }
+    }
+
+    function renderSpreadsheetLinks(cfg, groups) {
+      if (cfg) {
+        activateAnchorLink(document.getElementById("utamaHelpLink"), cfg.helpSystemUrl);
+        activateAnchorLink(document.getElementById("utamaPortalLink"), cfg.portalWebUrl);
+        activateAnchorLink(document.getElementById("utamaSansChatLink"), cfg.sansChatUrl);
+      }
+      const dynBox = document.getElementById("dynamicGroupLinks");
+      dynBox.innerHTML = "";
+      if (Array.isArray(groups)) {
+        groups.forEach((g) => {
+          if (g && g.link && /^https?:\/\//i.test(String(g.link).trim())) {
+            const a = document.createElement("a");
+            a.className = "sf-link-btn";
+            a.href = String(g.link).trim();
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.textContent = `🔗 ${g.name}`;
+            dynBox.appendChild(a);
+          }
+        });
+      }
+    }
 
     async function postApi(payload) {
       const res = await fetch(API_URL, {
@@ -188,7 +250,7 @@
     function renderRooms(groups) {
       const listEl = document.getElementById("roomList");
       listEl.innerHTML = "";
-      const items = (Array.isArray(groups) && groups.length) ? groups : [{ name: "Grup Umum", sheetName: "ChatUmum" }];
+      const items = (Array.isArray(groups) && groups.length) ? groups : [{ name: "Grup Umum", sheetName: "ChatUmum", link: "" }];
       items.forEach((g) => {
         const div = document.createElement("div");
         div.className = "room-item" + (!isPrivateMode && g.sheetName === currentGroup.sheetName ? " active" : "");
@@ -234,8 +296,19 @@
 
     async function loadDashboard() {
       try {
+        const cachedCfg = (() => {
+          try { return JSON.parse(localStorage.getItem("sanschat_sheet_config") || "null"); } catch (_) { return null; }
+        })();
+        if (cachedCfg) renderSpreadsheetLinks(cachedCfg, []);
+
+        const cfgRes = await fetch(API_URL + "?action=getConfig").then(r => r.json()).catch(() => null);
+        const cfg = (cfgRes && cfgRes.config) ? cfgRes.config : (cfgRes && cfgRes.data && cfgRes.data.config ? cfgRes.data.config : cachedCfg);
+        if (cfg) localStorage.setItem("sanschat_sheet_config", JSON.stringify(cfg));
+
         const bundle = await postApi({ action: "getInitialDashboardBundle", username: activeUsername });
-        if (bundle && bundle.groups) renderRooms(bundle.groups);
+        const groups = (bundle && bundle.groups) ? bundle.groups : [];
+        if (groups.length) renderRooms(groups);
+        renderSpreadsheetLinks(cfg, groups);
         await loadMessages();
       } catch (e) {}
     }
