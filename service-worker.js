@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sanschat-v35';
+const CACHE_NAME = 'sanschat-v36';
 const USER_META_CACHE = 'sanschat-user-meta-v1';
 const S3_API_BASE = "https://script.google.com/macros/s/AKfycbyHBqAVQ044nhszVhbKIeP2qi6Wwafu5KgfU648L6RNQSBwYPd_DXWm-TOqUwO7KVg/exec";
 const ASSETS_TO_CACHE = [
@@ -106,7 +106,6 @@ async function checkBackgroundAlertsForUser(username) {
     });
     const callJson = await callResp.json();
     const incoming = callJson && callJson.data;
-
     if (incoming && incoming.callerName) {
       const callKey = (incoming.roomUrl || incoming.callerName) + "_" + (incoming.type || "voice");
       if (lastNotifiedCallId !== callKey) {
@@ -122,22 +121,12 @@ async function checkBackgroundAlertsForUser(username) {
             renotify: true,
             requireInteraction: true,
             vibrate: [600, 200, 600, 200, 600, 200, 600],
-            data: {
-              actionType: 'incoming_call',
-              username: username,
-              callerName: incoming.callerName,
-              callType: incoming.type || 'voice',
-              roomUrl: incoming.roomUrl || ''
-            },
-            actions: [
-              { action: 'accept_call', title: '✅ TERIMA' },
-              { action: 'reject_call', title: '❌ TOLAK' }
-            ]
+            data: { actionType: 'incoming_call', username: username, callerName: incoming.callerName, callType: incoming.type || 'voice', roomUrl: incoming.roomUrl || '' },
+            actions: [{ action: 'accept_call', title: '✅ TERIMA' }, { action: 'reject_call', title: '❌ TOLAK' }]
           }
         );
       }
     }
-
     const chatResp = await fetch(S3_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -154,17 +143,12 @@ async function checkBackgroundAlertsForUser(username) {
             body: 'Ketuk TERIMA CHAT untuk membuka dan membalas pesan.',
             icon: './icon-192.png',
             badge: './icon-192.png',
-            tag: 'sanschat-unread-private',
+            tag: 'sanschat-incoming-chat',
             renotify: true,
             requireInteraction: true,
-            vibrate: [400, 150, 400, 150, 400],
-            data: {
-              actionType: 'open_private_chat',
-              username: username
-            },
-            actions: [
-              { action: 'open_chat', title: '💬 TERIMA CHAT' }
-            ]
+            vibrate: [500, 200, 500, 200, 500],
+            data: { actionType: 'incoming_chat', username: username },
+            actions: [{ action: 'accept_chat', title: '💬 TERIMA CHAT' }, { action: 'dismiss_chat', title: '🔕 ABAIKAN' }]
           }
         );
       }
@@ -172,57 +156,49 @@ async function checkBackgroundAlertsForUser(username) {
   } catch (e) {}
 }
 
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET' || event.request.url.includes('script.google.com')) return;
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const networkFetch = fetch(event.request).then((res) => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        }
-        return res;
-      }).catch(() => cachedResponse);
-      return cachedResponse || networkFetch;
-    })
-  );
-});
-
 self.addEventListener('notificationclick', (event) => {
-  const notifData = event.notification.data || {};
-  const clickedAction = event.action || 'default';
   event.notification.close();
-
+  const data = event.notification.data || {};
+  const username = data.username || swActiveUsername || "";
   event.waitUntil((async () => {
-    const savedU = await restoreSwUserMeta();
-    const targetUser = encodeURIComponent(notifData.username || savedU || '');
-    let targetUrl = `./utama.html?user=${targetUser}`;
-
-    if (notifData.actionType === 'incoming_call') {
-      if (clickedAction === 'reject_call') {
+    if (event.action === 'reject_call' && username) {
+      try {
         await fetch(S3_API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'updateCallStatus', username: notifData.username || savedU, status: 'ENDED' })
-        }).catch(() => {});
+          body: JSON.stringify({ action: 'updateCallStatus', username: username, status: 'REJECTED' })
+        });
+      } catch (e) {}
+      return;
+    }
+    if (event.action === 'dismiss_chat') return;
+    const allClients = await clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of allClients) {
+      if ('focus' in client) {
+        await client.focus();
+        client.postMessage({ type: 'OPEN_FROM_NOTIFICATION', actionType: data.actionType || 'incoming_chat', username: username });
         return;
       }
-      const cType = encodeURIComponent(notifData.callType || 'voice');
-      const cName = encodeURIComponent(notifData.callerName || 'Warga');
-      const cUrl = encodeURIComponent(notifData.roomUrl || '');
-      const autoAns = clickedAction === 'accept_call' ? '1' : '0';
-      targetUrl = `./utama.html?user=${targetUser}&incomingCall=1&autoAnswer=${autoAns}&callType=${cType}&callerName=${cName}&roomUrl=${cUrl}`;
-    } else if (notifData.actionType === 'open_private_chat') {
-      targetUrl = `./utama.html?user=${targetUser}&openPrivate=1`;
     }
-
-    const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
-    for (const client of clientList) {
-      if ('navigate' in client) {
-        await client.navigate(targetUrl);
-        return client.focus();
-      }
-    }
-    if (clients.openWindow) return clients.openWindow(targetUrl);
+    const targetUrl = username ? `./utama.html?user=${encodeURIComponent(username)}` : './index.html';
+    if (clients.openWindow) await clients.openWindow(targetUrl);
   })());
+});
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  const reqUrl = new URL(event.request.url);
+  if (reqUrl.origin !== self.location.origin) return;
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request).then((resp) => {
+        if (resp && resp.status === 200 && resp.type === 'basic') {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(event.request, clone));
+        }
+        return resp;
+      }).catch(() => cached);
+    })
+  );
 });
