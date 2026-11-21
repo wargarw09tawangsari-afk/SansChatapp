@@ -2192,11 +2192,16 @@
         localStorage.setItem('sanschat_groups_' + currentUser.username, JSON.stringify(bundle.groups));
         renderChatRoomList(bundle.groups);
       }
-      if (bundle.announcements && bundle.announcements.length > 0) {
+      if (Array.isArray(bundle.announcements)) {
         announcements = bundle.announcements;
-        localStorage.setItem('sanschat_announcements', JSON.stringify(announcements));
         announcementIndex = 0;
-        playNextAnnouncementCell(false);
+        if (announcements.length > 0) {
+          localStorage.setItem('sanschat_announcements', JSON.stringify(announcements));
+          playNextAnnouncementCell(false);
+        } else {
+          localStorage.removeItem('sanschat_announcements');
+          document.getElementById('announcementBox').innerText = "Tidak ada pengumuman aktif.";
+        }
       }
       updatePrivateButtonBadge(bundle.hasUnreadPrivate);
       if (bundle.incomingCall) {

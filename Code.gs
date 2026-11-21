@@ -192,8 +192,8 @@ function ensureDefaultSheets() {
 
   if (!ss.getSheetByName("Informasi")) {
     const inf = ss.insertSheet("Informasi");
-    inf.appendRow(["Isi Pengumuman", "Prioritas", "Tanggal"]);
-    inf.appendRow(["Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga.", "TINGGI", new Date()]);
+    inf.appendRow(["ID", "Isi Pengumuman", "Prioritas", "Tanggal", "Status", "TargetRole", "BerlakuSampai"]);
+    inf.appendRow(["INF-001", "Diberitahukan kepada seluruh warga RT 37, 38, dan 39 untuk hadir dalam kerja bakti kebersihan lingkungan pada hari Minggu pukul 07.00 WIB di balai warga.", "TINGGI", new Date(), "AKTIF", "ALL", ""]);
   }
 
   if (!ss.getSheetByName("ChatPrivat")) {
@@ -567,11 +567,41 @@ function updateGroupProfilePicture(sheetName, base64Data) {
   return { success: false };
 }
 
+/**
+ * Mengambil pengumuman dari sheet "Informasi" Kolom B (Isi Pengumuman)
+ */
 function getAnnouncements() {
   const sheet = getSpreadsheet().getSheetByName("Informasi");
   if (!sheet || sheet.getLastRow() < 2) return [];
-  const data = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues();
-  return data.map(r => String(r[0] || "").trim()).filter(Boolean);
+
+  const lastRow = sheet.getLastRow();
+  const lastCol = Math.max(2, sheet.getLastColumn());
+  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(h => String(h || "").trim().toLowerCase());
+  const data = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+
+  // Default Kolom B (index 1); gunakan kolom header "isi pengumuman" jika ada dan bukan kolom ID
+  let isiColIndex = 1;
+  const headerIsiIdx = headers.findIndex(h => h.includes("isi pengumuman") || h === "pengumuman");
+  if (headerIsiIdx !== -1) {
+    isiColIndex = headerIsiIdx;
+  }
+
+  const statusColIndex = headers.findIndex(h => h === "status");
+
+  const results = [];
+  for (let i = 0; i < data.length; i++) {
+    const isiPengumuman = String(data[i][isiColIndex] || "").trim();
+    if (!isiPengumuman) continue;
+
+    if (statusColIndex !== -1) {
+      const statusVal = String(data[i][statusColIndex] || "").trim().toUpperCase();
+      if (statusVal && statusVal !== "AKTIF") continue;
+    }
+
+    results.push(isiPengumuman);
+  }
+
+  return results;
 }
 
 function getGroupMembersByKolomC(groupName, chatSheetName) {
